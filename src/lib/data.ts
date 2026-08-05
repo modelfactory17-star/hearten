@@ -207,3 +207,77 @@ export const comments: Comment[] = [
     replies: [],
   },
 ];
+
+export interface User {
+  id: string;
+  emoji: string;
+  name: string;
+  bio: string;
+  status: string; // 感情狀態
+  joined: string;
+  posts_count: number;
+  comments_count: number;
+  hearts_received: number;
+}
+
+export const users: User[] = [
+  {
+    id: 'user1',
+    emoji: '🐱',
+    name: '月光下的貓',
+    bio: '失戀中，但相信明天會更好',
+    status: '單身',
+    joined: '2024年8月',
+    posts_count: 32,
+    comments_count: 156,
+    hearts_received: 1248,
+  },
+  {
+    id: 'user2',
+    emoji: '🍋',
+    name: '檸檬茶走甜',
+    bio: '愛情唔係必需品，係調味料',
+    status: '單身',
+    joined: '2024年7月',
+    posts_count: 19,
+    comments_count: 87,
+    hearts_received: 643,
+  },
+  {
+    id: 'user3',
+    emoji: '🌊',
+    name: '維港的風',
+    bio: '聽咗好多故事，今次輪到我講',
+    status: '戀愛中',
+    joined: '2024年6月',
+    posts_count: 17,
+    comments_count: 92,
+    hearts_received: 891,
+  },
+  {
+    id: 'user4',
+    emoji: '🐻',
+    name: '匿名小熊',
+    bio: '匿埋喺樹窿嘅小熊',
+    status: '戀愛中',
+    joined: '2024年9月',
+    posts_count: 8,
+    comments_count: 23,
+    hearts_received: 256,
+  },
+  {
+    id: 'user5',
+    emoji: '🚌',
+    name: '深夜巴士',
+    bio: '搭緊深夜巴士嘅人',
+    status: '單身',
+    joined: '2024年5月',
+    posts_count: 15,
+    comments_count: 67,
+    hearts_received: 432,
+  },
+];
+
+export function getUserByName(name: string): User | undefined {
+  return users.find((u) => u.name === name);
+}

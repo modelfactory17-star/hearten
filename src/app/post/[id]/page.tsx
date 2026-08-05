@@ -82,7 +82,10 @@ export default function PostPage() {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="font-medium text-white text-sm">{post.anonymous}</span>
+                  <span
+                  onClick={(e) => { e.stopPropagation(); router.push(`/user/${encodeURIComponent(post.anonymous)}`); }}
+                  className="font-medium text-white text-sm hover:text-hearten-rose cursor-pointer transition-colors"
+                >{post.anonymous}</span>
                   <span className="px-1.5 py-0.5 rounded-md bg-hearten-rose/10 text-hearten-rose text-[10px] font-medium">
                     {post.category}
                   </span>
@@ -220,6 +223,7 @@ export default function PostPage() {
 }
 
 function CommentItem({ comment, depth = 0 }: { comment: import('@/lib/data').Comment; depth?: number }) {
+  const router = useRouter();
   const [liked, setLiked] = useState(false);
   const [cHearts, setCHearts] = useState(comment.hearts);
   const [showReply, setShowReply] = useState(false);
@@ -233,7 +237,10 @@ function CommentItem({ comment, depth = 0 }: { comment: import('@/lib/data').Com
           <div className="w-7 h-7 rounded-full bg-hearten-rose/20 flex items-center justify-center text-sm shrink-0">
             {comment.emoji}
           </div>
-          <span className="text-sm font-medium text-white">{comment.anonymous}</span>
+          <span
+            onClick={() => router.push(`/user/${encodeURIComponent(comment.anonymous)}`)}
+            className="text-sm font-medium text-white hover:text-hearten-rose cursor-pointer transition-colors"
+          >{comment.anonymous}</span>
           {comment.isOP && (
             <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-hearten-amber/20 text-hearten-amber">
               樓主
