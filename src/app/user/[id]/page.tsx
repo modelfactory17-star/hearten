@@ -1,0 +1,150 @@
+'use client';
+
+import { useParams, useRouter } from 'next/navigation';
+import { ArrowLeft, Send, MessageSquare, Heart, FileText, UserPlus } from 'lucide-react';
+import { users, posts, getUserByName } from '@/lib/data';
+
+export default function UserPage() {
+  const params = useParams();
+  const router = useRouter();
+  const name = decodeURIComponent(params.id as string);
+  const user = users.find((u) => u.id === name) || getUserByName(name);
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-hearten-bg flex items-center justify-center">
+        <div className="text-center space-y-3">
+          <p className="text-hearten-muted text-lg">搵唔到呢位會員 😢</p>
+          <button
+            onClick={() => router.push('/')}
+            className="px-4 py-2 rounded-lg bg-hearten-rose text-white text-sm"
+          >
+            返去首頁
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const userPosts = posts.filter((p) => p.anonymous === user.name);
+
+  return (
+    <div className="min-h-screen bg-hearten-bg">
+      {/* Top bar */}
+      <div className="sticky top-0 z-50 h-14 border-b border-hearten-border bg-hearten-bg/90 backdrop-blur flex items-center px-4 gap-4">
+        <button
+          onClick={() => router.back()}
+          className="flex items-center gap-1 text-hearten-muted hover:text-white transition-colors text-sm"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          返去
+        </button>
+        <div className="flex-1" />
+        <span className="text-xs text-hearten-muted">會員資料</span>
+      </div>
+
+      <div className="max-w-xl mx-auto px-4 py-8">
+        {/* Profile Card */}
+        <div className="bg-hearten-card border border-hearten-border rounded-2xl overflow-hidden">
+          {/* Banner area */}
+          <div className="h-24 bg-gradient-to-r from-hearten-rose/30 via-hearten-rose/10 to-hearten-card" />
+
+          {/* Avatar */}
+          <div className="flex justify-center -mt-10">
+            <div className="w-20 h-20 rounded-full bg-hearten-card border-4 border-hearten-card flex items-center justify-center text-4xl shadow-lg">
+              {user.emoji}
+            </div>
+          </div>
+
+          {/* Info */}
+          <div className="text-center px-6 pb-6">
+            <h1 className="text-2xl font-bold text-white mt-3">{user.name}</h1>
+            <p className="text-base text-hearten-muted mt-1 italic">「{user.bio}」</p>
+
+            <div className="flex items-center justify-center gap-3 mt-3">
+              <span className="px-2.5 py-0.5 rounded-full bg-hearten-rose/10 text-hearten-rose text-sm">
+                {user.status}
+              </span>
+              <span className="text-sm text-hearten-dim">
+                加入：{user.joined}
+              </span>
+            </div>
+
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-4 mt-6 py-5 border-y border-hearten-border">
+              <div className="text-center">
+                <div className="flex items-center justify-center gap-1 text-hearten-muted mb-1">
+                  <FileText className="w-5 h-5" />
+                </div>
+                <div className="text-3xl font-bold text-white">{user.posts_count}</div>
+                <div className="text-sm text-hearten-dim mt-0.5">心事</div>
+              </div>
+              <div className="text-center">
+                <div className="flex items-center justify-center gap-1 text-hearten-muted mb-1">
+                  <MessageSquare className="w-5 h-5" />
+                </div>
+                <div className="text-3xl font-bold text-white">{user.comments_count}</div>
+                <div className="text-sm text-hearten-dim mt-0.5">留言</div>
+              </div>
+              <div className="text-center">
+                <div className="flex items-center justify-center gap-1 text-hearten-muted mb-1">
+                  <Heart className="w-5 h-5" />
+                </div>
+                <div className="text-3xl font-bold text-white">{user.hearts_received.toLocaleString()}</div>
+                <div className="text-sm text-hearten-dim mt-0.5">獲讚</div>
+              </div>
+            </div>
+
+            {/* Action buttons */}
+            <div className="flex gap-3 mt-5">
+              <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-hearten-rose hover:bg-hearten-rose-light text-white font-medium text-sm transition-colors">
+                <Send className="w-4 h-4" />
+                發送訊息
+              </button>
+              <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-hearten-border hover:border-hearten-rose text-hearten-text hover:text-hearten-rose font-medium text-sm transition-colors">
+                <UserPlus className="w-4 h-4" />
+                加到好友
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Recent Posts */}
+        <div className="mt-8">
+          <div className="flex items-center gap-3 mb-4">
+            <h2 className="text-sm font-bold text-hearten-muted uppercase tracking-wider">
+              📝 最近心事 ({userPosts.length})
+            </h2>
+            <div className="flex-1 h-px bg-hearten-border" />
+          </div>
+
+          {userPosts.length === 0 ? (
+            <p className="text-center text-hearten-muted text-sm py-6">未有心事</p>
+          ) : (
+            <div className="space-y-2">
+              {userPosts.map((post) => (
+                <button
+                  key={post.id}
+                  onClick={() => router.push(`/post/${post.id}`)}
+                  className="w-full text-left bg-hearten-card border border-hearten-border rounded-xl p-4 hover:border-gray-600 transition-colors"
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="px-1.5 py-0.5 rounded-md bg-hearten-rose/10 text-hearten-rose text-[10px] font-medium">
+                      {post.category}
+                    </span>
+                    <span className="text-xs text-hearten-muted">{post.time}</span>
+                  </div>
+                  <h3 className="text-sm font-semibold text-white">{post.title}</h3>
+                  <div className="flex items-center gap-4 mt-2 text-xs text-hearten-dim">
+                    <span>❤️ {post.hearts}</span>
+                    <span>💬 {post.replies}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
