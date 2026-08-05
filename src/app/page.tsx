@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import LeftSidebar from '@/components/LeftSidebar';
 import FeedCard from '@/components/FeedCard';
 import RightSidebar from '@/components/RightSidebar';
+import CategoryGrid from '@/components/CategoryGrid';
 
 const mockPosts = [
   {
@@ -101,9 +102,24 @@ export default function Home() {
         <LeftSidebar />
 
         {/* Main Feed */}
-        <main className="flex-1 min-w-0">
-          {/* Feed Header */}
-          <div className="sticky top-14 z-40 bg-hearten-bg/90 backdrop-blur border-b border-hearten-border px-6 py-3">
+        <main className="flex-1 min-w-0 px-6 py-6">
+          {/* Hero Title */}
+          <div className="mb-6">
+            <h1 className="text-xl font-bold text-hearten-text mb-1">揀個話題，開始傾 💬</h1>
+            <p className="text-sm text-hearten-muted">搵一個你關心嘅話題，睇吓其他香港人嘅故事、認識新朋友</p>
+          </div>
+
+          {/* Category Grid */}
+          <CategoryGrid />
+
+          {/* Section Divider */}
+          <div className="flex items-center gap-3 my-8">
+            <h2 className="text-sm font-bold text-hearten-muted uppercase tracking-wider">💬 最新心事</h2>
+            <div className="flex-1 h-px bg-hearten-border" />
+          </div>
+
+          {/* Sort Tabs — sticky */}
+          <div className="sticky top-14 z-40 bg-hearten-bg/90 backdrop-blur -mx-6 px-6 py-3 border-b border-hearten-border mb-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <button
@@ -130,7 +146,7 @@ export default function Home() {
                 </button>
               </div>
 
-              {/* Mobile CTA — hidden on desktop since left sidebar has it */}
+              {/* Mobile CTA */}
               <button className="md:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-hearten-rose text-white text-sm font-medium">
                 <MessageCircle className="w-4 h-4" />
                 寫心事
@@ -139,14 +155,14 @@ export default function Home() {
           </div>
 
           {/* Feed */}
-          <div className="px-6 py-4 space-y-3">
+          <div className="space-y-3">
             {mockPosts.map((post) => (
               <FeedCard key={post.id} {...post} />
             ))}
           </div>
 
           {/* Load more */}
-          <div className="px-6 py-6 text-center">
+          <div className="py-6 text-center">
             <button className="px-6 py-2.5 rounded-xl border border-hearten-border text-sm text-hearten-muted hover:text-white hover:border-gray-500 transition-colors">
               載入更多心事...
             </button>
