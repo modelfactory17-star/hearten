@@ -11,6 +11,7 @@ interface FeedCardProps {
   replies: number;
   time: string;
   anonymous: string;
+  onClick?: () => void;
 }
 
 export default function FeedCard({
@@ -22,9 +23,12 @@ export default function FeedCard({
   replies,
   time,
   anonymous,
+  onClick,
 }: FeedCardProps) {
   return (
-    <article className="bg-hearten-card border border-hearten-border rounded-xl p-5 hover:border-gray-600 transition-colors cursor-pointer group">
+    <article
+      onClick={onClick}
+      className={`bg-hearten-card border border-hearten-border rounded-xl p-5 hover:border-gray-600 transition-colors ${onClick ? 'cursor-pointer' : ''} group`}>
       <div className="flex items-start gap-4">
         {/* Avatar */}
         <div className="w-10 h-10 rounded-full bg-hearten-rose/20 flex items-center justify-center text-lg shrink-0">
