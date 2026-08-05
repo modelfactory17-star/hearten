@@ -117,12 +117,12 @@ export default function PostPage() {
             className="w-full bg-hearten-bg border border-hearten-border rounded-lg p-3 text-sm text-white placeholder-hearten-muted outline-none resize-none focus:border-hearten-rose transition-colors"
           />
           <div className="flex items-center justify-between mt-3">
-            <span className="text-xs text-hearten-dim">匿名人身份 · 尊重他人</span>
+            <span className="text-xs text-hearten-dim">尊重他人 · 用心回覆</span>
             <button
               disabled={!replyText.trim()}
               className="px-4 py-1.5 rounded-lg bg-hearten-rose hover:bg-hearten-rose-light disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors"
             >
-              匿名留言
+              留言
             </button>
           </div>
         </div>
