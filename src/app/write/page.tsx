@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Send } from 'lucide-react';
+import { addUserPost } from '@/lib/store';
+import type { Post } from '@/lib/data';
 
 const CATEGORIES = [
   { id: 'breakup', icon: '💔', name: '分手復合' },
@@ -32,6 +34,23 @@ export default function WritePage() {
     if (!body.trim()) { setError('請寫低你嘅心事'); return; }
     if (!anonymous.trim()) { setError('請輸入匿名名稱'); return; }
     setError('');
+
+    const cat = CATEGORIES.find(c => c.id === category)!;
+    const newPost: Post = {
+      id: `user-${Date.now()}`,
+      emoji: cat.icon,
+      title: title.trim(),
+      preview: body.trim().slice(0, 120) + (body.trim().length > 120 ? '...' : ''),
+      body: body.trim(),
+      category: `${cat.icon} ${cat.name}`,
+      categoryId: category,
+      hearts: 0,
+      replies: 0,
+      time: '啱啱',
+      anonymous: anonymous.trim(),
+    };
+
+    addUserPost(newPost);
     setSubmitted(true);
   };
 

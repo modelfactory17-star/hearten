@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { TrendingUp, Clock, MessageCircle } from 'lucide-react';
 import Header from '@/components/Header';
@@ -8,17 +8,35 @@ import LeftSidebar from '@/components/LeftSidebar';
 import FeedCard from '@/components/FeedCard';
 import RightSidebar from '@/components/RightSidebar';
 import CategoryGrid from '@/components/CategoryGrid';
-import { posts } from '@/lib/data';
+import { posts as staticPosts } from '@/lib/data';
+import { getUserPosts } from '@/lib/store';
+import type { Post } from '@/lib/data';
 
 type SortMode = 'trending' | 'latest';
 
 export default function Home() {
   const [sort, setSort] = useState<SortMode>('trending');
+  const [allPosts, setAllPosts] = useState<Post[]>([]);
   const router = useRouter();
 
-  const sortedPosts = [...posts].sort((a, b) => {
+  const refreshPosts = useCallback(() => {
+    const userPosts = getUserPosts();
+    // user posts first, then static posts (dedupe by id)
+    const userIds = new Set(userPosts.map(p => p.id));
+    const merged = [...userPosts, ...staticPosts.filter(p => !userIds.has(p.id))];
+    setAllPosts(merged);
+  }, []);
+
+  useEffect(() => {
+    refreshPosts();
+    window.addEventListener('hearten:posts-updated', refreshPosts);
+    return () => window.removeEventListener('hearten:posts-updated', refreshPosts);
+  }, [refreshPosts]);
+
+  const sortedPosts = [...allPosts].sort((a, b) => {
     if (sort === 'trending') return b.hearts - a.hearts;
-    return b.id.localeCompare(a.id); // newer first (higher id)
+    // sort by id: user posts (user-*) come before static posts
+    return b.id.localeCompare(a.id);
   });
 
   return (

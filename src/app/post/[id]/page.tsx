@@ -2,7 +2,8 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { Heart, MessageCircle, Share2, ArrowLeft, Flag, Eye, EyeOff } from 'lucide-react';
-import { posts, comments as allComments } from '@/lib/data';
+import { posts as staticPosts, comments as allComments } from '@/lib/data';
+import { getUserPosts } from '@/lib/store';
 import { useState } from 'react';
 
 const MOODS = [
@@ -22,7 +23,7 @@ const FONT_SIZES: { key: FontSize; label: string; className: string }[] = [
 export default function PostPage() {
   const params = useParams();
   const router = useRouter();
-  const post = posts.find((p) => p.id === params.id);
+  const post = staticPosts.find((p) => p.id === params.id) ?? getUserPosts().find((p) => p.id === params.id);
 
   const [hearts, setHearts] = useState(post?.hearts ?? 0);
   const [liked, setLiked] = useState(false);
