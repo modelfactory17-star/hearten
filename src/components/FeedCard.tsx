@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { Heart, MessageCircle, Share2 } from 'lucide-react';
 
 interface FeedCardProps {
@@ -25,13 +26,18 @@ export default function FeedCard({
   anonymous,
   onClick,
 }: FeedCardProps) {
+  const router = useRouter();
+
   return (
     <article
       onClick={onClick}
       className={`bg-hearten-card border border-hearten-border rounded-xl p-5 hover:border-gray-600 transition-colors ${onClick ? 'cursor-pointer' : ''} group`}>
       <div className="flex items-start gap-4">
         {/* Avatar */}
-        <div className="w-10 h-10 rounded-full bg-hearten-rose/20 flex items-center justify-center text-lg shrink-0">
+        <div
+          onClick={(e) => { e.stopPropagation(); router.push(`/user/${encodeURIComponent(anonymous)}`); }}
+          className="w-10 h-10 rounded-full bg-hearten-rose/20 flex items-center justify-center text-lg shrink-0 hover:ring-2 hover:ring-hearten-rose/50 cursor-pointer transition-all"
+        >
           {emoji}
         </div>
 
@@ -39,7 +45,10 @@ export default function FeedCard({
         <div className="flex-1 min-w-0">
           {/* Meta */}
           <div className="flex items-center gap-2 text-xs text-hearten-muted mb-1.5">
-            <span>{anonymous}</span>
+            <span
+              onClick={(e) => { e.stopPropagation(); router.push(`/user/${encodeURIComponent(anonymous)}`); }}
+              className="hover:text-hearten-rose cursor-pointer transition-colors"
+            >{anonymous}</span>
             <span>·</span>
             <span className="px-1.5 py-0.5 rounded-md bg-hearten-rose/10 text-hearten-rose text-[10px] font-medium">
               {category}
