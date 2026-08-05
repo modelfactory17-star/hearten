@@ -6,10 +6,10 @@ import { posts, comments as allComments } from '@/lib/data';
 import { useState } from 'react';
 
 const MOODS = [
+  { emoji: '😊', label: '支持' },
   { emoji: '😢', label: '傷心' },
   { emoji: '😡', label: '嬲' },
   { emoji: '🐷', label: '豬豬' },
-  { emoji: '😊', label: '支持' },
 ];
 
 type FontSize = 'small' | 'medium' | 'large';
