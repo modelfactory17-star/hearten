@@ -68,7 +68,10 @@ export default function Home() {
                 </button>
               </div>
 
-              <button className="md:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-hearten-rose text-white text-sm font-medium">
+              <button
+                onClick={() => router.push('/write')}
+                className="md:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-hearten-rose text-white text-sm font-medium"
+              >
                 <MessageCircle className="w-4 h-4" />
                 寫心事
               </button>

@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { Heart, Moon, Sparkles, MessageCircle, Users, Compass } from 'lucide-react';
 
 const categories = [
@@ -13,11 +14,16 @@ const categories = [
 ];
 
 export default function LeftSidebar() {
+  const router = useRouter();
+
   return (
     <aside className="w-[220px] shrink-0 border-r border-hearten-border h-[calc(100vh-3.5rem)] sticky top-14 overflow-y-auto">
       <div className="p-4 space-y-6">
         {/* Write Post CTA */}
-        <button className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-hearten-rose hover:bg-hearten-rose-light text-white font-medium text-sm transition-colors animate-pulse-glow">
+        <button
+          onClick={() => router.push('/write')}
+          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-hearten-rose hover:bg-hearten-rose-light text-white font-medium text-sm transition-colors animate-pulse-glow"
+        >
           <MessageCircle className="w-4 h-4" />
           寫心事
         </button>
