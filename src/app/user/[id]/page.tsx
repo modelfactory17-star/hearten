@@ -37,7 +37,7 @@ export default function UserPage() {
           className="flex items-center gap-1 text-hearten-muted hover:text-white transition-colors text-base"
         >
           <ArrowLeft className="w-5 h-5" />
-          返去
+          返回上頁
         </button>
         <div className="flex-1" />
         <span className="text-base font-medium text-hearten-muted">會員資料</span>
@@ -119,7 +119,7 @@ export default function UserPage() {
           </div>
 
           {userPosts.length === 0 ? (
-            <p className="text-center text-hearten-muted text-base py-6">未有心事</p>
+            <p className="text-center text-hearten-muted text-base py-6">未有發帖</p>
           ) : (
             <div className="space-y-2">
               {userPosts.map((post) => (
