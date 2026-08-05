@@ -113,7 +113,7 @@ export default function UserPage() {
         <div className="mt-8">
           <div className="flex items-center gap-3 mb-4">
             <h2 className="text-sm font-bold text-hearten-muted uppercase tracking-wider">
-              📝 最近心事 ({userPosts.length})
+              📝 最近發帖({userPosts.length})
             </h2>
             <div className="flex-1 h-px bg-hearten-border" />
           </div>
