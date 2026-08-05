@@ -17,7 +17,7 @@ export default function UserPage() {
           <p className="text-hearten-muted text-lg">搵唔到呢位會員 😢</p>
           <button
             onClick={() => router.push('/')}
-            className="px-4 py-2 rounded-lg bg-hearten-rose text-white text-sm"
+            className="px-4 py-2 rounded-lg bg-hearten-rose text-white text-base"
           >
             返去首頁
           </button>
@@ -34,13 +34,13 @@ export default function UserPage() {
       <div className="sticky top-0 z-50 h-14 border-b border-hearten-border bg-hearten-bg/90 backdrop-blur flex items-center px-4 gap-4">
         <button
           onClick={() => router.back()}
-          className="flex items-center gap-1 text-hearten-muted hover:text-white transition-colors text-sm"
+          className="flex items-center gap-1 text-hearten-muted hover:text-white transition-colors text-base"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-5 h-5" />
           返去
         </button>
         <div className="flex-1" />
-        <span className="text-xs text-hearten-muted">會員資料</span>
+        <span className="text-base font-medium text-hearten-muted">會員資料</span>
       </div>
 
       <div className="max-w-xl mx-auto px-4 py-8">
@@ -51,7 +51,7 @@ export default function UserPage() {
 
           {/* Avatar */}
           <div className="flex justify-center -mt-10">
-            <div className="w-20 h-20 rounded-full bg-hearten-card border-4 border-hearten-card flex items-center justify-center text-4xl shadow-lg">
+            <div className="w-24 h-24 rounded-full bg-hearten-card border-4 border-hearten-card flex items-center justify-center text-5xl shadow-lg">
               {user.emoji}
             </div>
           </div>
@@ -97,12 +97,12 @@ export default function UserPage() {
 
             {/* Action buttons */}
             <div className="flex gap-3 mt-5">
-              <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-hearten-rose hover:bg-hearten-rose-light text-white font-medium text-sm transition-colors">
-                <Send className="w-4 h-4" />
+              <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-hearten-rose hover:bg-hearten-rose-light text-white font-medium text-base transition-colors">
+                <Send className="w-5 h-5" />
                 發送訊息
               </button>
-              <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-hearten-border hover:border-hearten-rose text-hearten-text hover:text-hearten-rose font-medium text-sm transition-colors">
-                <UserPlus className="w-4 h-4" />
+              <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-hearten-border hover:border-hearten-rose text-hearten-text hover:text-hearten-rose font-medium text-base transition-colors">
+                <UserPlus className="w-5 h-5" />
                 加到好友
               </button>
             </div>
@@ -112,14 +112,14 @@ export default function UserPage() {
         {/* Recent Posts */}
         <div className="mt-8">
           <div className="flex items-center gap-3 mb-4">
-            <h2 className="text-sm font-bold text-hearten-muted uppercase tracking-wider">
-              📝 最近發帖({userPosts.length})
+            <h2 className="text-base font-bold text-hearten-muted uppercase tracking-wider">
+              📝 最近發帖 ({userPosts.length})
             </h2>
             <div className="flex-1 h-px bg-hearten-border" />
           </div>
 
           {userPosts.length === 0 ? (
-            <p className="text-center text-hearten-muted text-sm py-6">未有心事</p>
+            <p className="text-center text-hearten-muted text-base py-6">未有心事</p>
           ) : (
             <div className="space-y-2">
               {userPosts.map((post) => (
@@ -129,13 +129,13 @@ export default function UserPage() {
                   className="w-full text-left bg-hearten-card border border-hearten-border rounded-xl p-4 hover:border-gray-600 transition-colors"
                 >
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="px-1.5 py-0.5 rounded-md bg-hearten-rose/10 text-hearten-rose text-[10px] font-medium">
+                    <span className="px-1.5 py-0.5 rounded-md bg-hearten-rose/10 text-hearten-rose text-xs font-medium">
                       {post.category}
                     </span>
-                    <span className="text-xs text-hearten-muted">{post.time}</span>
+                    <span className="text-sm text-hearten-muted">{post.time}</span>
                   </div>
-                  <h3 className="text-sm font-semibold text-white">{post.title}</h3>
-                  <div className="flex items-center gap-4 mt-2 text-xs text-hearten-dim">
+                  <h3 className="text-base font-semibold text-white">{post.title}</h3>
+                  <div className="flex items-center gap-4 mt-2 text-sm text-hearten-dim">
                     <span>❤️ {post.hearts}</span>
                     <span>💬 {post.replies}</span>
                   </div>
