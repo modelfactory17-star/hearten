@@ -15,6 +15,7 @@ export const metadata: Metadata = {
   keywords: ["心事", "感情", "討論區", "香港", "傾訴", "AI顧問", "匿名", "樹窿"],
   icons: {
     icon: "/favicon.svg",
+    apple: "/apple-icon.svg",
   },
   openGraph: {
     title: "Hearten — 用心聽你嘅心事",
