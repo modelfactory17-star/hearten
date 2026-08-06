@@ -1,88 +1,73 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { TrendingUp, Clock, MessageCircle } from 'lucide-react';
 import Header from '@/components/Header';
 import LeftSidebar from '@/components/LeftSidebar';
-import FeedCard from '@/components/FeedCard';
 import RightSidebar from '@/components/RightSidebar';
 import CategoryGrid from '@/components/CategoryGrid';
-import { db } from '@/lib/db';
-import type { Post } from '@/lib/db';
-
-type SortMode = 'trending' | 'latest';
+import MemberGrid from '@/components/MemberGrid';
+import HotTopicsGrid from '@/components/HotTopicsGrid';
+import PollSection from '@/components/PollSection';
+import HotPostsList from '@/components/HotPostsList';
+import AdBanner from '@/components/AdBanner';
 
 export default function Home() {
-  const [sort, setSort] = useState<SortMode>('trending');
-  const [allPosts, setAllPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(true);
-  const router = useRouter();
-
-  useEffect(() => {
-    db.posts.list().then(posts => {
-      setAllPosts(posts);
-      setLoading(false);
-    }).catch(() => setLoading(false));
-  }, []);
-
-  const sortedPosts = [...allPosts].sort((a, b) => {
-    if (sort === 'trending') return b.hearts - a.hearts;
-    return b.id.localeCompare(a.id);
-  });
-
   return (
     <div className="min-h-screen bg-hearten-bg">
       <Header />
-      <div className="flex max-w-[1400px] mx-auto">
+      <div className="flex max-w-[1500px] mx-auto">
         <LeftSidebar />
-        <main className="flex-1 min-w-0 px-6 py-6">
+
+        {/* Main Area */}
+        <main className="flex-1 min-w-0 px-7 py-6 max-md:px-4">
+          {/* Main Header */}
           <div className="mb-6">
-            <h1 className="text-xl font-bold text-hearten-text mb-1">揀個話題，開始傾 💬</h1>
-            <p className="text-sm text-hearten-muted">搵一個你關心嘅話題，睇吓其他香港人嘅故事、認識新朋友</p>
+            <h1 className="text-[22px] font-bold text-hearten-text mb-1">揀個話題，開始傾 💬</h1>
+            <p className="text-[13.5px] text-hearten-muted">搵一個你關心嘅話題，睇吓其他香港人嘅故事、認識新朋友</p>
           </div>
+
+          {/* Category Grid */}
+          <SectionTitle emoji="📂" title="話題分類" />
           <CategoryGrid />
-          <div className="flex items-center gap-3 my-8">
-            <h2 className="text-sm font-bold text-hearten-muted uppercase tracking-wider">💬 最新心事</h2>
-            <div className="flex-1 h-px bg-hearten-border" />
+
+          {/* Member Section */}
+          <SectionTitle emoji="👥" title="會員" subtitle="睇下人哋嘅故事 · 自由 inbox 交流" />
+          <MemberGrid />
+
+          {/* Hot Topics */}
+          <SectionTitle emoji="📰" title="熱門話題" subtitle="時事 · 八卦 · 城中熱話" />
+          <HotTopicsGrid />
+
+          {/* Polls */}
+          <SectionTitle emoji="📊" title="投票專區" subtitle="一齊表達意見" />
+          <PollSection />
+
+          {/* Ad Banner 728x90 */}
+          <div className="mt-8">
+            <AdBanner size="leaderboard" />
           </div>
-          <div className="sticky top-14 z-40 bg-hearten-bg/90 backdrop-blur -mx-6 px-6 py-3 border-b border-hearten-border mb-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <button onClick={() => setSort('trending')} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${sort === 'trending' ? 'bg-hearten-rose/10 text-hearten-rose' : 'text-hearten-muted hover:text-hearten-text'}`}>
-                  <TrendingUp className="w-4 h-4" />熱門
-                </button>
-                <button onClick={() => setSort('latest')} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${sort === 'latest' ? 'bg-hearten-rose/10 text-hearten-rose' : 'text-hearten-muted hover:text-hearten-text'}`}>
-                  <Clock className="w-4 h-4" />最新
-                </button>
-              </div>
-              <button onClick={() => router.push('/write')} className="md:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-hearten-rose text-white text-sm font-medium">
-                <MessageCircle className="w-4 h-4" />寫心事
-              </button>
-            </div>
-          </div>
-          <div className="space-y-3">
-            {loading && <p className="text-center text-hearten-muted text-sm py-12">載入中...</p>}
-            {!loading && sortedPosts.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-hearten-muted text-lg mb-2">😴 暫時未有心事</p>
-                <p className="text-hearten-dim text-sm">做第一個分享心事嘅人？</p>
-              </div>
-            )}
-            {sortedPosts.map(post => (
-              <FeedCard key={post.id} id={post.id} emoji={post.emoji} title={post.title} preview={post.preview}
-                category={post.category} hearts={post.hearts} replies={post.replies} time={post.time}
-                anonymous={post.anonymous} onClick={() => router.push(`/post/${post.id}`)} />
-            ))}
-          </div>
-          <div className="py-6 text-center">
-            <button className="px-6 py-2.5 rounded-xl border border-hearten-border text-sm text-hearten-muted hover:text-hearten-text hover:border-gray-500 transition-colors">
-              載入更多心事...
-            </button>
-          </div>
+
+          {/* Hot Posts */}
+          <SectionTitle emoji="🔥" title="熱門心事" />
+          <HotPostsList />
         </main>
+
         <RightSidebar />
       </div>
+    </div>
+  );
+}
+
+/** Reusable section title matching reference design */
+function SectionTitle({ emoji, title, subtitle }: { emoji: string; title: string; subtitle?: string }) {
+  return (
+    <div className="flex items-center gap-3 mb-4 mt-8 first:mt-0">
+      <h2 className="text-[17px] font-bold text-hearten-text flex-shrink-0">
+        {emoji} {title}
+      </h2>
+      <div className="flex-1 h-px bg-hearten-border" />
+      {subtitle && (
+        <span className="text-xs text-hearten-dim font-normal flex-shrink-0">{subtitle}</span>
+      )}
     </div>
   );
 }

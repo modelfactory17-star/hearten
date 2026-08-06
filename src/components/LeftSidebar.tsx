@@ -1,72 +1,75 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { Heart, Moon, Sparkles, MessageCircle, Users, Compass } from 'lucide-react';
 
 const categories = [
-  { id: 'all', label: '全部心事', icon: Compass, active: true, count: 128 },
-  { id: 'breakup', label: '💔 分手', icon: Heart, count: 42 },
-  { id: 'crush', label: '💕 暗戀', icon: Heart, count: 35 },
-  { id: 'marriage', label: '💍 婚姻', icon: Heart, count: 28 },
-  { id: 'lgbtq', label: '🌈 LGBTQ+', icon: Heart, count: 18 },
-  { id: 'treehole', label: '🌳 樹窿', icon: Moon, count: 56 },
-  { id: 'tarot', label: '🃏 塔羅', icon: Sparkles, count: 22 },
+  { label: '🏠 全部話題', count: '1,524', active: true },
+  { label: '💔 分手', count: '342' },
+  { label: '💕 暗戀', count: '285' },
+  { label: '💍 婚姻', count: '198' },
+  { label: '🌈 LGBTQ+', count: '156' },
+  { label: '🌳 樹窿', count: '423' },
+  { label: '🃏 塔羅占卜', count: '87' },
+  { label: '💼 在職戀愛', badge: 'new' },
+  { label: '🎓 在學戀愛', badge: 'new' },
+  { label: '📋 交友配套', badge: 'new' },
+  { label: '🔞 一知半解', count: '203' },
+  { label: '📊 投票', badge: 'hot' },
+  { label: '📰 熱門話題', count: '89' },
+  { label: '👥 會員', badge: 'new' },
 ];
 
 export default function LeftSidebar() {
   const router = useRouter();
 
   return (
-    <aside className="w-[220px] shrink-0 border-r border-hearten-border h-[calc(100vh-3.5rem)] sticky top-14 overflow-y-auto">
-      <div className="p-4 space-y-6">
-        {/* Write Post CTA */}
+    <aside className="w-[220px] shrink-0 border-r border-hearten-border h-[calc(100vh-56px)] sticky top-14 overflow-y-auto px-4 py-5">
+      {/* Categories */}
+      <div className="mt-0">
+        <div className="text-[11px] font-bold uppercase tracking-[0.06em] text-hearten-muted mb-3 pl-1">
+          話題分類
+        </div>
+        <nav className="flex flex-col gap-[2px]">
+          {categories.map((cat) => (
+            <button
+              key={cat.label}
+              className={`flex items-center gap-[10px] py-[9px] px-3 rounded-[10px] text-[13.5px] font-medium transition-all duration-[0.15s] text-left w-full
+                ${cat.active
+                  ? 'bg-hearten-rose/10 text-hearten-rose'
+                  : 'text-hearten-muted hover:bg-hearten-card hover:text-hearten-text'
+                }
+              `}
+            >
+              {cat.label}
+              {cat.count && (
+                <span className="ml-auto text-[11.5px] text-hearten-dim">{cat.count}</span>
+              )}
+              {cat.badge === 'new' && (
+                <span className="ml-auto text-[10px] font-semibold px-[6px] py-[2px] rounded-[8px] bg-hearten-rose text-white">
+                  新
+                </span>
+              )}
+              {cat.badge === 'hot' && (
+                <span className="ml-auto text-[10px] font-semibold px-[6px] py-[2px] rounded-[8px] bg-hearten-amber text-black">
+                  熱
+                </span>
+              )}
+            </button>
+          ))}
+        </nav>
+      </div>
+
+      {/* Write Button at bottom */}
+      <div className="mt-7">
         <button
           onClick={() => router.push('/write')}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-hearten-rose hover:bg-hearten-rose-light text-white font-medium text-sm transition-colors animate-pulse-glow"
+          className="w-full flex items-center justify-center gap-2 px-4 py-[11px] rounded-[12px] bg-hearten-rose hover:bg-hearten-rose-light text-white text-sm font-semibold cursor-pointer transition-all duration-[0.15s] hover:-translate-y-[1px] animate-pulse-glow"
         >
-          <MessageCircle className="w-4 h-4" />
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-[17px] h-[17px]">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
           寫心事
         </button>
-
-        {/* Categories */}
-        <div>
-          <h3 className="text-xs font-semibold text-hearten-muted uppercase tracking-wider mb-3">
-            分類
-          </h3>
-          <nav className="space-y-1">
-            {categories.map((cat) => (
-                <button
-                  key={cat.id}
-                  className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors ${
-                    cat.active
-                      ? 'bg-hearten-rose/10 text-hearten-rose font-medium'
-                      : 'text-hearten-muted hover:bg-hearten-card hover:text-hearten-text'
-                  }`}
-                >
-                  <span>{cat.label.split(' ')[0]}</span>
-                  <span className="flex-1 text-left">{cat.label.split(' ').slice(1).join(' ')}</span>
-                  <span className="text-xs text-hearten-muted">{cat.count}</span>
-                </button>
-              ))}
-          </nav>
-        </div>
-
-        {/* Quick Links */}
-        <div>
-          <h3 className="text-xs font-semibold text-hearten-muted uppercase tracking-wider mb-3">
-            連結
-          </h3>
-          <nav className="space-y-1">
-            <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-hearten-muted hover:bg-hearten-card hover:text-hearten-text transition-colors">
-              <Users className="w-4 h-4" />
-              活躍用戶
-            </button>
-            <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-hearten-muted hover:bg-hearten-card hover:text-hearten-text transition-colors">
-              <Heart className="w-4 h-4" />
-              關於 Hearten
-            </button>
-          </nav>
-        </div>
       </div>
     </aside>
   );
