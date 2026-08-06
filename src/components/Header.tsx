@@ -53,7 +53,7 @@ export default function Header() {
           {/* Logo */}
           <div className="flex items-center gap-3">
             <a href="/" className="flex items-center gap-2.5 font-bold text-xl">
-              <img src="/favicon.svg" alt="Hearten" className="w-9 h-9" />
+              <img src="/logo.svg" alt="Hearten" className="w-10 h-10" />
               <span className="text-hearten-text">Hearten</span>
             </a>
             <span className="hidden sm:inline text-xs text-hearten-muted">

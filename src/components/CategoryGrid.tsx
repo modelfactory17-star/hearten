@@ -53,7 +53,7 @@ export default function CategoryGrid() {
           key={cat.color}
           onClick={() => router.push(`/category/${cat.color}`)}
           className={`relative rounded-[16px] overflow-hidden cursor-pointer transition-all duration-[0.25s] aspect-[5/4] flex flex-col justify-end p-[18px] border border-hearten-border hover:-translate-y-[3px] hover:border-hearten-border-hover text-left
-            dark:${darkGradients[cat.color]}
+            ${darkGradients[cat.color]}
             light:bg-hearten-card light:!bg-none ${lightBorders[cat.color]}
           `}
         >
