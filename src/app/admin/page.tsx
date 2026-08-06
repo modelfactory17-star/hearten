@@ -47,7 +47,6 @@ export default function AdminPage() {
   const tab = searchParams.get('tab') || 'dashboard';
   const [search, setSearch] = useState('');
   const [userFilter, setUserFilter] = useState<string>('all');
-  const [postFilter, setPostFilter] = useState<string>('all');
 
   return (
     <div className="space-y-6">

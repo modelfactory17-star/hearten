@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   LayoutDashboard, Users, FileText, MessageSquare, Flag,
-  BarChart3, Settings, LogOut, Menu, X, Search
+  BarChart3, Settings, LogOut
 } from 'lucide-react';
 
 const NAV_ITEMS = [
