@@ -26,6 +26,11 @@ export default function LoginModal({ open, onClose }: Props) {
     setLoading(true);
 
     try {
+      if (tab === 'register' && password.length < 6) {
+        setError('密碼最少需要6個字');
+        setLoading(false);
+        return;
+      }
       if (tab === 'login') {
         const result = await login(email, password);
         if (result.ok) {
@@ -115,7 +120,7 @@ export default function LoginModal({ open, onClose }: Props) {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder={tab === 'register' ? '最少4個字' : '輸入密碼'}
+              placeholder={tab === 'register' ? '最少6個字' : '輸入密碼'}
               className="w-full bg-hearten-bg border border-hearten-border rounded-lg px-3 py-2.5 text-sm text-hearten-text placeholder-hearten-muted outline-none focus:border-hearten-rose transition-colors"
               onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
             />
