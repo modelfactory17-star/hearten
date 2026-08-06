@@ -3,8 +3,9 @@
 import { useParams, useRouter } from 'next/navigation';
 import { Heart, MessageCircle, Share2, ArrowLeft, Flag, Eye, EyeOff } from 'lucide-react';
 import { posts as staticPosts, comments as allComments } from '@/lib/data';
-import { getUserPosts } from '@/lib/store';
-import { useState } from 'react';
+import { getUserPosts, getUserComments, addUserComment, createComment } from '@/lib/store';
+import { useState, useCallback, useEffect } from 'react';
+import type { Comment } from '@/lib/data';
 
 const MOODS = [
   { emoji: '😊', label: '支持' },
@@ -20,6 +21,27 @@ const FONT_SIZES: { key: FontSize; label: string; className: string }[] = [
   { key: 'large', label: '大', className: 'text-[17px]' },
 ];
 
+/** Build nested comment tree from flat static + user comments */
+function buildTree(staticComments: Comment[], userComments: Comment[]): Comment[] {
+  const userByParent: Record<string, Comment[]> = {};
+  const topLevel: Comment[] = [];
+
+  for (const uc of userComments) {
+    if (uc.parentId) {
+      (userByParent[uc.parentId] ??= []).push(uc);
+    } else {
+      topLevel.push(uc);
+    }
+  }
+
+  function attach(comment: Comment): Comment {
+    const kids = userByParent[comment.id] ?? [];
+    return { ...comment, replies: [...comment.replies.map(attach), ...kids] };
+  }
+
+  return [...topLevel, ...staticComments.map(attach)];
+}
+
 export default function PostPage() {
   const params = useParams();
   const router = useRouter();
@@ -28,11 +50,27 @@ export default function PostPage() {
   const [hearts, setHearts] = useState(post?.hearts ?? 0);
   const [liked, setLiked] = useState(false);
   const [replyText, setReplyText] = useState('');
+  const [replyName, setReplyName] = useState('');
   const [mood, setMood] = useState<string | null>(null);
-
-  // Post controls
   const [authorOnly, setAuthorOnly] = useState(false);
   const [fontSize, setFontSize] = useState<FontSize>('medium');
+  const [commentCount, setCommentCount] = useState(0);
+
+  // Track user comments for this post
+  const [userComments, setUserComments] = useState<Comment[]>([]);
+
+  const refreshComments = useCallback(() => {
+    if (!post) return;
+    const ucs = getUserComments(post.id);
+    setUserComments(ucs);
+    setCommentCount(allComments.filter((c) => c.postId === post.id).length + ucs.length);
+  }, [post]);
+
+  useEffect(() => {
+    refreshComments();
+    window.addEventListener('hearten:comments-updated', refreshComments);
+    return () => window.removeEventListener('hearten:comments-updated', refreshComments);
+  }, [refreshComments]);
 
   if (!post) {
     return (
@@ -50,12 +88,23 @@ export default function PostPage() {
     );
   }
 
-  const postComments = allComments.filter((c) => c.postId === post.id);
+  const staticPostComments = allComments.filter((c) => c.postId === post.id);
+  const tree = buildTree(staticPostComments, userComments);
+
   const displayedComments = authorOnly
-    ? postComments.filter((c) => c.isOP)
-    : postComments;
+    ? tree.filter((c) => c.isOP)
+    : tree;
 
   const bodyClass = FONT_SIZES.find((f) => f.key === fontSize)?.className ?? 'text-[15px]';
+
+  const handleSubmitComment = () => {
+    if (!replyText.trim() || !replyName.trim()) return;
+    const comment = createComment(post.id, replyText, replyName);
+    addUserComment(comment);
+    setReplyText('');
+    setMood(null);
+    refreshComments();
+  };
 
   return (
     <div className="min-h-screen bg-hearten-bg">
@@ -153,7 +202,7 @@ export default function PostPage() {
             </button>
             <button className="flex items-center gap-1.5 text-hearten-muted hover:text-blue-400 transition-colors text-sm">
               <MessageCircle className="w-4 h-4" />
-              <span>{postComments.length} 則留言</span>
+              <span>{commentCount} 則留言</span>
             </button>
             <button className="flex items-center gap-1.5 text-hearten-muted hover:text-green-400 transition-colors text-sm ml-auto">
               <Share2 className="w-4 h-4" />
@@ -172,6 +221,13 @@ export default function PostPage() {
 
         {/* Reply box */}
         <div className="bg-hearten-card border border-hearten-border rounded-xl p-4 mb-4">
+          <input
+            value={replyName}
+            onChange={(e) => setReplyName(e.target.value)}
+            placeholder="匿名名稱（例如：深夜咖啡）"
+            maxLength={12}
+            className="w-full bg-hearten-bg border border-hearten-border rounded-lg px-3 py-2 text-sm text-hearten-text placeholder-hearten-muted outline-none focus:border-hearten-rose transition-colors mb-3"
+          />
           <textarea
             value={replyText}
             onChange={(e) => setReplyText(e.target.value)}
@@ -198,7 +254,8 @@ export default function PostPage() {
               ))}
             </div>
             <button
-              disabled={!replyText.trim()}
+              onClick={handleSubmitComment}
+              disabled={!replyText.trim() || !replyName.trim()}
               className="px-4 py-1.5 rounded-lg bg-hearten-rose hover:bg-hearten-rose-light disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors"
             >
               留言
@@ -214,7 +271,12 @@ export default function PostPage() {
             </p>
           ) : (
             displayedComments.map((comment) => (
-              <CommentItem key={comment.id} comment={comment} />
+              <CommentItem
+                key={comment.id}
+                comment={comment}
+                postId={post.id}
+                onCommentAdded={refreshComments}
+              />
             ))
           )}
         </div>
@@ -223,12 +285,33 @@ export default function PostPage() {
   );
 }
 
-function CommentItem({ comment, depth = 0 }: { comment: import('@/lib/data').Comment; depth?: number }) {
+function CommentItem({
+  comment,
+  postId,
+  onCommentAdded,
+  depth = 0,
+}: {
+  comment: Comment;
+  postId: string;
+  onCommentAdded: () => void;
+  depth?: number;
+}) {
   const router = useRouter();
   const [liked, setLiked] = useState(false);
   const [cHearts, setCHearts] = useState(comment.hearts);
   const [showReply, setShowReply] = useState(false);
   const [replyInput, setReplyInput] = useState('');
+  const [replyName, setReplyName] = useState('');
+
+  const handleReply = () => {
+    if (!replyInput.trim() || !replyName.trim()) return;
+    const c = createComment(postId, replyInput, replyName, comment.id);
+    addUserComment(c);
+    setReplyInput('');
+    setReplyName('');
+    setShowReply(false);
+    onCommentAdded();
+  };
 
   return (
     <div className={depth > 0 ? 'ml-10 border-l-2 border-hearten-border pl-4' : ''}>
@@ -280,26 +363,42 @@ function CommentItem({ comment, depth = 0 }: { comment: import('@/lib/data').Com
 
         {/* Inline reply */}
         {showReply && (
-          <div className="mt-3 flex gap-2">
+          <div className="mt-3 space-y-2">
             <input
-              value={replyInput}
-              onChange={(e) => setReplyInput(e.target.value)}
-              placeholder="寫回覆..."
-              className="flex-1 bg-hearten-bg border border-hearten-border rounded-lg px-3 py-1.5 text-sm text-hearten-text placeholder-hearten-muted outline-none focus:border-hearten-rose transition-colors"
+              value={replyName}
+              onChange={(e) => setReplyName(e.target.value)}
+              placeholder="匿名名稱"
+              maxLength={12}
+              className="w-full bg-hearten-bg border border-hearten-border rounded-lg px-3 py-1.5 text-sm text-hearten-text placeholder-hearten-muted outline-none focus:border-hearten-rose transition-colors"
             />
-            <button
-              disabled={!replyInput.trim()}
-              className="px-3 py-1.5 rounded-lg bg-hearten-rose hover:bg-hearten-rose-light disabled:opacity-40 text-white text-xs font-medium transition-colors"
-            >
-              回覆
-            </button>
+            <div className="flex gap-2">
+              <input
+                value={replyInput}
+                onChange={(e) => setReplyInput(e.target.value)}
+                placeholder="寫回覆..."
+                className="flex-1 bg-hearten-bg border border-hearten-border rounded-lg px-3 py-1.5 text-sm text-hearten-text placeholder-hearten-muted outline-none focus:border-hearten-rose transition-colors"
+              />
+              <button
+                onClick={handleReply}
+                disabled={!replyInput.trim() || !replyName.trim()}
+                className="px-3 py-1.5 rounded-lg bg-hearten-rose hover:bg-hearten-rose-light disabled:opacity-40 text-white text-xs font-medium transition-colors"
+              >
+                回覆
+              </button>
+            </div>
           </div>
         )}
       </div>
 
       {/* Nested replies */}
       {comment.replies.map((reply) => (
-        <CommentItem key={reply.id} comment={reply} depth={depth + 1} />
+        <CommentItem
+          key={reply.id}
+          comment={reply}
+          postId={postId}
+          onCommentAdded={onCommentAdded}
+          depth={depth + 1}
+        />
       ))}
     </div>
   );
