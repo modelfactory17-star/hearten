@@ -343,12 +343,28 @@ export default function AdminContent() {
       {tab === 'comments' && (
         <div className="bg-[#0d0d14] border border-[#1a1a2e] rounded-xl overflow-hidden">
           <div className="flex items-center justify-between p-4 border-b border-[#1a1a2e]">
-            <div className="relative">
-              <Search className="w-3.5 h-3.5 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
-                placeholder="搜尋留言..."
-                className="w-56 bg-[#1a1a2e] border border-[#2a2a3e] rounded-lg pl-9 pr-3 py-1.5 text-xs text-gray-300 placeholder-gray-600 outline-none focus:border-[#e11d48] transition-colors"
-              />
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <Search className="w-3.5 h-3.5 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  placeholder="搜尋留言..."
+                  className="w-56 bg-[#1a1a2e] border border-[#2a2a3e] rounded-lg pl-9 pr-3 py-1.5 text-xs text-gray-300 placeholder-gray-600 outline-none focus:border-[#e11d48] transition-colors"
+                />
+              </div>
+              <select className="bg-[#1a1a2e] border border-[#2a2a3e] rounded-lg px-3 py-1.5 text-xs text-gray-400 outline-none">
+                <option>全部狀態</option>
+                <option>正常</option>
+                <option>已標記</option>
+                <option>已刪除</option>
+              </select>
+              <select className="bg-[#1a1a2e] border border-[#2a2a3e] rounded-lg px-3 py-1.5 text-xs text-gray-400 outline-none">
+                <option>全部分類</option>
+                <option>心靈樹窿</option>
+                <option>分手復合</option>
+                <option>暗戀表白</option>
+                <option>婚姻關係</option>
+                <option>LGBTQ+</option>
+              </select>
             </div>
           </div>
 
