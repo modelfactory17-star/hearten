@@ -212,6 +212,58 @@ export const likes = {
   },
 };
 
+// ─── Admin ────────────────────────────────────────────────
+
+export const admin = {
+  async stats() {
+    const supabase = createClient();
+    const [{ count: users }, { count: posts }, { count: comments }, { count: hearts }] = await Promise.all([
+      supabase.from('profiles').select('*', { count: 'exact', head: true }),
+      supabase.from('posts').select('*', { count: 'exact', head: true }),
+      supabase.from('comments').select('*', { count: 'exact', head: true }),
+      supabase.from('likes').select('*', { count: 'exact', head: true }),
+    ]);
+    return { users: users || 0, posts: posts || 0, comments: comments || 0, hearts: hearts || 0 };
+  },
+
+  async users() {
+    const supabase = createClient();
+    const { data: profiles } = await supabase.from('profiles').select('id, username, emoji, joined');
+    // Get post counts per user
+    const { data: postCounts } = await supabase.from('posts').select('user_id');
+    const counts: Record<string, number> = {};
+    for (const p of (postCounts || [])) { counts[p.user_id] = (counts[p.user_id] || 0) + 1; }
+    return (profiles || []).map(p => ({
+      id: p.id, username: p.username, emoji: p.emoji || '🐱',
+      posts: counts[p.id] || 0, joined: p.joined ? p.joined.slice(0, 10) : '',
+      status: 'active' as const,
+    }));
+  },
+
+  async posts() {
+    const supabase = createClient();
+    const { data } = await supabase.from('posts').select('*, profiles(username)').order('created_at', { ascending: false });
+    return (data || []).map((row: Record<string, unknown>) => ({
+      id: row.id as string, title: row.title as string,
+      author: (row.profiles as { username?: string } | null)?.username || '匿名用戶',
+      category: row.category as string, hearts: (row.hearts as number) || 0,
+      comments: (row.replies as number) || 0,
+      time: timeAgo(row.created_at as string),
+    }));
+  },
+
+  async comments() {
+    const supabase = createClient();
+    const { data } = await supabase.from('comments').select('*, profiles(username), posts(title)').order('created_at', { ascending: false }).limit(100);
+    return (data || []).map((row: Record<string, unknown>) => ({
+      id: row.id as string, body: row.body as string,
+      author: (row.profiles as { username?: string } | null)?.username || '匿名用戶',
+      post: (row.posts as { title?: string } | null)?.title || '',
+      time: timeAgo(row.created_at as string),
+    }));
+  },
+};
+
 // ─── Bookmarks ────────────────────────────────────────────
 
 export const bookmarks = {
@@ -258,4 +310,4 @@ function timeAgo(dateStr: string): string {
 
 // ─── Unified export ────────────────────────────────────────
 
-export const db = { auth, posts, comments, likes, bookmarks };
+export const db = { auth, posts, comments, likes, bookmarks, admin };
