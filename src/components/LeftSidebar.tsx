@@ -26,14 +26,14 @@ export default function LeftSidebar() {
     <aside className="w-[220px] shrink-0 border-r border-hearten-border h-[calc(100vh-56px)] sticky top-14 overflow-y-auto px-4 py-5">
       {/* Categories */}
       <div className="mt-0">
-        <div className="text-[13px] font-bold uppercase tracking-[0.04em] text-hearten-muted mb-3 pl-1">
+        <div className="text-[13px] font-extrabold uppercase tracking-[0.04em] text-hearten-muted mb-3 pl-1">
           話題分類
         </div>
         <nav className="flex flex-col gap-[2px]">
           {categories.map((cat) => (
             <button
               key={cat.label}
-              className={`flex items-center gap-[10px] py-[9px] px-3 rounded-[10px] text-sm font-medium transition-all duration-[0.15s] text-left w-full
+              className={`flex items-center gap-[10px] py-[9px] px-3 rounded-[10px] text-sm font-semibold transition-all duration-[0.15s] text-left w-full
                 ${cat.active
                   ? 'bg-hearten-rose/10 text-hearten-rose'
                   : 'text-hearten-muted hover:bg-hearten-card hover:text-hearten-text'
