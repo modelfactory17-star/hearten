@@ -51,8 +51,8 @@ export default function PostPage() {
 
   // Find post from static + Supabase
   const [post, setPost] = useState(staticPosts.find(p => p.id === postId) ?? null);
-  const [hearts, setHearts] = useState(post?.hearts ?? 0);
-  const [liked, setLiked] = useState(false);
+  const [heartCount, setHeartCount] = useState(post?.hearts ?? 0);
+  const [hearted, setHearted] = useState(false);
   const [replyText, setReplyText] = useState('');
   const [mood, setMood] = useState<string | null>(null);
   const [authorOnly, setAuthorOnly] = useState(false);
@@ -74,7 +74,11 @@ export default function PostPage() {
   }, [postId]);
 
   useEffect(() => {
-    db.auth.getUser().then(setUser);
+    db.auth.getUser().then(u => {
+      setUser(u);
+      if (u) db.likes.isLiked(u.id, 'post', postId).then(setHearted);
+    });
+    db.likes.count('post', postId).then(setHeartCount);
     refreshComments();
     if (!post) {
       db.posts.list().then(posts => {
@@ -100,6 +104,13 @@ export default function PostPage() {
       </div>
     );
   }
+
+  const handleHeartPost = async () => {
+    if (!user) { window.dispatchEvent(new Event('hearten:open-login')); return; }
+    const now = await db.likes.toggle(user.id, 'post', postId);
+    setHearted(now);
+    setHeartCount(c => now ? c + 1 : c - 1);
+  };
 
   const handleSubmitComment = async () => {
     if (!replyText.trim() || !user) return;
@@ -161,9 +172,9 @@ export default function PostPage() {
           <div className={`text-hearten-muted leading-relaxed whitespace-pre-line mb-6 ${bodyClass}`}>{post.body}</div>
 
           <div className="flex items-center gap-6 pt-4 border-t border-hearten-border">
-            <button onClick={() => { setLiked(!liked); setHearts(h => liked ? h - 1 : h + 1); }}
-              className={`flex items-center gap-1.5 transition-colors text-sm ${liked ? 'text-hearten-rose' : 'text-hearten-muted hover:text-hearten-rose'}`}>
-              <Heart className={`w-4 h-4 ${liked ? 'fill-current' : ''}`} /><span>{hearts}</span>
+            <button onClick={handleHeartPost}
+              className={`flex items-center gap-1.5 transition-colors text-sm ${hearted ? 'text-hearten-rose' : 'text-hearten-muted hover:text-hearten-rose'}`}>
+              <Heart className={`w-4 h-4 ${hearted ? 'fill-current' : ''}`} /><span>{heartCount}</span>
             </button>
             <button className="flex items-center gap-1.5 text-hearten-muted hover:text-blue-400 transition-colors text-sm">
               <MessageCircle className="w-4 h-4" /><span>{commentCount} 則留言</span>
@@ -236,13 +247,26 @@ function CommentItem({ comment, postId, onCommentAdded, depth = 0 }: {
   comment: Comment; postId: string; onCommentAdded: () => void; depth?: number;
 }) {
   const router = useRouter();
-  const [liked, setLiked] = useState(false);
-  const [cHearts, setCHearts] = useState(comment.hearts);
+  const [cHearted, setCHearted] = useState(false);
+  const [cHeartCount, setCHeartCount] = useState(comment.hearts);
   const [showReply, setShowReply] = useState(false);
   const [replyInput, setReplyInput] = useState('');
   const [user, setUser] = useState<AuthUser | null>(null);
 
-  useEffect(() => { db.auth.getUser().then(setUser); }, []);
+  useEffect(() => {
+    db.auth.getUser().then(u => {
+      setUser(u);
+      if (u) db.likes.isLiked(u.id, 'comment', comment.id).then(setCHearted);
+    });
+    db.likes.count('comment', comment.id).then(setCHeartCount);
+  }, [comment.id]);
+
+  const handleHeartComment = async () => {
+    if (!user) { window.dispatchEvent(new Event('hearten:open-login')); return; }
+    const now = await db.likes.toggle(user.id, 'comment', comment.id);
+    setCHearted(now);
+    setCHeartCount(c => now ? c + 1 : c - 1);
+  };
 
   const handleReply = async () => {
     if (!replyInput.trim() || !user) return;
@@ -263,9 +287,9 @@ function CommentItem({ comment, postId, onCommentAdded, depth = 0 }: {
         </div>
         <p className="text-sm text-hearten-muted leading-relaxed mb-3">{comment.body}</p>
         <div className="flex items-center gap-4">
-          <button onClick={() => { setLiked(!liked); setCHearts(h => liked ? h - 1 : h + 1); }}
-            className={`flex items-center gap-1 text-xs transition-colors ${liked ? 'text-hearten-rose' : 'text-hearten-muted hover:text-hearten-rose'}`}>
-            <Heart className={`w-3 h-3 ${liked ? 'fill-current' : ''}`} />{cHearts > 0 && <span>{cHearts}</span>}
+          <button onClick={handleHeartComment}
+            className={`flex items-center gap-1 text-xs transition-colors ${cHearted ? 'text-hearten-rose' : 'text-hearten-muted hover:text-hearten-rose'}`}>
+            <Heart className={`w-3 h-3 ${cHearted ? 'fill-current' : ''}`} />{cHeartCount > 0 && <span>{cHeartCount}</span>}
           </button>
           {user && (
             <button onClick={() => setShowReply(!showReply)}

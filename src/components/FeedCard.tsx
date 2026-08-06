@@ -32,14 +32,31 @@ export default function FeedCard({
 }: FeedCardProps) {
   const router = useRouter();
   const [bookmarked, setBookmarked] = useState(false);
+  const [hearted, setHearted] = useState(false);
+  const [heartCount, setHeartCount] = useState(hearts);
   const [user, setUser] = useState<AuthUser | null>(null);
 
   useEffect(() => {
     db.auth.getUser().then((u) => {
       setUser(u);
-      if (u) db.bookmarks.isBookmarked(u.id, id).then(setBookmarked);
+      if (u) {
+        db.bookmarks.isBookmarked(u.id, id).then(setBookmarked);
+        db.likes.isLiked(u.id, 'post', id).then(setHearted);
+      }
     });
+    db.likes.count('post', id).then(setHeartCount);
   }, [id]);
+
+  const handleHeart = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!user) {
+      window.dispatchEvent(new Event('hearten:open-login'));
+      return;
+    }
+    const now = await db.likes.toggle(user.id, 'post', id);
+    setHearted(now);
+    setHeartCount(c => now ? c + 1 : c - 1);
+  };
 
   const handleBookmark = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -92,9 +109,10 @@ export default function FeedCard({
 
           {/* Actions */}
           <div className="flex items-center gap-5 mt-3 pt-3 border-t border-hearten-border">
-            <button className="flex items-center gap-1.5 text-hearten-muted hover:text-hearten-rose transition-colors text-sm">
-              <Heart className="w-4 h-4" />
-              <span>{hearts}</span>
+            <button onClick={handleHeart}
+              className={`flex items-center gap-1.5 transition-colors text-sm ${hearted ? 'text-hearten-rose' : 'text-hearten-muted hover:text-hearten-rose'}`}>
+              <Heart className={`w-4 h-4 ${hearted ? 'fill-current' : ''}`} />
+              <span>{heartCount}</span>
             </button>
             <button className="flex items-center gap-1.5 text-hearten-muted hover:text-blue-400 transition-colors text-sm">
               <MessageCircle className="w-4 h-4" />
