@@ -2,7 +2,9 @@
 
 import { useRouter } from 'next/navigation';
 import { Heart, MessageCircle, Share2, Bookmark } from 'lucide-react';
-import { toggleBookmark, isBookmarked } from '@/lib/bookmarks';
+import { toggleBookmarkDB, isPostBookmarked } from '@/lib/store';
+import { getCurrentUser } from '@/lib/auth';
+import type { AuthUser } from '@/lib/auth';
 import { useState, useEffect } from 'react';
 
 interface FeedCardProps {
@@ -32,14 +34,22 @@ export default function FeedCard({
 }: FeedCardProps) {
   const router = useRouter();
   const [bookmarked, setBookmarked] = useState(false);
+  const [user, setUser] = useState<AuthUser | null>(null);
 
   useEffect(() => {
-    setBookmarked(isBookmarked(id));
+    getCurrentUser().then((u) => {
+      setUser(u);
+      if (u) isPostBookmarked(u.id, id).then(setBookmarked);
+    });
   }, [id]);
 
-  const handleBookmark = (e: React.MouseEvent) => {
+  const handleBookmark = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    const now = toggleBookmark(id);
+    if (!user) {
+      window.dispatchEvent(new Event('hearten:open-login'));
+      return;
+    }
+    const now = await toggleBookmarkDB(user.id, id);
     setBookmarked(now);
   };
 
