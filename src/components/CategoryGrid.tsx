@@ -15,18 +15,18 @@ const categories = [
   { icon: '🔞', name: '一知半解', desc: '有D嘢，search 唔到答案。入嚟，呢度有人講', count: 203, today: '18+', color: 'bedroom' },
 ];
 
-// Warm gradient backgrounds per category (lighter, brand-colored)
+// Warm gradient backgrounds — light, pastel tones
 const darkGradients: Record<string, string> = {
-  breakup: 'bg-[linear-gradient(135deg,#881337_0%,#be123c_40%,#e11d48_100%)]',
-  crush: 'bg-[linear-gradient(135deg,#831843_0%,#be185d_40%,#ec4899_100%)]',
-  marriage: 'bg-[linear-gradient(135deg,#92400e_0%,#d97706_40%,#f59e0b_100%)]',
-  lgbtq: 'bg-[linear-gradient(135deg,#155e75_0%,#0891b2_40%,#06b6d4_100%)]',
-  treehole: 'bg-[linear-gradient(135deg,#5b21b6_0%,#7c3aed_40%,#8b5cf6_100%)]',
-  tarot: 'bg-[linear-gradient(135deg,#6b21a8_0%,#9333ea_40%,#a855f7_100%)]',
-  'work-love': 'bg-[linear-gradient(135deg,#92400e_0%,#d97706_40%,#f59e0b_100%)]',
-  'school-love': 'bg-[linear-gradient(135deg,#115e59_0%,#0d9488_40%,#14b8a6_100%)]',
-  'dating-kit': 'bg-[linear-gradient(135deg,#4338ca_0%,#6366f1_40%,#8b5cf6_100%)]',
-  bedroom: 'bg-[linear-gradient(135deg,#9f1239_0%,#e11d48_40%,#f43f5e_100%)]',
+  breakup: 'bg-[linear-gradient(135deg,#fecdd3_0%,#fda4af_40%,#fb7185_100%)]',
+  crush: 'bg-[linear-gradient(135deg,#fce7f3_0%,#f9a8d4_40%,#f472b6_100%)]',
+  marriage: 'bg-[linear-gradient(135deg,#fef3c7_0%,#fcd34d_40%,#f59e0b_100%)]',
+  lgbtq: 'bg-[linear-gradient(135deg,#cffafe_0%,#67e8f9_40%,#06b6d4_100%)]',
+  treehole: 'bg-[linear-gradient(135deg,#ede9fe_0%,#c4b5fd_40%,#8b5cf6_100%)]',
+  tarot: 'bg-[linear-gradient(135deg,#f3e8ff_0%,#d8b4fe_40%,#a855f7_100%)]',
+  'work-love': 'bg-[linear-gradient(135deg,#fef3c7_0%,#fcd34d_40%,#f59e0b_100%)]',
+  'school-love': 'bg-[linear-gradient(135deg,#ccfbf1_0%,#5eead4_40%,#14b8a6_100%)]',
+  'dating-kit': 'bg-[linear-gradient(135deg,#e0e7ff_0%,#a5b4fc_40%,#6366f1_100%)]',
+  bedroom: 'bg-[linear-gradient(135deg,#ffe4e6_0%,#fda4af_40%,#f43f5e_100%)]',
 };
 
 // Border colors for light mode per category
@@ -54,25 +54,24 @@ export default function CategoryGrid() {
           onClick={() => router.push(`/category/${cat.color}`)}
           className={`relative rounded-[16px] overflow-hidden cursor-pointer transition-all duration-[0.25s] aspect-[5/4] flex flex-col justify-end p-[18px] border border-hearten-border hover:-translate-y-[3px] hover:border-hearten-border-hover text-left
             ${darkGradients[cat.color]}
-            light:bg-hearten-card light:!bg-none ${lightBorders[cat.color]}
           `}
         >
           {/* Gradient overlay ::before */}
-          <span className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,transparent_20%,rgba(0,0,0,0.25)_100%)] light:bg-[linear-gradient(180deg,transparent_30%,rgba(255,240,245,0.5)_100%)]" />
+          <span className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,transparent_10%,rgba(0,0,0,0.12)_100%)] light:bg-[linear-gradient(180deg,transparent_10%,rgba(255,255,255,0.3)_100%)]" />
 
           {/* Content above overlay */}
-          <span className="relative z-[2] text-[40px] mb-[10px] leading-none [filter:drop-shadow(0_4px_8px_rgba(0,0,0,0.5))]">
+          <span className="relative z-[2] text-[40px] mb-[10px] leading-none">
             {cat.icon}
           </span>
-          <span className="relative z-[2] text-[16px] font-bold text-white light:text-hearten-text mb-[3px]">
+          <span className="relative z-[2] text-[16px] font-bold text-hearten-text mb-[3px]">
             {cat.name}
           </span>
-          <span className="relative z-[2] text-[12.5px] text-white/60 light:text-hearten-muted mb-[6px] leading-[1.4]">
+          <span className="relative z-[2] text-[12.5px] text-hearten-muted mb-[6px] leading-[1.4]">
             {cat.desc}
           </span>
-          <span className="relative z-[2] flex items-center gap-[6px] text-[11.5px] text-white/40 light:text-hearten-dim">
+          <span className="relative z-[2] flex items-center gap-[6px] text-[11.5px] text-hearten-dim">
             <span>{cat.count} 篇</span>
-            <span className="w-[3px] h-[3px] rounded-full bg-white/30 light:bg-hearten-dim" />
+            <span className="w-[3px] h-[3px] rounded-full bg-hearten-dim" />
             <span>今日 {cat.today}</span>
           </span>
         </button>
