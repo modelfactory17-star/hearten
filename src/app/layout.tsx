@@ -10,7 +10,7 @@ const notoSansHK = Noto_Sans_HK({
 });
 
 export const metadata: Metadata = {
-  title: "Hearten — 香港最暖嘅感情樹窿",
+  title: "Hearten — 香港最暖嘅愛情討論區",
   description: "匿名分享心事，AI 顧問 + 真人社群一齊陪你。Hearten = Heart + Listen，用心聽你嘅心事。",
   keywords: ["心事", "感情", "討論區", "香港", "傾訴", "AI顧問", "匿名", "樹窿"],
   openGraph: {
