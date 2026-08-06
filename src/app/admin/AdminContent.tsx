@@ -42,7 +42,7 @@ const MOCK_COMMENTS = [
   { id: '4', body: '加我 TG @scam123 教你賺錢', author: 'spam_bot_01', post: '30歲仲係處男', time: '30 分鐘前', status: 'flagged' },
 ];
 
-export default function AdminPage() {
+export default function AdminContent() {
   const searchParams = useSearchParams();
   const tab = searchParams.get('tab') || 'dashboard';
   const [search, setSearch] = useState('');
