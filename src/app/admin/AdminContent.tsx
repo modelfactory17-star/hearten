@@ -1,6 +1,6 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
+import { useAdminTab } from './AdminContext';
 import { useState } from 'react';
 import {
   Users, FileText, MessageSquare, Heart,
@@ -43,8 +43,7 @@ const MOCK_COMMENTS = [
 ];
 
 export default function AdminContent() {
-  const searchParams = useSearchParams();
-  const tab = searchParams.get('tab') || 'dashboard';
+  const { tab } = useAdminTab();
   const [search, setSearch] = useState('');
   const [userFilter, setUserFilter] = useState<string>('all');
 
