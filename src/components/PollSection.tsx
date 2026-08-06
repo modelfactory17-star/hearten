@@ -65,7 +65,7 @@ export default function PollSection() {
           {poll.options.map((opt, j) => (
             <div
               key={j}
-              className="flex items-center gap-[10px] py-[10px] px-3 rounded-[10px] mb-[6px] relative overflow-hidden border border-hearten-border bg-[#1a1a20] dark:bg-[#1a1a20] light:bg-[#fdf2f4] cursor-pointer transition-all duration-[0.15s] hover:border-hearten-rose"
+              className="flex items-center gap-[10px] py-[10px] px-3 rounded-[10px] mb-[6px] relative overflow-hidden border border-hearten-border bg-[#2a1a2e] dark:bg-[#2a1a2e] light:bg-[#fdf2f4] cursor-pointer transition-all duration-[0.15s] hover:border-hearten-rose"
             >
               {/* Bar */}
               <span

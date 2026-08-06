@@ -15,18 +15,18 @@ const categories = [
   { icon: '🔞', name: '一知半解', desc: '有D嘢，search 唔到答案。入嚟，呢度有人講', count: 203, today: '18+', color: 'bedroom' },
 ];
 
-// Dark gradient backgrounds per category (matches reference HTML)
+// Warm gradient backgrounds per category (lighter, brand-colored)
 const darkGradients: Record<string, string> = {
-  breakup: 'bg-[linear-gradient(135deg,#1a0a14_0%,#2d1528_40%,#1a1020_100%)]',
-  crush: 'bg-[linear-gradient(135deg,#1a0f18_0%,#2d1a2a_40%,#1a1420_100%)]',
-  marriage: 'bg-[linear-gradient(135deg,#1a120a_0%,#2d2018_40%,#201a10_100%)]',
-  lgbtq: 'bg-[linear-gradient(135deg,#0f1a1a_0%,#15282d_40%,#102022_100%)]',
-  treehole: 'bg-[linear-gradient(135deg,#12101a_0%,#1e1a2d_40%,#141820_100%)]',
-  tarot: 'bg-[linear-gradient(135deg,#1a1018_0%,#2a182d_40%,#1a1222_100%)]',
-  'work-love': 'bg-[linear-gradient(135deg,#1a140a_0%,#2d2418_40%,#201a10_100%)]',
-  'school-love': 'bg-[linear-gradient(135deg,#0a1a14_0%,#182d24_40%,#102018_100%)]',
-  'dating-kit': 'bg-[linear-gradient(135deg,#14101a_0%,#201a2d_40%,#161420_100%)]',
-  bedroom: 'bg-[linear-gradient(135deg,#1a0a10_0%,#2d1522_40%,#1a0e16_100%)]',
+  breakup: 'bg-[linear-gradient(135deg,#881337_0%,#be123c_40%,#e11d48_100%)]',
+  crush: 'bg-[linear-gradient(135deg,#831843_0%,#be185d_40%,#ec4899_100%)]',
+  marriage: 'bg-[linear-gradient(135deg,#92400e_0%,#d97706_40%,#f59e0b_100%)]',
+  lgbtq: 'bg-[linear-gradient(135deg,#155e75_0%,#0891b2_40%,#06b6d4_100%)]',
+  treehole: 'bg-[linear-gradient(135deg,#5b21b6_0%,#7c3aed_40%,#8b5cf6_100%)]',
+  tarot: 'bg-[linear-gradient(135deg,#6b21a8_0%,#9333ea_40%,#a855f7_100%)]',
+  'work-love': 'bg-[linear-gradient(135deg,#92400e_0%,#d97706_40%,#f59e0b_100%)]',
+  'school-love': 'bg-[linear-gradient(135deg,#115e59_0%,#0d9488_40%,#14b8a6_100%)]',
+  'dating-kit': 'bg-[linear-gradient(135deg,#4338ca_0%,#6366f1_40%,#8b5cf6_100%)]',
+  bedroom: 'bg-[linear-gradient(135deg,#9f1239_0%,#e11d48_40%,#f43f5e_100%)]',
 };
 
 // Border colors for light mode per category
@@ -58,7 +58,7 @@ export default function CategoryGrid() {
           `}
         >
           {/* Gradient overlay ::before */}
-          <span className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,transparent_30%,rgba(80,20,40,0.75)_100%)] light:bg-[linear-gradient(180deg,transparent_30%,rgba(255,240,245,0.85)_100%)]" />
+          <span className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,transparent_20%,rgba(0,0,0,0.25)_100%)] light:bg-[linear-gradient(180deg,transparent_30%,rgba(255,240,245,0.5)_100%)]" />
 
           {/* Content above overlay */}
           <span className="relative z-[2] text-[40px] mb-[10px] leading-none [filter:drop-shadow(0_4px_8px_rgba(0,0,0,0.5))]">
