@@ -100,6 +100,7 @@ export default function Home() {
             {sortedPosts.map((post) => (
               <FeedCard
                 key={post.id}
+                id={post.id}
                 emoji={post.emoji}
                 title={post.title}
                 preview={post.preview}

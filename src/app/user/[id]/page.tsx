@@ -3,12 +3,16 @@
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Send, MessageSquare, Heart, FileText, UserPlus } from 'lucide-react';
 import { users, posts, getUserByName } from '@/lib/data';
+import { getCurrentUser } from '@/lib/auth';
+import { useState } from 'react';
 
 export default function UserPage() {
   const params = useParams();
   const router = useRouter();
   const name = decodeURIComponent(params.id as string);
   const user = users.find((u) => u.id === name) || getUserByName(name);
+  const currentUser = getCurrentUser();
+  const [msgSent, setMsgSent] = useState(false);
 
   if (!user) {
     return (
@@ -97,9 +101,19 @@ export default function UserPage() {
 
             {/* Action buttons */}
             <div className="flex gap-3 mt-5">
-              <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-hearten-rose hover:bg-hearten-rose-light text-white font-medium text-base transition-colors">
+              <button
+                onClick={() => {
+                  if (!currentUser) {
+                    window.dispatchEvent(new Event('hearten:open-login'));
+                    return;
+                  }
+                  setMsgSent(true);
+                  setTimeout(() => setMsgSent(false), 2500);
+                }}
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-hearten-rose hover:bg-hearten-rose-light text-white font-medium text-base transition-colors"
+              >
                 <Send className="w-5 h-5" />
-                發送訊息
+                {msgSent ? '已發送 ✉️' : currentUser ? '發送訊息' : '登入以發送訊息'}
               </button>
               <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-hearten-border hover:border-hearten-rose text-hearten-text hover:text-hearten-rose font-medium text-base transition-colors">
                 <UserPlus className="w-5 h-5" />

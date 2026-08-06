@@ -1,9 +1,12 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { Heart, MessageCircle, Share2 } from 'lucide-react';
+import { Heart, MessageCircle, Share2, Bookmark } from 'lucide-react';
+import { toggleBookmark, isBookmarked } from '@/lib/bookmarks';
+import { useState, useEffect } from 'react';
 
 interface FeedCardProps {
+  id: string;
   emoji: string;
   title: string;
   preview: string;
@@ -16,6 +19,7 @@ interface FeedCardProps {
 }
 
 export default function FeedCard({
+  id,
   emoji,
   title,
   preview,
@@ -27,6 +31,17 @@ export default function FeedCard({
   onClick,
 }: FeedCardProps) {
   const router = useRouter();
+  const [bookmarked, setBookmarked] = useState(false);
+
+  useEffect(() => {
+    setBookmarked(isBookmarked(id));
+  }, [id]);
+
+  const handleBookmark = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const now = toggleBookmark(id);
+    setBookmarked(now);
+  };
 
   return (
     <article
@@ -76,6 +91,12 @@ export default function FeedCard({
             <button className="flex items-center gap-1.5 text-hearten-muted hover:text-blue-400 transition-colors text-sm">
               <MessageCircle className="w-4 h-4" />
               <span>{replies}</span>
+            </button>
+            <button
+              onClick={handleBookmark}
+              className={`flex items-center gap-1.5 transition-colors text-sm ${bookmarked ? 'text-hearten-amber' : 'text-hearten-muted hover:text-hearten-amber'}`}
+            >
+              <Bookmark className={`w-4 h-4 ${bookmarked ? 'fill-current' : ''}`} />
             </button>
             <button className="flex items-center gap-1.5 text-hearten-muted hover:text-green-400 transition-colors text-sm ml-auto">
               <Share2 className="w-4 h-4" />
