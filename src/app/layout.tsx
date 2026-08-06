@@ -1,5 +1,13 @@
 import type { Metadata } from "next";
+import { Noto_Sans_HK } from "next/font/google";
 import "./globals.css";
+
+const notoSansHK = Noto_Sans_HK({
+  subsets: ["latin"],
+  weight: ["400", "500", "700", "900"],
+  display: "swap",
+  variable: "--font-noto",
+});
 
 export const metadata: Metadata = {
   title: "Hearten — 香港最暖嘅感情樹窿",
@@ -18,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="zh-HK" suppressHydrationWarning>
+    <html lang="zh-HK" suppressHydrationWarning className={`${notoSansHK.variable}`}>
       <head>
         <script
           dangerouslySetInnerHTML={{
