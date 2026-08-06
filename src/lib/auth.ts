@@ -17,7 +17,7 @@ export async function register(
   const supabase = createClient();
 
   if (username.trim().length < 2) return { ok: false, error: '名稱最少2個字' };
-  if (password.length < 4) return { ok: false, error: '密碼最少4個字' };
+  if (password.length < 6) return { ok: false, error: '密碼最少6個字' };
   if (!email.includes('@')) return { ok: false, error: '請輸入有效電郵' };
 
   const { data, error } = await supabase.auth.signUp({
@@ -36,6 +36,31 @@ export async function register(
   if (data.user?.identities?.length === 0) {
     return { ok: false, error: '呢個電郵已經註冊咗' };
   }
+
+  // Send 6-digit OTP to email for verification
+  const { error: otpError } = await supabase.auth.signInWithOtp({
+    email: email.trim(),
+    options: { shouldCreateUser: false },
+  });
+
+  if (otpError) return { ok: false, error: '發送驗證碼失敗: ' + otpError.message };
+
+  return { ok: true };
+}
+
+export async function verifyRegisterOtp(
+  email: string,
+  token: string,
+): Promise<{ ok: boolean; error?: string }> {
+  const supabase = createClient();
+
+  const { error } = await supabase.auth.verifyOtp({
+    email: email.trim(),
+    token: token.trim(),
+    type: 'email',
+  });
+
+  if (error) return { ok: false, error: '驗證碼錯誤，請檢查後再試' };
 
   return { ok: true };
 }

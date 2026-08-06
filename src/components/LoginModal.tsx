@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { X } from 'lucide-react';
-import { login, register } from '@/lib/auth';
+import { login, register, verifyRegisterOtp } from '@/lib/auth';
 
 interface Props {
   open: boolean;
@@ -17,6 +17,8 @@ export default function LoginModal({ open, onClose }: Props) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showOtp, setShowOtp] = useState(false);
+  const [otp, setOtp] = useState('');
 
   if (!open) return null;
 
@@ -42,11 +44,33 @@ export default function LoginModal({ open, onClose }: Props) {
       } else {
         const result = await register(email, password, username);
         if (result.ok) {
-          setSuccess('註冊成功！請檢查電郵驗證');
-          setTimeout(() => onClose(), 1500);
+          setSuccess('');
+          setShowOtp(true);
         } else {
           setError(result.error ?? '錯誤');
         }
+      }
+    } catch {
+      setError('網絡錯誤，請再試');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    if (otp.length < 6) {
+      setError('請輸入6位驗證碼');
+      return;
+    }
+    setError('');
+    setLoading(true);
+    try {
+      const result = await verifyRegisterOtp(email, otp);
+      if (result.ok) {
+        setSuccess('驗證成功！歡迎加入 Hearten 💕');
+        setTimeout(() => onClose(), 1000);
+      } else {
+        setError(result.error ?? '驗證失敗');
       }
     } catch {
       setError('網絡錯誤，請再試');
@@ -90,6 +114,48 @@ export default function LoginModal({ open, onClose }: Props) {
         </div>
 
         <div className="space-y-4">
+          {showOtp ? (
+            <>
+              <div className="text-center mb-2">
+                <p className="text-sm text-hearten-text">驗證碼已發送到</p>
+                <p className="text-sm font-medium text-hearten-rose">{email}</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-hearten-text mb-1.5">6位驗證碼</label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={6}
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+                  placeholder="000000"
+                  className="w-full bg-hearten-bg border border-hearten-border rounded-lg px-3 py-2.5 text-sm text-hearten-text placeholder-hearten-muted outline-none focus:border-hearten-rose transition-colors text-center tracking-[0.3em]"
+                  onKeyDown={(e) => e.key === 'Enter' && handleVerifyOtp()}
+                  autoFocus
+                />
+              </div>
+
+              {error && <p className="text-hearten-rose text-sm">⚠️ {error}</p>}
+              {success && <p className="text-green-400 text-sm">✅ {success}</p>}
+
+              <button
+                onClick={handleVerifyOtp}
+                disabled={otp.length < 6 || loading}
+                className="w-full py-2.5 rounded-xl bg-hearten-rose hover:bg-hearten-rose-light disabled:opacity-40 text-white font-medium text-sm transition-colors"
+              >
+                {loading ? '驗證中...' : '驗證'}
+              </button>
+
+              <button
+                onClick={() => { setShowOtp(false); setError(''); setOtp(''); }}
+                className="w-full text-xs text-hearten-dim hover:text-hearten-muted transition-colors"
+              >
+                ← 返回修改資料
+              </button>
+            </>
+          ) : (
+            <>
           <div>
             <label className="block text-sm font-medium text-hearten-text mb-1.5">電郵</label>
             <input
@@ -143,6 +209,8 @@ export default function LoginModal({ open, onClose }: Props) {
               {tab === 'login' ? '註冊' : '登入'}
             </button>
           </p>
+            </>
+          )}
         </div>
       </div>
     </div>
