@@ -2,10 +2,9 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { Heart, MessageCircle, Share2, ArrowLeft, Flag, Eye, EyeOff, Bookmark } from 'lucide-react';
-import { posts as staticPosts, comments as allComments } from '@/lib/data';
 import { db, type AuthUser } from '@/lib/db';
+import type { Post, Comment } from '@/lib/db';
 import { useState, useCallback, useEffect } from 'react';
-import type { Comment } from '@/lib/data';
 
 const MOODS = [
   { emoji: '😊', label: '支持' },
@@ -50,7 +49,7 @@ export default function PostPage() {
   const postId = params.id as string;
 
   // Find post from static + Supabase
-  const [post, setPost] = useState(staticPosts.find(p => p.id === postId) ?? null);
+  const [post, setPost] = useState<Post | null>(null);
   const [heartCount, setHeartCount] = useState(post?.hearts ?? 0);
   const [hearted, setHearted] = useState(false);
   const [replyText, setReplyText] = useState('');
@@ -62,10 +61,9 @@ export default function PostPage() {
   const [shareDone, setShareDone] = useState(false);
   const [user, setUser] = useState<AuthUser | null>(null);
 
-  const staticPostComments = allComments.filter(c => c.postId === postId);
-  const tree = buildTree(staticPostComments, userComments);
+  const tree = buildTree([], userComments);
   const displayedComments = authorOnly ? tree.filter(c => c.isOP) : tree;
-  const commentCount = staticPostComments.length + userComments.length;
+  const commentCount = userComments.length;
   const bodyClass = FONT_SIZES.find(f => f.key === fontSize)?.className ?? 'text-[15px]';
 
   const refreshComments = useCallback(async () => {
