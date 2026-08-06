@@ -52,8 +52,8 @@ export default function Header() {
         <div className="h-full max-w-[1400px] mx-auto px-4 flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <a href="/" className="flex items-center gap-2 font-bold text-lg">
-              <img src="/favicon.svg" alt="Hearten" className="w-7 h-7" />
+            <a href="/" className="flex items-center gap-2.5 font-bold text-xl">
+              <img src="/favicon.svg" alt="Hearten" className="w-9 h-9" />
               <span className="text-hearten-text">Hearten</span>
             </a>
             <span className="hidden sm:inline text-xs text-hearten-muted">
