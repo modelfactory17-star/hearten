@@ -1,93 +1,78 @@
 'use client';
 
+import { createClient } from '@/utils/supabase/client';
+
 export interface AuthUser {
+  id: string;
   username: string;
   emoji: string;
   joined: string;
 }
 
-interface StoredUser {
-  username: string;
-  passwordHash: string;
-  emoji: string;
-  joined: string;
-}
+export async function register(
+  email: string,
+  password: string,
+  username: string,
+): Promise<{ ok: boolean; error?: string }> {
+  const supabase = createClient();
 
-const USERS_KEY = 'hearten_users';
-const SESSION_KEY = 'hearten_session';
-const EMOJIS = ['🐱', '🐶', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🐔', '🐧', '🐦', '🦄', '🐙', '🦋', '🌺'];
-
-function simpleHash(s: string): string {
-  let hash = 0;
-  for (let i = 0; i < s.length; i++) {
-    hash = ((hash << 5) - hash) + s.charCodeAt(i);
-    hash |= 0;
-  }
-  return 'h_' + Math.abs(hash).toString(36);
-}
-
-function randomEmoji(): string {
-  return EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
-}
-
-function getUsers(): StoredUser[] {
-  if (typeof window === 'undefined') return [];
-  try {
-    const raw = localStorage.getItem(USERS_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch { return []; }
-}
-
-function saveUsers(users: StoredUser[]): void {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-}
-
-export function register(username: string, password: string): { ok: boolean; error?: string } {
-  const users = getUsers();
-  if (users.find((u) => u.username === username)) {
-    return { ok: false, error: '呢個名已經有人用咗' };
-  }
   if (username.trim().length < 2) return { ok: false, error: '名稱最少2個字' };
   if (password.length < 4) return { ok: false, error: '密碼最少4個字' };
+  if (!email.includes('@')) return { ok: false, error: '請輸入有效電郵' };
 
-  users.push({
-    username: username.trim(),
-    passwordHash: simpleHash(password),
-    emoji: randomEmoji(),
-    joined: new Date().toLocaleDateString('zh-HK', { year: 'numeric', month: 'long' }),
+  const { data, error } = await supabase.auth.signUp({
+    email: email.trim(),
+    password,
+    options: {
+      data: { username: username.trim() },
+    },
   });
-  saveUsers(users);
-  setSession({ username: username.trim(), emoji: users[users.length - 1].emoji, joined: users[users.length - 1].joined });
+
+  if (error) {
+    if (error.message.includes('already registered')) return { ok: false, error: '呢個電郵已經註冊咗' };
+    return { ok: false, error: error.message };
+  }
+
+  if (data.user?.identities?.length === 0) {
+    return { ok: false, error: '呢個電郵已經註冊咗' };
+  }
+
   return { ok: true };
 }
 
-export function login(username: string, password: string): { ok: boolean; error?: string } {
-  const users = getUsers();
-  const user = users.find((u) => u.username === username);
-  if (!user) return { ok: false, error: '用戶名或密碼錯誤' };
-  if (user.passwordHash !== simpleHash(password)) return { ok: false, error: '用戶名或密碼錯誤' };
+export async function login(email: string, password: string): Promise<{ ok: boolean; error?: string }> {
+  const supabase = createClient();
 
-  setSession({ username: user.username, emoji: user.emoji, joined: user.joined });
+  const { error } = await supabase.auth.signInWithPassword({
+    email: email.trim(),
+    password,
+  });
+
+  if (error) return { ok: false, error: '電郵或密碼錯誤' };
+
   return { ok: true };
 }
 
-export function logout(): void {
-  if (typeof window === 'undefined') return;
-  localStorage.removeItem(SESSION_KEY);
-  window.dispatchEvent(new Event('hearten:auth-changed'));
+export async function logout(): Promise<void> {
+  const supabase = createClient();
+  await supabase.auth.signOut();
 }
 
-function setSession(user: AuthUser): void {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem(SESSION_KEY, JSON.stringify(user));
-  window.dispatchEvent(new Event('hearten:auth-changed'));
-}
+export async function getCurrentUser(): Promise<AuthUser | null> {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
 
-export function getCurrentUser(): AuthUser | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    const raw = localStorage.getItem(SESSION_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch { return null; }
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('username, emoji, joined')
+    .eq('id', user.id)
+    .single();
+
+  return {
+    id: user.id,
+    username: profile?.username ?? user.user_metadata?.username ?? 'user',
+    emoji: profile?.emoji ?? '🐱',
+    joined: profile?.joined ?? '',
+  };
 }

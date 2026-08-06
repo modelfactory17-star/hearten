@@ -4,15 +4,20 @@ import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Send, MessageSquare, Heart, FileText, UserPlus } from 'lucide-react';
 import { users, posts, getUserByName } from '@/lib/data';
 import { getCurrentUser } from '@/lib/auth';
-import { useState } from 'react';
+import type { AuthUser } from '@/lib/auth';
+import { useState, useEffect } from 'react';
 
 export default function UserPage() {
   const params = useParams();
   const router = useRouter();
   const name = decodeURIComponent(params.id as string);
   const user = users.find((u) => u.id === name) || getUserByName(name);
-  const currentUser = getCurrentUser();
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
   const [msgSent, setMsgSent] = useState(false);
+
+  useEffect(() => {
+    getCurrentUser().then(setCurrentUser);
+  }, []);
 
   if (!user) {
     return (

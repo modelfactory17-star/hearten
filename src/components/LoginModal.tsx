@@ -11,25 +11,42 @@ interface Props {
 
 export default function LoginModal({ open, onClose }: Props) {
   const [tab, setTab] = useState<'login' | 'register'>('login');
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [loading, setLoading] = useState(false);
 
   if (!open) return null;
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setError('');
     setSuccess('');
-    const result = tab === 'login'
-      ? login(username, password)
-      : register(username, password);
+    setLoading(true);
 
-    if (result.ok) {
-      setSuccess(tab === 'login' ? '登入成功！' : '註冊成功！');
-      setTimeout(() => onClose(), 600);
-    } else {
-      setError(result.error ?? '錯誤');
+    try {
+      if (tab === 'login') {
+        const result = await login(email, password);
+        if (result.ok) {
+          setSuccess('登入成功！');
+          setTimeout(() => onClose(), 600);
+        } else {
+          setError(result.error ?? '錯誤');
+        }
+      } else {
+        const result = await register(email, password, username);
+        if (result.ok) {
+          setSuccess('註冊成功！請檢查電郵驗證');
+          setTimeout(() => onClose(), 1500);
+        } else {
+          setError(result.error ?? '錯誤');
+        }
+      }
+    } catch {
+      setError('網絡錯誤，請再試');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -69,15 +86,29 @@ export default function LoginModal({ open, onClose }: Props) {
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-hearten-text mb-1.5">用戶名稱</label>
+            <label className="block text-sm font-medium text-hearten-text mb-1.5">電郵</label>
             <input
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="你嘅 Hearten 名稱"
-              maxLength={16}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="your@email.com"
               className="w-full bg-hearten-bg border border-hearten-border rounded-lg px-3 py-2.5 text-sm text-hearten-text placeholder-hearten-muted outline-none focus:border-hearten-rose transition-colors"
             />
           </div>
+
+          {tab === 'register' && (
+            <div>
+              <label className="block text-sm font-medium text-hearten-text mb-1.5">用戶名稱</label>
+              <input
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="你嘅 Hearten 名稱"
+                maxLength={16}
+                className="w-full bg-hearten-bg border border-hearten-border rounded-lg px-3 py-2.5 text-sm text-hearten-text placeholder-hearten-muted outline-none focus:border-hearten-rose transition-colors"
+              />
+            </div>
+          )}
+
           <div>
             <label className="block text-sm font-medium text-hearten-text mb-1.5">密碼</label>
             <input
@@ -95,10 +126,10 @@ export default function LoginModal({ open, onClose }: Props) {
 
           <button
             onClick={handleSubmit}
-            disabled={!username.trim() || !password}
+            disabled={!email.trim() || !password || (tab === 'register' && !username.trim()) || loading}
             className="w-full py-2.5 rounded-xl bg-hearten-rose hover:bg-hearten-rose-light disabled:opacity-40 text-white font-medium text-sm transition-colors"
           >
-            {tab === 'login' ? '登入' : '註冊'}
+            {loading ? '處理中...' : tab === 'login' ? '登入' : '註冊'}
           </button>
 
           <p className="text-xs text-hearten-dim text-center">

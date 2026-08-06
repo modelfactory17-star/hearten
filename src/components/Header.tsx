@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Search, Bell, User, Sun, Moon, LogOut } from 'lucide-react';
 import { getCurrentUser, logout } from '@/lib/auth';
 import type { AuthUser } from '@/lib/auth';
+import { createClient } from '@/utils/supabase/client';
 import LoginModal from './LoginModal';
 
 export default function Header() {
@@ -14,15 +15,21 @@ export default function Header() {
   useEffect(() => {
     const stored = localStorage.getItem('hearten-theme') as 'dark' | 'light' | null;
     if (stored) setTheme(stored);
-    setUser(getCurrentUser());
-    const onAuth = () => setUser(getCurrentUser());
+    getCurrentUser().then(setUser);
     const onOpenLogin = () => setShowLogin(true);
-    window.addEventListener('hearten:auth-changed', onAuth);
     window.addEventListener('hearten:open-login', onOpenLogin);
     return () => {
-      window.removeEventListener('hearten:auth-changed', onAuth);
       window.removeEventListener('hearten:open-login', onOpenLogin);
     };
+  }, []);
+
+  // Refresh user on auth change
+  useEffect(() => {
+    const { data: { subscription } } = createClient().auth.onAuthStateChange((_event, session) => {
+      if (session) getCurrentUser().then(setUser);
+      else setUser(null);
+    });
+    return () => subscription.unsubscribe();
   }, []);
 
   const toggleTheme = () => {

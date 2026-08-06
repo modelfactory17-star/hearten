@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Send } from 'lucide-react';
-import { addUserPost } from '@/lib/store';
-import type { Post } from '@/lib/data';
+import { createPost } from '@/lib/store';
+import { getCurrentUser } from '@/lib/auth';
+import type { AuthUser } from '@/lib/auth';
 
 const CATEGORIES = [
   { id: 'breakup', icon: '💔', name: '分手復合' },
@@ -24,33 +25,30 @@ export default function WritePage() {
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
-  const [anonymous, setAnonymous] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = () => {
+  useEffect(() => {
+    getCurrentUser().then(setUser);
+  }, []);
+
+  const handleSubmit = async () => {
+    if (!user) {
+      window.dispatchEvent(new Event('hearten:open-login'));
+      return;
+    }
     if (!category) { setError('請選擇話題分類'); return; }
     if (!title.trim()) { setError('請輸入標題'); return; }
     if (!body.trim()) { setError('請寫低你嘅心事'); return; }
-    if (!anonymous.trim()) { setError('請輸入匿名名稱'); return; }
     setError('');
-
+    setLoading(true);
     const cat = CATEGORIES.find(c => c.id === category)!;
-    const newPost: Post = {
-      id: `user-${Date.now()}`,
-      emoji: cat.icon,
-      title: title.trim(),
-      preview: body.trim().slice(0, 120) + (body.trim().length > 120 ? '...' : ''),
-      body: body.trim(),
-      category: `${cat.icon} ${cat.name}`,
-      categoryId: category,
-      hearts: 0,
-      replies: 0,
-      time: '啱啱',
-      anonymous: anonymous.trim(),
-    };
+    const newPost = await createPost(user.id, title.trim(), body.trim(), cat.name, category);
+    setLoading(false);
+    if (!newPost) { setError('發佈失敗，請再試'); return; }
 
-    addUserPost(newPost);
     setSubmitted(true);
   };
 
@@ -74,7 +72,7 @@ export default function WritePage() {
             <button onClick={() => router.push('/')} className="px-6 py-2.5 rounded-xl bg-hearten-rose text-white font-medium transition-colors hover:bg-hearten-rose-light">
               睇其他心事
             </button>
-            <button onClick={() => { setSubmitted(false); setTitle(''); setBody(''); setAnonymous(''); setCategory(''); }} className="px-6 py-2.5 rounded-xl border border-hearten-border text-hearten-text hover:border-hearten-rose transition-colors font-medium">
+            <button onClick={() => { setSubmitted(false); setTitle(''); setBody(''); setCategory(''); }} className="px-6 py-2.5 rounded-xl border border-hearten-border text-hearten-text hover:border-hearten-rose transition-colors font-medium">
               再寫一篇
             </button>
           </div>
@@ -146,31 +144,18 @@ export default function WritePage() {
             />
           </div>
 
-          {/* Anonymous name */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-hearten-text mb-2">匿名名稱</label>
-            <input
-              value={anonymous}
-              onChange={(e) => setAnonymous(e.target.value)}
-              placeholder="例如：深夜咖啡、維港的風..."
-              maxLength={12}
-              className="w-full bg-hearten-bg border border-hearten-border rounded-lg px-4 py-3 text-base text-hearten-text placeholder-hearten-muted outline-none focus:border-hearten-rose transition-colors"
-            />
-            <p className="text-xs text-hearten-dim mt-1">呢個名會顯示喺你嘅帖文同留言</p>
-          </div>
-
           {/* Error */}
           {error && (
             <p className="text-hearten-rose text-sm mb-4">⚠️ {error}</p>
           )}
 
-          {/* Submit */}
           <button
             onClick={handleSubmit}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-hearten-rose hover:bg-hearten-rose-light text-white font-medium text-base transition-colors"
+            disabled={loading || !category || !title.trim() || !body.trim()}
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-hearten-rose hover:bg-hearten-rose-light disabled:opacity-40 text-white font-medium text-base transition-colors"
           >
             <Send className="w-5 h-5" />
-            匿名發布心事
+            {loading ? '發佈中...' : '匿名發布心事'}
           </button>
         </div>
       </div>
