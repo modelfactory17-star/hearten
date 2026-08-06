@@ -3,9 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Send } from 'lucide-react';
-import { createPost } from '@/lib/store';
-import { getCurrentUser } from '@/lib/auth';
-import type { AuthUser } from '@/lib/auth';
+import { db, type AuthUser } from '@/lib/db';
 
 const CATEGORIES = [
   { id: 'breakup', icon: '💔', name: '分手復合' },
@@ -31,7 +29,7 @@ export default function WritePage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    getCurrentUser().then(setUser);
+    db.auth.getUser().then(setUser);
   }, []);
 
   const handleSubmit = async () => {
@@ -45,7 +43,7 @@ export default function WritePage() {
     setError('');
     setLoading(true);
     const cat = CATEGORIES.find(c => c.id === category)!;
-    const newPost = await createPost(user.id, title.trim(), body.trim(), cat.name, category);
+    const newPost = await db.posts.create(user.id, title.trim(), body.trim(), cat.name, category);
     setLoading(false);
     if (!newPost) { setError('發佈失敗，請再試'); return; }
 

@@ -9,7 +9,7 @@ import FeedCard from '@/components/FeedCard';
 import RightSidebar from '@/components/RightSidebar';
 import CategoryGrid from '@/components/CategoryGrid';
 import { posts as staticPosts } from '@/lib/data';
-import { fetchPosts } from '@/lib/store';
+import { db } from '@/lib/db';
 import type { Post } from '@/lib/data';
 
 type SortMode = 'trending' | 'latest';
@@ -20,7 +20,7 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    fetchPosts().then(userPosts => {
+    db.posts.list().then(userPosts => {
       const userIds = new Set(userPosts.map(p => p.id));
       const merged = [...userPosts, ...staticPosts.filter(p => !userIds.has(p.id))];
       setAllPosts(merged);

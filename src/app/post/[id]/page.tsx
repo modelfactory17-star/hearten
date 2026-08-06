@@ -3,10 +3,7 @@
 import { useParams, useRouter } from 'next/navigation';
 import { Heart, MessageCircle, Share2, ArrowLeft, Flag, Eye, EyeOff, Bookmark } from 'lucide-react';
 import { posts as staticPosts, comments as allComments } from '@/lib/data';
-import { fetchComments, addComment, fetchPosts } from '@/lib/store';
-import { getCurrentUser } from '@/lib/auth';
-import type { AuthUser } from '@/lib/auth';
-import { toggleBookmarkDB, isPostBookmarked } from '@/lib/store';
+import { db, type AuthUser } from '@/lib/db';
 import { useState, useCallback, useEffect } from 'react';
 import type { Comment } from '@/lib/data';
 
@@ -72,15 +69,15 @@ export default function PostPage() {
   const bodyClass = FONT_SIZES.find(f => f.key === fontSize)?.className ?? 'text-[15px]';
 
   const refreshComments = useCallback(async () => {
-    const comments = await fetchComments(postId);
+    const comments = await db.comments.list(postId);
     setUserComments(comments);
   }, [postId]);
 
   useEffect(() => {
-    getCurrentUser().then(setUser);
+    db.auth.getUser().then(setUser);
     refreshComments();
     if (!post) {
-      fetchPosts().then(posts => {
+      db.posts.list().then(posts => {
         const found = posts.find(p => p.id === postId);
         if (found) setPost(found);
       }).catch(() => {});
@@ -90,7 +87,7 @@ export default function PostPage() {
 
   useEffect(() => {
     if (!user) { setBookmarked(false); return; }
-    isPostBookmarked(user.id, postId).then(setBookmarked);
+    db.bookmarks.isBookmarked(user.id, postId).then(setBookmarked);
   }, [user, postId]);
 
   if (!post) {
@@ -106,13 +103,13 @@ export default function PostPage() {
 
   const handleSubmitComment = async () => {
     if (!replyText.trim() || !user) return;
-    const c = await addComment(user.id, postId, replyText);
+    const c = await db.comments.create(user.id, postId, replyText);
     if (c) { setReplyText(''); setMood(null); refreshComments(); }
   };
 
   const handleBookmark = async () => {
     if (!user) { window.dispatchEvent(new Event('hearten:open-login')); return; }
-    const now = await toggleBookmarkDB(user.id, postId);
+    const now = await db.bookmarks.toggle(user.id, postId);
     setBookmarked(now);
   };
 
@@ -245,11 +242,11 @@ function CommentItem({ comment, postId, onCommentAdded, depth = 0 }: {
   const [replyInput, setReplyInput] = useState('');
   const [user, setUser] = useState<AuthUser | null>(null);
 
-  useEffect(() => { getCurrentUser().then(setUser); }, []);
+  useEffect(() => { db.auth.getUser().then(setUser); }, []);
 
   const handleReply = async () => {
     if (!replyInput.trim() || !user) return;
-    const c = await addComment(user.id, postId, replyInput, comment.id);
+    const c = await db.comments.create(user.id, postId, replyInput, comment.id);
     if (c) { setReplyInput(''); setShowReply(false); onCommentAdded(); }
   };
 

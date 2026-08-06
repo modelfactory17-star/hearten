@@ -3,8 +3,7 @@
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Send, MessageSquare, Heart, FileText, UserPlus } from 'lucide-react';
 import { users, posts, getUserByName } from '@/lib/data';
-import { getCurrentUser } from '@/lib/auth';
-import type { AuthUser } from '@/lib/auth';
+import { db, type AuthUser } from '@/lib/db';
 import { useState, useEffect } from 'react';
 
 export default function UserPage() {
@@ -16,7 +15,7 @@ export default function UserPage() {
   const [msgSent, setMsgSent] = useState(false);
 
   useEffect(() => {
-    getCurrentUser().then(setCurrentUser);
+    db.auth.getUser().then(setCurrentUser);
   }, []);
 
   if (!user) {

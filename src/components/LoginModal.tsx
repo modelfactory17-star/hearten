@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { X } from 'lucide-react';
-import { login, register, verifyRegisterOtp } from '@/lib/auth';
+import { db } from '@/lib/db';
 
 interface Props {
   open: boolean;
@@ -34,7 +34,7 @@ export default function LoginModal({ open, onClose }: Props) {
         return;
       }
       if (tab === 'login') {
-        const result = await login(email, password);
+        const result = await db.auth.login(email, password);
         if (result.ok) {
           setSuccess('登入成功！');
           setTimeout(() => onClose(), 600);
@@ -42,7 +42,7 @@ export default function LoginModal({ open, onClose }: Props) {
           setError(result.error ?? '錯誤');
         }
       } else {
-        const result = await register(email, password, username);
+        const result = await db.auth.register(email, password, username);
         if (result.ok) {
           setSuccess('');
           setShowOtp(true);
@@ -65,7 +65,7 @@ export default function LoginModal({ open, onClose }: Props) {
     setError('');
     setLoading(true);
     try {
-      const result = await verifyRegisterOtp(email, otp);
+      const result = await db.auth.verifyOtp(email, otp);
       if (result.ok) {
         setSuccess('驗證成功！歡迎加入 Hearten 💕');
         setTimeout(() => onClose(), 1000);
