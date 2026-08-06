@@ -58,7 +58,7 @@ export default function CategoryGrid() {
           `}
         >
           {/* Gradient overlay ::before */}
-          <span className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,transparent_25%,rgba(0,0,0,0.8)_100%)] light:bg-[linear-gradient(180deg,transparent_25%,rgba(0,0,0,0.4)_100%)]" />
+          <span className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,transparent_30%,rgba(80,20,40,0.75)_100%)] light:bg-[linear-gradient(180deg,transparent_30%,rgba(255,240,245,0.85)_100%)]" />
 
           {/* Content above overlay */}
           <span className="relative z-[2] text-[40px] mb-[10px] leading-none [filter:drop-shadow(0_4px_8px_rgba(0,0,0,0.5))]">
