@@ -40,7 +40,7 @@ export default function LeftSidebar() {
                   className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors ${
                     cat.active
                       ? 'bg-hearten-rose/10 text-hearten-rose font-medium'
-                      : 'text-gray-300 hover:bg-hearten-card hover:text-white'
+                      : 'text-hearten-muted hover:bg-hearten-card hover:text-hearten-text'
                   }`}
                 >
                   <span>{cat.label.split(' ')[0]}</span>
@@ -57,11 +57,11 @@ export default function LeftSidebar() {
             連結
           </h3>
           <nav className="space-y-1">
-            <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-gray-300 hover:bg-hearten-card hover:text-white transition-colors">
+            <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-hearten-muted hover:bg-hearten-card hover:text-hearten-text transition-colors">
               <Users className="w-4 h-4" />
               活躍用戶
             </button>
-            <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-gray-300 hover:bg-hearten-card hover:text-white transition-colors">
+            <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-hearten-muted hover:bg-hearten-card hover:text-hearten-text transition-colors">
               <Heart className="w-4 h-4" />
               關於 Hearten
             </button>

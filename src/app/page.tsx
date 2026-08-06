@@ -67,7 +67,7 @@ export default function Home() {
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                     sort === 'trending'
                       ? 'bg-hearten-rose/10 text-hearten-rose'
-                      : 'text-hearten-muted hover:text-white'
+                      : 'text-hearten-muted hover:text-hearten-text'
                   }`}
                 >
                   <TrendingUp className="w-4 h-4" />
@@ -78,7 +78,7 @@ export default function Home() {
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                     sort === 'latest'
                       ? 'bg-hearten-rose/10 text-hearten-rose'
-                      : 'text-hearten-muted hover:text-white'
+                      : 'text-hearten-muted hover:text-hearten-text'
                   }`}
                 >
                   <Clock className="w-4 h-4" />
@@ -114,7 +114,7 @@ export default function Home() {
           </div>
 
           <div className="py-6 text-center">
-            <button className="px-6 py-2.5 rounded-xl border border-hearten-border text-sm text-hearten-muted hover:text-white hover:border-gray-500 transition-colors">
+            <button className="px-6 py-2.5 rounded-xl border border-hearten-border text-sm text-hearten-muted hover:text-hearten-text hover:border-gray-500 transition-colors">
               載入更多心事...
             </button>
           </div>

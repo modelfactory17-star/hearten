@@ -63,7 +63,7 @@ export default function PostPage() {
       <div className="sticky top-0 z-50 h-14 border-b border-hearten-border bg-hearten-bg/90 backdrop-blur flex items-center px-4 gap-4">
         <button
           onClick={() => router.push('/')}
-          className="flex items-center gap-1 text-hearten-muted hover:text-white transition-colors text-sm"
+          className="flex items-center gap-1 text-hearten-muted hover:text-hearten-text transition-colors text-sm"
         >
           <ArrowLeft className="w-4 h-4" />
           返去
@@ -85,7 +85,7 @@ export default function PostPage() {
                 <div className="flex items-center gap-2">
                   <span
                   onClick={(e) => { e.stopPropagation(); router.push(`/user/${encodeURIComponent(post.anonymous)}`); }}
-                  className="font-medium text-white text-sm hover:text-hearten-rose cursor-pointer transition-colors"
+                  className="font-medium text-hearten-text text-sm hover:text-hearten-rose cursor-pointer transition-colors"
                 >{post.anonymous}</span>
                   <span className="px-1.5 py-0.5 rounded-md bg-hearten-rose/10 text-hearten-rose text-[10px] font-medium">
                     {post.category}
@@ -106,7 +106,7 @@ export default function PostPage() {
                     className={`px-2 py-1 text-xs transition-colors ${
                       fontSize === f.key
                         ? 'bg-hearten-rose text-white'
-                        : 'text-hearten-muted hover:text-white hover:bg-hearten-card'
+                        : 'text-hearten-muted hover:text-hearten-text hover:bg-hearten-card'
                     }`}
                   >
                     {f.label}
@@ -120,7 +120,7 @@ export default function PostPage() {
                 className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs transition-colors ${
                   authorOnly
                     ? 'bg-hearten-amber/20 text-hearten-amber'
-                    : 'text-hearten-muted hover:text-white hover:bg-hearten-card'
+                    : 'text-hearten-muted hover:text-hearten-text hover:bg-hearten-card'
                 }`}
               >
                 {authorOnly ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
@@ -130,10 +130,10 @@ export default function PostPage() {
           </div>
 
           {/* Title */}
-          <h1 className="text-xl font-bold text-white mb-4">{post.title}</h1>
+          <h1 className="text-xl font-bold text-hearten-text mb-4">{post.title}</h1>
 
           {/* Body */}
-          <div className={`text-gray-300 leading-relaxed whitespace-pre-line mb-6 ${bodyClass}`}>
+          <div className={`text-hearten-muted leading-relaxed whitespace-pre-line mb-6 ${bodyClass}`}>
             {post.body}
           </div>
 
@@ -177,7 +177,7 @@ export default function PostPage() {
             onChange={(e) => setReplyText(e.target.value)}
             placeholder="分享你嘅諗法..."
             rows={3}
-            className="w-full bg-hearten-bg border border-hearten-border rounded-lg p-3 text-sm text-white placeholder-hearten-muted outline-none resize-none focus:border-hearten-rose transition-colors"
+            className="w-full bg-hearten-bg border border-hearten-border rounded-lg p-3 text-sm text-hearten-text placeholder-hearten-muted outline-none resize-none focus:border-hearten-rose transition-colors"
           />
           <div className="flex items-center justify-between mt-3">
             {/* Mood buttons */}
@@ -189,7 +189,7 @@ export default function PostPage() {
                   className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs transition-all ${
                     mood === m.label
                       ? 'bg-hearten-rose/20 text-hearten-rose border border-hearten-rose/40'
-                      : 'border border-hearten-border text-hearten-muted hover:border-gray-500 hover:text-gray-300'
+                      : 'border border-hearten-border text-hearten-muted hover:border-gray-500 hover:text-hearten-muted'
                   }`}
                 >
                   <span className="text-sm leading-none">{m.emoji}</span>
@@ -240,7 +240,7 @@ function CommentItem({ comment, depth = 0 }: { comment: import('@/lib/data').Com
           </div>
           <span
             onClick={() => router.push(`/user/${encodeURIComponent(comment.anonymous)}`)}
-            className="text-sm font-medium text-white hover:text-hearten-rose cursor-pointer transition-colors"
+            className="text-sm font-medium text-hearten-text hover:text-hearten-rose cursor-pointer transition-colors"
           >{comment.anonymous}</span>
           {comment.isOP && (
             <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-hearten-amber/20 text-hearten-amber">
@@ -248,13 +248,13 @@ function CommentItem({ comment, depth = 0 }: { comment: import('@/lib/data').Com
             </span>
           )}
           <span className="text-xs text-hearten-muted">{comment.time}</span>
-          <button className="ml-auto text-hearten-muted hover:text-white">
+          <button className="ml-auto text-hearten-muted hover:text-hearten-text">
             <Flag className="w-3.5 h-3.5" />
           </button>
         </div>
 
         {/* Body */}
-        <p className="text-sm text-gray-300 leading-relaxed mb-3">{comment.body}</p>
+        <p className="text-sm text-hearten-muted leading-relaxed mb-3">{comment.body}</p>
 
         {/* Actions */}
         <div className="flex items-center gap-4">
@@ -285,7 +285,7 @@ function CommentItem({ comment, depth = 0 }: { comment: import('@/lib/data').Com
               value={replyInput}
               onChange={(e) => setReplyInput(e.target.value)}
               placeholder="寫回覆..."
-              className="flex-1 bg-hearten-bg border border-hearten-border rounded-lg px-3 py-1.5 text-sm text-white placeholder-hearten-muted outline-none focus:border-hearten-rose transition-colors"
+              className="flex-1 bg-hearten-bg border border-hearten-border rounded-lg px-3 py-1.5 text-sm text-hearten-text placeholder-hearten-muted outline-none focus:border-hearten-rose transition-colors"
             />
             <button
               disabled={!replyInput.trim()}

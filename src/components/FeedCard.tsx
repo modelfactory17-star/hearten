@@ -58,12 +58,12 @@ export default function FeedCard({
           </div>
 
           {/* Title */}
-          <h3 className="text-[15px] font-semibold text-white mb-1.5 group-hover:text-hearten-rose transition-colors">
+          <h3 className="text-[15px] font-semibold text-hearten-text mb-1.5 group-hover:text-hearten-rose transition-colors">
             {title}
           </h3>
 
           {/* Preview */}
-          <p className="text-sm text-gray-400 line-clamp-2 leading-relaxed">
+          <p className="text-sm text-hearten-muted line-clamp-2 leading-relaxed">
             {preview}
           </p>
 

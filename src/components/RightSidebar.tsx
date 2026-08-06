@@ -35,7 +35,7 @@ export default function RightSidebar() {
                 className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-hearten-card text-left transition-colors group"
               >
                 <span className="text-sm">{topic.emoji}</span>
-                <span className="flex-1 text-sm text-gray-300 group-hover:text-white truncate">
+                <span className="flex-1 text-sm text-hearten-muted group-hover:text-hearten-text truncate">
                   {topic.title}
                 </span>
                 <span className="text-xs text-hearten-muted shrink-0">
@@ -61,7 +61,7 @@ export default function RightSidebar() {
                 <div className="w-8 h-8 rounded-full bg-hearten-card border border-hearten-border flex items-center justify-center text-sm shrink-0">
                   {user.emoji}
                 </div>
-                <span className="flex-1 text-sm text-gray-300 truncate">
+                <span className="flex-1 text-sm text-hearten-muted truncate">
                   {user.name}
                 </span>
                 <span className="text-xs text-hearten-muted shrink-0">
@@ -78,9 +78,9 @@ export default function RightSidebar() {
             <p>© 2024 Hearten</p>
             <p>Heart + Listen · 用心聽你嘅心事</p>
             <div className="flex gap-3 mt-2">
-              <a href="#" className="hover:text-white transition-colors">私隱</a>
-              <a href="#" className="hover:text-white transition-colors">條款</a>
-              <a href="#" className="hover:text-white transition-colors">聯絡</a>
+              <a href="#" className="hover:text-hearten-text transition-colors">私隱</a>
+              <a href="#" className="hover:text-hearten-text transition-colors">條款</a>
+              <a href="#" className="hover:text-hearten-text transition-colors">聯絡</a>
             </div>
           </div>
         </div>

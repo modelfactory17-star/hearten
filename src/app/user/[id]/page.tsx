@@ -34,7 +34,7 @@ export default function UserPage() {
       <div className="sticky top-0 z-50 h-14 border-b border-hearten-border bg-hearten-bg/90 backdrop-blur flex items-center px-4 gap-4">
         <button
           onClick={() => router.back()}
-          className="flex items-center gap-1 text-hearten-muted hover:text-white transition-colors text-base"
+          className="flex items-center gap-1 text-hearten-muted hover:text-hearten-text transition-colors text-base"
         >
           <ArrowLeft className="w-5 h-5" />
           返回上頁
@@ -58,7 +58,7 @@ export default function UserPage() {
 
           {/* Info */}
           <div className="text-center px-6 pb-6">
-            <h1 className="text-2xl font-bold text-white mt-3">{user.name}</h1>
+            <h1 className="text-2xl font-bold text-hearten-text mt-3">{user.name}</h1>
             <p className="text-base text-hearten-muted mt-1 italic">「{user.bio}」</p>
 
             <div className="flex items-center justify-center gap-3 mt-3">
@@ -76,21 +76,21 @@ export default function UserPage() {
                 <div className="flex items-center justify-center gap-1 text-hearten-muted mb-1">
                   <FileText className="w-5 h-5" />
                 </div>
-                <div className="text-3xl font-bold text-white">{user.posts_count}</div>
+                <div className="text-3xl font-bold text-hearten-text">{user.posts_count}</div>
                 <div className="text-sm text-hearten-dim mt-0.5">心事</div>
               </div>
               <div className="text-center">
                 <div className="flex items-center justify-center gap-1 text-hearten-muted mb-1">
                   <MessageSquare className="w-5 h-5" />
                 </div>
-                <div className="text-3xl font-bold text-white">{user.comments_count}</div>
+                <div className="text-3xl font-bold text-hearten-text">{user.comments_count}</div>
                 <div className="text-sm text-hearten-dim mt-0.5">留言</div>
               </div>
               <div className="text-center">
                 <div className="flex items-center justify-center gap-1 text-hearten-muted mb-1">
                   <Heart className="w-5 h-5" />
                 </div>
-                <div className="text-3xl font-bold text-white">{user.hearts_received.toLocaleString()}</div>
+                <div className="text-3xl font-bold text-hearten-text">{user.hearts_received.toLocaleString()}</div>
                 <div className="text-sm text-hearten-dim mt-0.5">獲讚</div>
               </div>
             </div>
@@ -134,7 +134,7 @@ export default function UserPage() {
                     </span>
                     <span className="text-sm text-hearten-muted">{post.time}</span>
                   </div>
-                  <h3 className="text-base font-semibold text-white">{post.title}</h3>
+                  <h3 className="text-base font-semibold text-hearten-text">{post.title}</h3>
                   <div className="flex items-center gap-4 mt-2 text-sm text-hearten-dim">
                     <span>❤️ {post.hearts}</span>
                     <span>💬 {post.replies}</span>
