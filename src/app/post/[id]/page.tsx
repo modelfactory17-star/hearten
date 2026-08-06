@@ -129,7 +129,7 @@ export default function PostPage() {
     <div className="min-h-screen bg-hearten-bg">
       <div className="sticky top-0 z-50 h-14 border-b border-hearten-border bg-hearten-bg/90 backdrop-blur flex items-center px-4 gap-4">
         <button onClick={() => router.push('/')} className="flex items-center gap-1 text-hearten-muted hover:text-hearten-text transition-colors text-sm">
-          <ArrowLeft className="w-4 h-4" />返去
+          <ArrowLeft className="w-4 h-4" />返回上頁
         </button>
         <div className="flex-1" />
         <span className="text-xs text-hearten-muted">💬 心事詳情</span>
