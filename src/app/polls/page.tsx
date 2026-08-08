@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import LeftSidebar from '@/components/LeftSidebar';
 import RightSidebar from '@/components/RightSidebar';
@@ -383,22 +383,22 @@ export default function PollsPage() {
   const [showCreate, setShowCreate] = useState(false);
   const [useDemo, setUseDemo] = useState(false);
 
-  const loadPolls = useCallback(async () => {
+  const reloadPolls = async () => {
     setLoading(true);
-    const data = await db.polls.list(userId || undefined);
-    if (data.length === 0) {
-      // Fallback to demo data when DB is empty
-      setPolls(DEMO_POLLS);
-      setUseDemo(true);
-    } else {
-      setPolls(data);
-      setUseDemo(false);
+    if (!useDemo) {
+      const data = await db.polls.list(userId || undefined);
+      if (data.length > 0) {
+        setPolls(data);
+      } else {
+        setPolls(DEMO_POLLS);
+        setUseDemo(true);
+      }
     }
     setLoading(false);
-  }, [userId]);
+  };
 
   useEffect(() => {
-    // Check auth on mount
+    // Check auth on mount, then load polls with userId
     (async () => {
       const user = await db.auth.getUser();
       if (user) {
@@ -407,13 +407,25 @@ export default function PollsPage() {
         const supabase = (await import('@/utils/supabase/client')).createClient();
         const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
         setIsAdmin(profile?.role === 'admin');
+        // Load polls with userId
+        setLoading(true);
+        const data = await db.polls.list(user.id);
+        if (data.length === 0) {
+          setPolls(DEMO_POLLS);
+          setUseDemo(true);
+        } else {
+          setPolls(data);
+          setUseDemo(false);
+        }
+        setLoading(false);
+      } else {
+        setLoading(true);
+        setPolls(DEMO_POLLS);
+        setUseDemo(true);
+        setLoading(false);
       }
-      loadPolls();
     })();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Reload on user change
-  useEffect(() => { if (userId !== undefined) loadPolls(); }, [userId, loadPolls]);
+  }, []);
 
   const handleVote = async (pollId: string, optionIds: string[]) => {
     if (!userId || useDemo) {
@@ -435,7 +447,7 @@ export default function PollsPage() {
     }
 
     const ok = await db.polls.vote(pollId, optionIds, userId);
-    if (ok) loadPolls();
+    if (ok) reloadPolls();
   };
 
   const handleClose = async (pollId: string) => {
@@ -444,7 +456,7 @@ export default function PollsPage() {
       return;
     }
     const ok = await db.polls.closePoll(pollId);
-    if (ok) loadPolls();
+    if (ok) reloadPolls();
   };
 
   const activePolls = polls.filter(p => p.status === 'active');
@@ -551,7 +563,7 @@ export default function PollsPage() {
       {showCreate && (
         <CreatePollModal
           onClose={() => setShowCreate(false)}
-          onCreated={() => loadPolls()}
+          onCreated={() => reloadPolls()}
         />
       )}
     </div>
