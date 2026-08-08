@@ -194,7 +194,10 @@ export const posts = {
 export const comments = {
   async list(postId: string): Promise<Comment[]> {
     const supabase = createClient();
-    const { data } = await supabase.from('comments').select('*, profiles(username, emoji, avatar_url)').eq('post_id', postId).order('created_at', { ascending: true });
+    const { data } = await supabase.from('comments').select(`
+      *,
+      profiles:user_id (username, emoji, avatar_url)
+    `).eq('post_id', postId).order('created_at', { ascending: true });
     return (data || []).map(mapComment);
   },
 
@@ -202,7 +205,10 @@ export const comments = {
     const supabase = createClient();
     const { data, error } = await supabase.from('comments').insert({
       user_id: userId, post_id: postId, parent_id: parentId || null, body,
-    }).select('*, profiles(username, emoji, avatar_url)').single();
+    }).select(`
+      *,
+      profiles:user_id (username, emoji, avatar_url)
+    `).single();
     if (error || !data) return null;
     return { id: data.id, postId: data.post_id, parentId: data.parent_id || undefined, emoji: data.profiles?.emoji || '🐱', avatar_url: data.profiles?.avatar_url || null, anonymous: data.profiles?.username || '匿名用戶', body: data.body, time: '啱啱', hearts: 0, isOP: false, replies: [] };
   },
@@ -322,6 +328,38 @@ export const bookmarks = {
     const supabase = createClient();
     const { data } = await supabase.from('bookmarks').select('post_id').eq('user_id', userId);
     return (data || []).map(b => b.post_id);
+  },
+};
+
+// ─── Moods ────────────────────────────────────────────────
+
+export const moods = {
+  async toggle(userId: string, postId: string, mood: string): Promise<boolean> {
+    const supabase = createClient();
+    const { data: existing } = await supabase.from('post_moods')
+      .select('id').eq('post_id', postId).eq('user_id', userId).eq('mood', mood).maybeSingle();
+    if (existing) {
+      await supabase.from('post_moods').delete().eq('id', existing.id);
+      return false;
+    } else {
+      await supabase.from('post_moods').insert({ post_id: postId, user_id: userId, mood });
+      return true;
+    }
+  },
+
+  async countByPost(postId: string): Promise<Record<string, number>> {
+    const supabase = createClient();
+    const { data } = await supabase.from('post_moods').select('mood').eq('post_id', postId);
+    const counts: Record<string, number> = { support: 0, sad: 0, angry: 0, pig: 0 };
+    for (const row of (data || [])) { counts[row.mood] = (counts[row.mood] || 0) + 1; }
+    return counts;
+  },
+
+  async getUserMoods(userId: string, postId: string): Promise<string[]> {
+    const supabase = createClient();
+    const { data } = await supabase.from('post_moods')
+      .select('mood').eq('post_id', postId).eq('user_id', userId);
+    return (data || []).map(r => r.mood);
   },
 };
 
@@ -464,4 +502,4 @@ function timeAgo(dateStr: string): string {
 
 // ─── Unified export ────────────────────────────────────────
 
-export const db = { auth, posts, comments, likes, bookmarks, admin, polls };
+export const db = { auth, posts, comments, likes, bookmarks, moods, admin, polls };

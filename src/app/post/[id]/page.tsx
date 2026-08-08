@@ -11,10 +11,10 @@ import type { Post, Comment } from '@/lib/db';
 import { useState, useCallback, useEffect } from 'react';
 
 const MOODS = [
-  { emoji: '😊', label: '支持' },
-  { emoji: '😢', label: '傷心' },
-  { emoji: '😡', label: '嬲' },
-  { emoji: '🐷', label: '豬豬' },
+  { emoji: '😊', label: '支持', key: 'support' },
+  { emoji: '😢', label: '傷心', key: 'sad' },
+  { emoji: '😡', label: '嬲', key: 'angry' },
+  { emoji: '🐷', label: '豬豬', key: 'pig' },
 ];
 
 const COMMENT_EMOJIS = [
@@ -62,7 +62,8 @@ export default function PostPage() {
   const [heartCount, setHeartCount] = useState(0);
   const [hearted, setHearted] = useState(false);
   const [replyText, setReplyText] = useState('');
-  const [mood, setMood] = useState<string | null>(null);
+  const [moodCounts, setMoodCounts] = useState<Record<string, number>>({ support: 0, sad: 0, angry: 0, pig: 0 });
+  const [userMoods, setUserMoods] = useState<string[]>([]);
   const [authorOnly, setAuthorOnly] = useState(false);
   const [fontSize, setFontSize] = useState<FontSize>('medium');
   const [userComments, setUserComments] = useState<Comment[]>([]);
@@ -84,9 +85,13 @@ export default function PostPage() {
   useEffect(() => {
     db.auth.getUser().then(u => {
       setUser(u);
-      if (u) db.likes.isLiked(u.id, 'post', postId).then(setHearted);
+      if (u) {
+        db.likes.isLiked(u.id, 'post', postId).then(setHearted);
+        db.moods.getUserMoods(u.id, postId).then(setUserMoods);
+      }
     });
     db.likes.count('post', postId).then(setHeartCount);
+    db.moods.countByPost(postId).then(setMoodCounts);
     refreshComments();
     if (!post) {
       db.posts.list().then(posts => {
@@ -203,16 +208,21 @@ export default function PostPage() {
                   </button>
                   {MOODS.map(m => (
                     <button key={m.emoji}
-                      onClick={() => {
+                      onClick={async () => {
                         if (!user) { window.dispatchEvent(new Event('hearten:open-login')); return; }
-                        setMood(mood === m.label ? null : m.label);
+                        const now = await db.moods.toggle(user.id, postId, m.key);
+                        setUserMoods(prev => now ? [...prev, m.key] : prev.filter(k => k !== m.key));
+                        setMoodCounts(prev => ({ ...prev, [m.key]: prev[m.key] + (now ? 1 : -1) }));
                       }}
-                      className={`text-lg transition-all ${
-                        mood === m.label
+                      className={`text-lg transition-all flex items-center gap-0.5 ${
+                        userMoods.includes(m.key)
                           ? 'scale-110'
                           : 'opacity-50 hover:opacity-100 hover:scale-110'
                       }`}>
                       {m.emoji}
+                      {moodCounts[m.key] > 0 && (
+                        <span className="text-xs text-hearten-dim ml-0.5">{moodCounts[m.key]}</span>
+                      )}
                     </button>
                   ))}
                   <button className="flex items-center gap-1.5 text-hearten-muted hover:text-blue-400 transition-colors text-sm">
