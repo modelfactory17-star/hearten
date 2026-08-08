@@ -17,6 +17,12 @@ const MOODS = [
   { emoji: '🐷', label: '豬豬' },
 ];
 
+const COMMENT_EMOJIS = [
+  '😊', '😂', '❤️', '😢', '😡', '👍', '🤔', '😍',
+  '🙏', '💪', '🔥', '🥺', '🤗', '😭', '😤', '💔',
+  '🎉', '😅', '🤯', '😴', '🥰', '😎', '🙄', '😱',
+];
+
 type FontSize = 'small' | 'medium' | 'large';
 const FONT_SIZES: { key: FontSize; label: string; className: string }[] = [
   { key: 'small', label: '小', className: 'text-[14px]' },
@@ -190,6 +196,24 @@ export default function PostPage() {
                 <h1 className="text-xl font-bold text-hearten-text mb-4">{post.title}</h1>
                 <div className={`text-hearten-muted leading-relaxed whitespace-pre-line mb-6 ${bodyClass}`}>{post.body}</div>
 
+                {/* Mood Reactions */}
+                <div className="flex items-center gap-2 mb-5">
+                  {MOODS.map(m => (
+                    <button key={m.emoji}
+                      onClick={() => {
+                        if (!user) { window.dispatchEvent(new Event('hearten:open-login')); return; }
+                        setMood(mood === m.label ? null : m.label);
+                      }}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-all ${
+                        mood === m.label
+                          ? 'bg-hearten-rose/20 text-hearten-rose border border-hearten-rose/40'
+                          : 'border border-hearten-border text-hearten-muted hover:border-hearten-rose/40 hover:text-hearten-text'
+                      }`}>
+                      <span className="text-base leading-none">{m.emoji}</span>{m.label}
+                    </button>
+                  ))}
+                </div>
+
                 <div className="flex items-center gap-6 pt-4 border-t border-hearten-border">
                   <button onClick={handleHeartPost}
                     className={`flex items-center gap-1.5 transition-colors text-sm ${hearted ? 'text-hearten-rose' : 'text-hearten-muted hover:text-hearten-rose'}`}>
@@ -226,12 +250,11 @@ export default function PostPage() {
                     placeholder="分享你嘅諗法..." rows={3}
                     className="w-full bg-hearten-bg border border-hearten-border rounded-lg p-3 text-sm text-hearten-text placeholder-hearten-muted outline-none resize-none focus:border-hearten-rose transition-colors" />
                   <div className="flex items-center justify-between mt-3">
-                    <div className="flex items-center gap-1.5">
-                      {MOODS.map(m => (
-                        <button key={m.emoji} onClick={() => setMood(mood === m.label ? null : m.label)}
-                          className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs transition-all ${mood === m.label ? 'bg-hearten-rose/20 text-hearten-rose border border-hearten-rose/40' : 'border border-hearten-border text-hearten-muted hover:border-gray-500 hover:text-hearten-muted'}`}>
-                          <span className="text-sm leading-none">{m.emoji}</span>{m.label}
-                        </button>
+                    <div className="flex items-center gap-1 flex-wrap">
+                      {COMMENT_EMOJIS.map(emoji => (
+                        <button key={emoji} onClick={() => setReplyText(prev => prev + emoji)}
+                          className="w-7 h-7 flex items-center justify-center rounded hover:bg-hearten-bg text-sm transition-colors"
+                          title={emoji}>{emoji}</button>
                       ))}
                     </div>
                     <button onClick={handleSubmitComment} disabled={!replyText.trim()}
@@ -327,11 +350,19 @@ function CommentItem({ comment, postId, onCommentAdded, depth = 0 }: {
           )}
         </div>
         {showReply && user && (
-          <div className="mt-3 flex gap-2">
-            <input value={replyInput} onChange={e => setReplyInput(e.target.value)} placeholder="寫回覆..."
-              className="flex-1 bg-hearten-bg border border-hearten-border rounded-lg px-3 py-1.5 text-sm text-hearten-text placeholder-hearten-muted outline-none focus:border-hearten-rose transition-colors" />
-            <button onClick={handleReply} disabled={!replyInput.trim()}
-              className="px-3 py-1.5 rounded-lg bg-hearten-rose hover:bg-hearten-rose-light disabled:opacity-40 text-white text-xs font-medium transition-colors">回覆</button>
+          <div className="mt-3">
+            <div className="flex gap-2 mb-2">
+              <input value={replyInput} onChange={e => setReplyInput(e.target.value)} placeholder="寫回覆..."
+                className="flex-1 bg-hearten-bg border border-hearten-border rounded-lg px-3 py-1.5 text-sm text-hearten-text placeholder-hearten-muted outline-none focus:border-hearten-rose transition-colors" />
+              <button onClick={handleReply} disabled={!replyInput.trim()}
+                className="px-3 py-1.5 rounded-lg bg-hearten-rose hover:bg-hearten-rose-light disabled:opacity-40 text-white text-xs font-medium transition-colors">回覆</button>
+            </div>
+            <div className="flex items-center gap-1">
+              {['😊','😂','❤️','😢','😡','👍','🤔','😍'].map(emoji => (
+                <button key={emoji} onClick={() => setReplyInput(prev => prev + emoji)}
+                  className="w-6 h-6 flex items-center justify-center rounded hover:bg-hearten-bg text-sm transition-colors">{emoji}</button>
+              ))}
+            </div>
           </div>
         )}
       </div>

@@ -186,7 +186,7 @@ export const posts = {
 export const comments = {
   async list(postId: string): Promise<Comment[]> {
     const supabase = createClient();
-    const { data } = await supabase.from('comments').select('*, profiles!comments_user_id_fkey(username, emoji, avatar_url)').eq('post_id', postId).order('created_at', { ascending: true });
+    const { data } = await supabase.from('comments').select('*, profiles(username, emoji, avatar_url)').eq('post_id', postId).order('created_at', { ascending: true });
     return (data || []).map(mapComment);
   },
 
@@ -194,7 +194,7 @@ export const comments = {
     const supabase = createClient();
     const { data, error } = await supabase.from('comments').insert({
       user_id: userId, post_id: postId, parent_id: parentId || null, body,
-    }).select('*, profiles!comments_user_id_fkey(username, emoji, avatar_url)').single();
+    }).select('*, profiles(username, emoji, avatar_url)').single();
     if (error || !data) return null;
     return { id: data.id, postId: data.post_id, parentId: data.parent_id || undefined, emoji: data.profiles?.emoji || '🐱', avatar_url: data.profiles?.avatar_url || null, anonymous: data.profiles?.username || '匿名用戶', body: data.body, time: '啱啱', hearts: 0, isOP: false, replies: [] };
   },
