@@ -122,14 +122,14 @@ export default function LoginModal({ open, onClose }: Props) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-hearten-text mb-1.5">6位驗證碼</label>
+                <label className="block text-sm font-medium text-hearten-text mb-1.5">驗證碼</label>
                 <input
                   type="text"
                   inputMode="numeric"
-                  maxLength={6}
+                  maxLength={8}
                   value={otp}
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-                  placeholder="000000"
+                  placeholder="00000000"
                   className="w-full bg-hearten-bg border border-hearten-border rounded-lg px-3 py-2.5 text-sm text-hearten-text placeholder-hearten-muted outline-none focus:border-hearten-rose transition-colors text-center tracking-[0.3em]"
                   onKeyDown={(e) => e.key === 'Enter' && handleVerifyOtp()}
                   autoFocus

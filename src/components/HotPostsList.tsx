@@ -41,7 +41,7 @@ export default function HotPostsList() {
             <div className="text-[14.5px] font-semibold text-hearten-text whitespace-nowrap overflow-hidden text-ellipsis mb-[3px]">
               {post.title}
             </div>
-            <div className="text-xs text-hearten-dim">
+            <div className="text-sm text-hearten-dim">
               {post.author} · {post.time} · {post.category}
             </div>
           </div>

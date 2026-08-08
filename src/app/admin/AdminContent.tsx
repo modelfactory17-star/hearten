@@ -18,6 +18,7 @@ export default function AdminContent() {
   const { tab } = useAdminTab();
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState<string | null>(null);
 
   // Data
   const [stats, setStats] = useState({ users: 0, posts: 0, comments: 0, hearts: 0 });
@@ -48,6 +49,21 @@ export default function AdminContent() {
     load();
     return () => { cancelled = true; };
   }, [tab]);
+
+  async function handleDelete(type: 'user' | 'post' | 'comment', id: string) {
+    if (!confirm(`確定要刪除這個${type === 'user' ? '用戶' : type === 'post' ? '文章' : '留言'}？此操作無法復原。`)) return;
+    setDeleting(id);
+    const res = await fetch('/api/admin/delete', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type, id }) });
+    if (res.ok) {
+      if (type === 'user') setUsers(prev => prev.filter(u => u.id !== id));
+      else if (type === 'post') setPosts(prev => prev.filter(p => p.id !== id));
+      else setComments(prev => prev.filter(c => c.id !== id));
+    } else {
+      const { error } = await res.json();
+      alert(`刪除失敗：${error}`);
+    }
+    setDeleting(null);
+  }
 
   return (
     <div className="space-y-6">
@@ -202,7 +218,7 @@ export default function AdminContent() {
                   </td>
                   <td className="py-3 px-4 text-right">
                     <div className="flex items-center justify-end gap-1">
-                      <button className="p-1.5 rounded-lg text-gray-500 hover:text-[#e11d48] hover:bg-[#e11d48]/10 transition-colors" title="刪除">
+                      <button onClick={() => handleDelete('user', user.id)} disabled={deleting === user.id} className="p-1.5 rounded-lg text-gray-500 hover:text-[#e11d48] hover:bg-[#e11d48]/10 transition-colors disabled:opacity-30" title="刪除">
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
@@ -269,7 +285,7 @@ export default function AdminContent() {
                   <td className="py-3 px-4 text-sm text-gray-500">{post.time}</td>
                   <td className="py-3 px-4 text-right">
                     <div className="flex items-center justify-end gap-1">
-                      <button className="p-1.5 rounded-lg text-gray-500 hover:text-[#e11d48] hover:bg-[#e11d48]/10 transition-colors" title="刪除">
+                      <button onClick={() => handleDelete('post', post.id)} disabled={deleting === post.id} className="p-1.5 rounded-lg text-gray-500 hover:text-[#e11d48] hover:bg-[#e11d48]/10 transition-colors disabled:opacity-30" title="刪除">
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
@@ -328,7 +344,7 @@ export default function AdminContent() {
                   <td className="py-3 px-4 text-sm text-gray-500">{comment.time}</td>
                   <td className="py-3 px-4 text-right">
                     <div className="flex items-center justify-end gap-1">
-                      <button className="p-1.5 rounded-lg text-gray-500 hover:text-[#e11d48] hover:bg-[#e11d48]/10 transition-colors" title="刪除">
+                      <button onClick={() => handleDelete('comment', comment.id)} disabled={deleting === comment.id} className="p-1.5 rounded-lg text-gray-500 hover:text-[#e11d48] hover:bg-[#e11d48]/10 transition-colors disabled:opacity-30" title="刪除">
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>

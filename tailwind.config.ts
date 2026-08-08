@@ -14,6 +14,7 @@ const config: Config = {
         hearten: {
           bg: "rgb(var(--hearten-bg) / <alpha-value>)",
           card: "rgb(var(--hearten-card) / <alpha-value>)",
+          header: "rgb(var(--hearten-header) / <alpha-value>)",
           "card-hover": "rgb(var(--hearten-card-hover) / <alpha-value>)",
           border: "rgb(var(--hearten-border) / <alpha-value>)",
           "border-hover": "rgb(var(--hearten-border-hover) / <alpha-value>)",

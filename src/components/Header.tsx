@@ -2,14 +2,17 @@
 
 import { useState, useEffect } from 'react';
 import { Search, Bell, User, Sun, Moon, LogOut } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { db, type AuthUser } from '@/lib/db';
 import { createClient } from '@/utils/supabase/client';
 import LoginModal from './LoginModal';
 
-export default function Header() {
+export default function Header({ onMenuToggle }: { onMenuToggle?: () => void }) {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [user, setUser] = useState<AuthUser | null>(null);
   const [showLogin, setShowLogin] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
     const stored = localStorage.getItem('hearten-theme') as 'dark' | 'light' | null;
@@ -46,12 +49,28 @@ export default function Header() {
     db.auth.logout();
   };
 
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && searchQuery.trim()) {
+      router.push(`/?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
   return (
     <>
-      <header className="sticky top-0 z-50 h-14 border-b border-hearten-border bg-hearten-bg/90 backdrop-blur">
+      <header className="sticky top-0 z-50 h-14 border-b border-hearten-border bg-hearten-header backdrop-blur">
         <div className="h-full max-w-[1400px] mx-auto px-4 flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-3">
+            {/* Hamburger — mobile only */}
+            <button
+              onClick={onMenuToggle}
+              className="lg:hidden p-1.5 -ml-1 rounded-lg hover:bg-hearten-card text-hearten-text transition-colors"
+              aria-label="Toggle menu"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M3 6h18M3 12h18M3 18h18"/>
+              </svg>
+            </button>
             <a href="/" className="flex items-center gap-2.5 font-bold text-xl">
               <img src="/logo.svg" alt="Hearten" className="w-10 h-10" />
               <span className="text-hearten-text">Hearten</span>
@@ -66,6 +85,9 @@ export default function Header() {
             <Search className="w-4 h-4 text-hearten-muted" />
             <input
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleSearch}
               placeholder="搜尋心事..."
               className="bg-transparent text-sm text-hearten-text placeholder-hearten-muted outline-none w-full"
             />
@@ -92,7 +114,14 @@ export default function Header() {
                   href={`/user/${encodeURIComponent(user.username)}`}
                   className="flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-hearten-card text-hearten-text text-sm transition-colors"
                 >
-                  <span>{user.emoji}</span>
+                  {user.avatar_url ? (
+                    <span className="w-6 h-6 rounded-full overflow-hidden">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={user.avatar_url} alt="" className="w-full h-full object-cover" />
+                    </span>
+                  ) : (
+                    <span>{user.emoji}</span>
+                  )}
                   <span className="hidden sm:inline max-w-[80px] truncate">{user.username}</span>
                 </a>
                 <button
@@ -104,13 +133,21 @@ export default function Header() {
                 </button>
               </div>
             ) : (
-              <button
-                onClick={() => setShowLogin(true)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-hearten-rose hover:bg-hearten-rose-light text-white text-sm font-medium transition-colors"
-              >
-                <User className="w-4 h-4" />
-                <span className="hidden sm:inline">登入</span>
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setShowLogin(true)}
+                  className="px-3 py-1.5 rounded-lg border border-hearten-border hover:bg-hearten-card text-hearten-text text-sm font-medium transition-colors"
+                >
+                  註冊
+                </button>
+                <button
+                  onClick={() => setShowLogin(true)}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-hearten-rose hover:bg-hearten-rose-light text-white text-sm font-medium transition-colors"
+                >
+                  <User className="w-4 h-4" />
+                  <span className="hidden sm:inline">登入</span>
+                </button>
+              </div>
             )}
           </div>
         </div>

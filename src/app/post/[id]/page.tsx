@@ -2,6 +2,10 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { Heart, MessageCircle, Share2, ArrowLeft, Flag, Eye, EyeOff, Bookmark } from 'lucide-react';
+import Footer from '@/components/Footer';
+import Header from '@/components/Header';
+import LeftSidebar from '@/components/LeftSidebar';
+import RightSidebar from '@/components/RightSidebar';
 import { db, type AuthUser } from '@/lib/db';
 import type { Post, Comment } from '@/lib/db';
 import { useState, useCallback, useEffect } from 'react';
@@ -15,9 +19,9 @@ const MOODS = [
 
 type FontSize = 'small' | 'medium' | 'large';
 const FONT_SIZES: { key: FontSize; label: string; className: string }[] = [
-  { key: 'small', label: '小', className: 'text-[13px]' },
-  { key: 'medium', label: '中', className: 'text-[15px]' },
-  { key: 'large', label: '大', className: 'text-[17px]' },
+  { key: 'small', label: '小', className: 'text-[14px]' },
+  { key: 'medium', label: '中', className: 'text-[16px]' },
+  { key: 'large', label: '大', className: 'text-[18px]' },
 ];
 
 function buildTree(staticComments: Comment[], userComments: Comment[]): Comment[] {
@@ -48,9 +52,8 @@ export default function PostPage() {
   const router = useRouter();
   const postId = params.id as string;
 
-  // Find post from static + Supabase
   const [post, setPost] = useState<Post | null>(null);
-  const [heartCount, setHeartCount] = useState(post?.hearts ?? 0);
+  const [heartCount, setHeartCount] = useState(0);
   const [hearted, setHearted] = useState(false);
   const [replyText, setReplyText] = useState('');
   const [mood, setMood] = useState<string | null>(null);
@@ -60,11 +63,12 @@ export default function PostPage() {
   const [bookmarked, setBookmarked] = useState(false);
   const [shareDone, setShareDone] = useState(false);
   const [user, setUser] = useState<AuthUser | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const tree = buildTree([], userComments);
   const displayedComments = authorOnly ? tree.filter(c => c.isOP) : tree;
   const commentCount = userComments.length;
-  const bodyClass = FONT_SIZES.find(f => f.key === fontSize)?.className ?? 'text-[15px]';
+  const bodyClass = FONT_SIZES.find(f => f.key === fontSize)?.className ?? 'text-[16px]';
 
   const refreshComments = useCallback(async () => {
     const comments = await db.comments.list(postId);
@@ -92,17 +96,6 @@ export default function PostPage() {
     db.bookmarks.isBookmarked(user.id, postId).then(setBookmarked);
   }, [user, postId]);
 
-  if (!post) {
-    return (
-      <div className="min-h-screen bg-hearten-bg flex items-center justify-center">
-        <div className="text-center space-y-3">
-          <p className="text-hearten-muted text-lg">搵唔到呢篇心事 😢</p>
-          <button onClick={() => router.push('/')} className="px-4 py-2 rounded-lg bg-hearten-rose text-white text-sm">返去首頁</button>
-        </div>
-      </div>
-    );
-  }
-
   const handleHeartPost = async () => {
     if (!user) { window.dispatchEvent(new Event('hearten:open-login')); return; }
     const now = await db.likes.toggle(user.id, 'post', postId);
@@ -123,120 +116,155 @@ export default function PostPage() {
   };
 
   const handleShare = async () => {
-    await sharePost(post.title);
+    await sharePost(post?.title ?? '');
     setShareDone(true);
     setTimeout(() => setShareDone(false), 2000);
   };
 
   return (
     <div className="min-h-screen bg-hearten-bg">
-      <div className="sticky top-0 z-50 h-14 border-b border-hearten-border bg-hearten-bg/90 backdrop-blur flex items-center px-4 gap-4">
-        <button onClick={() => router.push('/')} className="flex items-center gap-1 text-hearten-muted hover:text-hearten-text transition-colors text-sm">
-          <ArrowLeft className="w-4 h-4" />返回上頁
-        </button>
-        <div className="flex-1" />
-        <span className="text-xs text-hearten-muted">💬 心事詳情</span>
-      </div>
+      <Header onMenuToggle={() => setMobileMenuOpen(v => !v)} />
 
-      <div className="max-w-2xl mx-auto px-4 py-6">
-        <article className="bg-hearten-card border border-hearten-border rounded-xl p-6 mb-6">
-          <div className="flex items-start justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-hearten-rose/20 flex items-center justify-center text-2xl shrink-0">{post.emoji}</div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span onClick={() => router.push(`/user/${encodeURIComponent(post.anonymous)}`)}
-                    className="font-medium text-hearten-text text-sm hover:text-hearten-rose cursor-pointer transition-colors">{post.anonymous}</span>
-                  <span className="px-1.5 py-0.5 rounded-md bg-hearten-rose/10 text-hearten-rose text-[10px] font-medium">{post.category}</span>
-                </div>
-                <span className="text-xs text-hearten-muted">{post.time}</span>
+      <div className="flex max-w-[1500px] mx-auto">
+        <div className="hidden lg:block"><LeftSidebar /></div>
+        {mobileMenuOpen && (
+          <div className="fixed inset-0 z-40 lg:hidden">
+            <div className="absolute inset-0 bg-black/50" onClick={() => setMobileMenuOpen(false)} />
+            <div className="absolute left-0 top-0 h-full w-[260px] bg-hearten-bg shadow-xl animate-slide-in overflow-y-auto">
+              <div className="flex justify-end p-3">
+                <button onClick={() => setMobileMenuOpen(false)} className="p-1.5 rounded-lg hover:bg-hearten-card text-hearten-muted">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
               </div>
+              <LeftSidebar />
             </div>
-            <div className="flex items-center gap-2">
-              <div className="flex items-center rounded-lg border border-hearten-border overflow-hidden">
-                {FONT_SIZES.map(f => (
-                  <button key={f.key} onClick={() => setFontSize(f.key)}
-                    className={`px-2 py-1 text-xs transition-colors ${fontSize === f.key ? 'bg-hearten-rose text-white' : 'text-hearten-muted hover:text-hearten-text hover:bg-hearten-card'}`}>{f.label}</button>
-                ))}
-              </div>
-              <button onClick={() => setAuthorOnly(!authorOnly)}
-                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs transition-colors ${authorOnly ? 'bg-hearten-amber/20 text-hearten-amber' : 'text-hearten-muted hover:text-hearten-text hover:bg-hearten-card'}`}>
-                {authorOnly ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}只看該作者
-              </button>
-            </div>
-          </div>
-
-          <h1 className="text-xl font-bold text-hearten-text mb-4">{post.title}</h1>
-          <div className={`text-hearten-muted leading-relaxed whitespace-pre-line mb-6 ${bodyClass}`}>{post.body}</div>
-
-          <div className="flex items-center gap-6 pt-4 border-t border-hearten-border">
-            <button onClick={handleHeartPost}
-              className={`flex items-center gap-1.5 transition-colors text-sm ${hearted ? 'text-hearten-rose' : 'text-hearten-muted hover:text-hearten-rose'}`}>
-              <Heart className={`w-4 h-4 ${hearted ? 'fill-current' : ''}`} /><span>{heartCount}</span>
-            </button>
-            <button className="flex items-center gap-1.5 text-hearten-muted hover:text-blue-400 transition-colors text-sm">
-              <MessageCircle className="w-4 h-4" /><span>{commentCount} 則留言</span>
-            </button>
-            <button onClick={handleBookmark}
-              className={`flex items-center gap-1.5 transition-colors text-sm ${bookmarked ? 'text-hearten-amber' : 'text-hearten-muted hover:text-hearten-amber'}`}>
-              <Bookmark className={`w-4 h-4 ${bookmarked ? 'fill-current' : ''}`} />
-            </button>
-            <button onClick={handleShare}
-              className={`flex items-center gap-1.5 transition-colors text-sm ml-auto ${shareDone ? 'text-green-400' : 'text-hearten-muted hover:text-green-400'}`}>
-              <Share2 className="w-4 h-4" />{shareDone ? '已複製' : '分享'}
-            </button>
-          </div>
-        </article>
-
-        <div className="flex items-center gap-3 mb-5">
-          <h2 className="text-sm font-bold text-hearten-muted uppercase tracking-wider">
-            💬 留言 ({displayedComments.length}{authorOnly ? ' · 只看該作者' : ''})
-          </h2>
-          <div className="flex-1 h-px bg-hearten-border" />
-        </div>
-
-        {user ? (
-          <div className="bg-hearten-card border border-hearten-border rounded-xl p-4 mb-4">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-sm">{user.emoji}</span>
-              <span className="text-sm font-medium text-hearten-text">{user.username}</span>
-            </div>
-            <textarea value={replyText} onChange={e => setReplyText(e.target.value)}
-              placeholder="分享你嘅諗法..." rows={3}
-              className="w-full bg-hearten-bg border border-hearten-border rounded-lg p-3 text-sm text-hearten-text placeholder-hearten-muted outline-none resize-none focus:border-hearten-rose transition-colors" />
-            <div className="flex items-center justify-between mt-3">
-              <div className="flex items-center gap-1.5">
-                {MOODS.map(m => (
-                  <button key={m.emoji} onClick={() => setMood(mood === m.label ? null : m.label)}
-                    className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs transition-all ${mood === m.label ? 'bg-hearten-rose/20 text-hearten-rose border border-hearten-rose/40' : 'border border-hearten-border text-hearten-muted hover:border-gray-500 hover:text-hearten-muted'}`}>
-                    <span className="text-sm leading-none">{m.emoji}</span>{m.label}
-                  </button>
-                ))}
-              </div>
-              <button onClick={handleSubmitComment} disabled={!replyText.trim()}
-                className="px-4 py-1.5 rounded-lg bg-hearten-rose hover:bg-hearten-rose-light disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors">留言</button>
-            </div>
-          </div>
-        ) : (
-          <div className="bg-hearten-card border border-hearten-border rounded-xl p-6 mb-4 text-center">
-            <p className="text-hearten-muted text-sm mb-3">請先登入以留言 💬</p>
-            <button onClick={() => window.dispatchEvent(new Event('hearten:open-login'))}
-              className="px-4 py-2 rounded-lg bg-hearten-rose hover:bg-hearten-rose-light text-white text-sm font-medium transition-colors">登入 / 註冊</button>
           </div>
         )}
 
-        <div className="space-y-0">
-          {displayedComments.length === 0 ? (
-            <p className="text-center text-hearten-muted text-sm py-8">
-              {authorOnly ? '該作者未有留言' : '仲未有留言。做第一個留言嘅人？ 💭'}
-            </p>
+        <main className="flex-1 min-w-0 px-7 py-6 max-md:px-4">
+          {!post ? (
+            <div className="flex items-center justify-center h-64">
+              <div className="text-center space-y-3">
+                <p className="text-hearten-muted text-lg">搵唔到呢篇心事 😢</p>
+                <button onClick={() => router.push('/')} className="px-4 py-2 rounded-lg bg-hearten-rose text-white text-sm">返去首頁</button>
+              </div>
+            </div>
           ) : (
-            displayedComments.map(comment => (
-              <CommentItem key={comment.id} comment={comment} postId={postId} onCommentAdded={refreshComments} />
-            ))
+            <>
+              {/* Back nav */}
+              <button onClick={() => router.push('/')} className="flex items-center gap-1 text-hearten-muted hover:text-hearten-text transition-colors text-sm mb-4">
+                <ArrowLeft className="w-4 h-4" />返回上頁
+              </button>
+
+              <article className="bg-hearten-card border border-hearten-border rounded-xl p-6 mb-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-full bg-hearten-rose/20 flex items-center justify-center text-2xl shrink-0 overflow-hidden">
+                      {post.avatar_url ? (
+                        <img src={post.avatar_url} alt="" className="w-full h-full object-cover" />
+                      ) : post.emoji}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span onClick={() => router.push(`/user/${encodeURIComponent(post.anonymous)}`)}
+                          className="font-medium text-hearten-text text-sm hover:text-hearten-rose cursor-pointer transition-colors">{post.anonymous}</span>
+                        <span className="px-1.5 py-0.5 rounded-md bg-hearten-rose/10 text-hearten-rose text-[10px] font-medium">{post.category}</span>
+                      </div>
+                      <span className="text-xs text-hearten-muted">{post.time}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center rounded-lg border border-hearten-border overflow-hidden">
+                      {FONT_SIZES.map(f => (
+                        <button key={f.key} onClick={() => setFontSize(f.key)}
+                          className={`px-2 py-1 text-xs transition-colors ${fontSize === f.key ? 'bg-hearten-rose text-white' : 'text-hearten-muted hover:text-hearten-text hover:bg-hearten-card'}`}>{f.label}</button>
+                      ))}
+                    </div>
+                    <button onClick={() => setAuthorOnly(!authorOnly)}
+                      className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs transition-colors ${authorOnly ? 'bg-hearten-amber/20 text-hearten-amber' : 'text-hearten-muted hover:text-hearten-text hover:bg-hearten-card'}`}>
+                      {authorOnly ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}只看該作者
+                    </button>
+                  </div>
+                </div>
+
+                <h1 className="text-xl font-bold text-hearten-text mb-4">{post.title}</h1>
+                <div className={`text-hearten-muted leading-relaxed whitespace-pre-line mb-6 ${bodyClass}`}>{post.body}</div>
+
+                <div className="flex items-center gap-6 pt-4 border-t border-hearten-border">
+                  <button onClick={handleHeartPost}
+                    className={`flex items-center gap-1.5 transition-colors text-sm ${hearted ? 'text-hearten-rose' : 'text-hearten-muted hover:text-hearten-rose'}`}>
+                    <Heart className={`w-4 h-4 ${hearted ? 'fill-current' : ''}`} /><span>{heartCount}</span>
+                  </button>
+                  <button className="flex items-center gap-1.5 text-hearten-muted hover:text-blue-400 transition-colors text-sm">
+                    <MessageCircle className="w-4 h-4" /><span>{commentCount} 則留言</span>
+                  </button>
+                  <button onClick={handleBookmark}
+                    className={`flex items-center gap-1.5 transition-colors text-sm ${bookmarked ? 'text-hearten-amber' : 'text-hearten-muted hover:text-hearten-amber'}`}>
+                    <Bookmark className={`w-4 h-4 ${bookmarked ? 'fill-current' : ''}`} />
+                  </button>
+                  <button onClick={handleShare}
+                    className={`flex items-center gap-1.5 transition-colors text-sm ml-auto ${shareDone ? 'text-green-400' : 'text-hearten-muted hover:text-green-400'}`}>
+                    <Share2 className="w-4 h-4" />{shareDone ? '已複製' : '分享'}
+                  </button>
+                </div>
+              </article>
+
+              <div className="flex items-center gap-3 mb-5">
+                <h2 className="text-sm font-bold text-hearten-muted uppercase tracking-wider">
+                  💬 留言 ({displayedComments.length}{authorOnly ? ' · 只看該作者' : ''})
+                </h2>
+                <div className="flex-1 h-px bg-hearten-border" />
+              </div>
+
+              {user ? (
+                <div className="bg-hearten-card border border-hearten-border rounded-xl p-4 mb-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-sm">{user.emoji}</span>
+                    <span className="text-sm font-medium text-hearten-text">{user.username}</span>
+                  </div>
+                  <textarea value={replyText} onChange={e => setReplyText(e.target.value)}
+                    placeholder="分享你嘅諗法..." rows={3}
+                    className="w-full bg-hearten-bg border border-hearten-border rounded-lg p-3 text-sm text-hearten-text placeholder-hearten-muted outline-none resize-none focus:border-hearten-rose transition-colors" />
+                  <div className="flex items-center justify-between mt-3">
+                    <div className="flex items-center gap-1.5">
+                      {MOODS.map(m => (
+                        <button key={m.emoji} onClick={() => setMood(mood === m.label ? null : m.label)}
+                          className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs transition-all ${mood === m.label ? 'bg-hearten-rose/20 text-hearten-rose border border-hearten-rose/40' : 'border border-hearten-border text-hearten-muted hover:border-gray-500 hover:text-hearten-muted'}`}>
+                          <span className="text-sm leading-none">{m.emoji}</span>{m.label}
+                        </button>
+                      ))}
+                    </div>
+                    <button onClick={handleSubmitComment} disabled={!replyText.trim()}
+                      className="px-4 py-1.5 rounded-lg bg-hearten-rose hover:bg-hearten-rose-light disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors">留言</button>
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-hearten-card border border-hearten-border rounded-xl p-6 mb-4 text-center">
+                  <p className="text-hearten-muted text-sm mb-3">請先登入以留言 💬</p>
+                  <button onClick={() => window.dispatchEvent(new Event('hearten:open-login'))}
+                    className="px-4 py-2 rounded-lg bg-hearten-rose hover:bg-hearten-rose-light text-white text-sm font-medium transition-colors">登入 / 註冊</button>
+                </div>
+              )}
+
+              <div className="space-y-0">
+                {displayedComments.length === 0 ? (
+                  <p className="text-center text-hearten-muted text-sm py-8">
+                    {authorOnly ? '該作者未有留言' : '仲未有留言。做第一個留言嘅人？ 💭'}
+                  </p>
+                ) : (
+                  displayedComments.map(comment => (
+                    <CommentItem key={comment.id} comment={comment} postId={postId} onCommentAdded={refreshComments} />
+                  ))
+                )}
+              </div>
+            </>
           )}
-        </div>
+        </main>
+
+        <RightSidebar />
       </div>
+
+      <Footer />
     </div>
   );
 }
@@ -276,14 +304,18 @@ function CommentItem({ comment, postId, onCommentAdded, depth = 0 }: {
     <div className={depth > 0 ? 'ml-10 border-l-2 border-hearten-border pl-4' : ''}>
       <div className={`bg-hearten-card border border-hearten-border rounded-xl p-4 ${depth > 0 ? '' : 'mb-0'} mb-3`}>
         <div className="flex items-center gap-2 mb-2">
-          <div className="w-7 h-7 rounded-full bg-hearten-rose/20 flex items-center justify-center text-sm shrink-0">{comment.emoji}</div>
+          <div className="w-7 h-7 rounded-full bg-hearten-rose/20 flex items-center justify-center text-sm shrink-0 overflow-hidden">
+            {comment.avatar_url ? (
+              <img src={comment.avatar_url} alt="" className="w-full h-full object-cover" />
+            ) : comment.emoji}
+          </div>
           <span onClick={() => router.push(`/user/${encodeURIComponent(comment.anonymous)}`)}
             className="text-sm font-medium text-hearten-text hover:text-hearten-rose cursor-pointer transition-colors">{comment.anonymous}</span>
           {comment.isOP && <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-hearten-amber/20 text-hearten-amber">樓主</span>}
           <span className="text-xs text-hearten-muted">{comment.time}</span>
           <button className="ml-auto text-hearten-muted hover:text-hearten-text"><Flag className="w-3.5 h-3.5" /></button>
         </div>
-        <p className="text-sm text-hearten-muted leading-relaxed mb-3">{comment.body}</p>
+        <p className="text-[15px] text-hearten-muted leading-relaxed mb-3">{comment.body}</p>
         <div className="flex items-center gap-4">
           <button onClick={handleHeartComment}
             className={`flex items-center gap-1 text-xs transition-colors ${cHearted ? 'text-hearten-rose' : 'text-hearten-muted hover:text-hearten-rose'}`}>

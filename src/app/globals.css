@@ -2,12 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  font-size: 17px;
+}
+
 :root {
   --background: #0a0a0f;
   --foreground: #e4e4e7;
   /* Dark mode (default) */
   --hearten-bg: 10 10 15;
   --hearten-card: 20 20 24;
+  --hearten-header: 20 20 24;
   --hearten-card-hover: 26 26 34;
   --hearten-border: 31 31 36;
   --hearten-border-hover: 58 58 72;
@@ -24,6 +29,7 @@ html.light {
   --foreground: #18181b;
   --hearten-bg: 248 248 250;
   --hearten-card: 255 255 255;
+  --hearten-header: 224 242 254;
   --hearten-card-hover: 244 244 245;
   --hearten-border: 228 228 231;
   --hearten-border-hover: 212 212 216;
@@ -79,4 +85,13 @@ html.light ::-webkit-scrollbar-thumb:hover {
 }
 .animate-pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Mobile sidebar slide-in */
+@keyframes slide-in {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+.animate-slide-in {
+  animation: slide-in 0.2s ease-out;
 }

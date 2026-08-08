@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 interface FeedCardProps {
   id: string;
   emoji: string;
+  avatar_url: string | null;
   title: string;
   preview: string;
   category: string;
@@ -21,6 +22,7 @@ interface FeedCardProps {
 export default function FeedCard({
   id,
   emoji,
+  avatar_url,
   title,
   preview,
   category,
@@ -76,9 +78,14 @@ export default function FeedCard({
         {/* Avatar */}
         <div
           onClick={(e) => { e.stopPropagation(); router.push(`/user/${encodeURIComponent(anonymous)}`); }}
-          className="w-10 h-10 rounded-full bg-hearten-rose/20 flex items-center justify-center text-lg shrink-0 hover:ring-2 hover:ring-hearten-rose/50 cursor-pointer transition-all"
+          className="w-10 h-10 rounded-full bg-hearten-rose/20 flex items-center justify-center text-lg shrink-0 hover:ring-2 hover:ring-hearten-rose/50 cursor-pointer transition-all overflow-hidden"
         >
-          {emoji}
+          {avatar_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={avatar_url} alt="" className="w-full h-full object-cover" />
+          ) : (
+            emoji
+          )}
         </div>
 
         {/* Content */}

@@ -43,10 +43,10 @@ export default function RightSidebar() {
               className="flex items-center gap-3 py-[9px] px-3 rounded-[10px] bg-transparent hover:bg-hearten-card cursor-pointer transition-colors duration-[0.15s] text-left w-full"
             >
               <span className="text-[15px]">{topic.emoji}</span>
-              <span className="flex-1 text-sm font-semibold text-hearten-muted whitespace-nowrap overflow-hidden text-ellipsis group-hover:text-hearten-text">
+              <span className="flex-1 text-base font-semibold text-hearten-muted whitespace-nowrap overflow-hidden text-ellipsis group-hover:text-hearten-text">
                 {topic.text}
               </span>
-              <span className="text-xs text-hearten-dim flex-shrink-0">{topic.num}</span>
+              <span className="text-sm text-hearten-dim flex-shrink-0">{topic.num}</span>
             </button>
           ))}
         </div>
@@ -73,7 +73,7 @@ export default function RightSidebar() {
               <span className="flex-1 text-sm font-semibold text-hearten-muted whitespace-nowrap overflow-hidden text-ellipsis">
                 {member.text}
               </span>
-              <span className="text-xs text-hearten-dim flex-shrink-0">新</span>
+              <span className="text-sm text-hearten-dim flex-shrink-0">新</span>
             </button>
           ))}
         </div>
@@ -100,22 +100,12 @@ export default function RightSidebar() {
               <span className="flex-1 text-sm font-semibold text-hearten-muted whitespace-nowrap overflow-hidden text-ellipsis">
                 {user.text}
               </span>
-              <span className="text-xs text-hearten-dim flex-shrink-0">{user.num}</span>
+              <span className="text-sm text-hearten-dim flex-shrink-0">{user.num}</span>
             </button>
           ))}
         </div>
       </div>
 
-      {/* Footer */}
-      <div className="pt-[18px] border-t border-hearten-border text-xs text-hearten-dim leading-[1.9]">
-        <p>© 2024 Hearten</p>
-        <p>Heart + Listen · 用心聽你嘅心事</p>
-        <p className="mt-2">
-          <a href="#" className="mr-3 hover:text-hearten-muted transition-colors duration-[0.15s]">私隱</a>
-          <a href="#" className="mr-3 hover:text-hearten-muted transition-colors duration-[0.15s]">條款</a>
-          <a href="#" className="hover:text-hearten-muted transition-colors duration-[0.15s]">聯絡</a>
-        </p>
-      </div>
     </aside>
   );
 }

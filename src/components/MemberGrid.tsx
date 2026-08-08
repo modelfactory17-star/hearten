@@ -145,8 +145,8 @@ export default function MemberGrid() {
 
               {/* Info */}
               <div className="flex-1 min-w-0">
-                <div className="text-[14.5px] font-bold text-hearten-text">{m.name}</div>
-                <div className="text-[11.5px] text-hearten-dim mt-[2px]">{m.location}</div>
+                <div className="text-base font-bold text-hearten-text">{m.name}</div>
+                <div className="text-xs text-hearten-dim mt-[2px]">{m.location}</div>
                 <div className="flex items-center gap-1 mt-[6px] flex-wrap">
                   <span className={`inline-flex items-center gap-1 text-[10.5px] font-semibold px-2 py-[2px] rounded-[10px] ${statusBadge[m.status].className}`}>
                     {statusBadge[m.status].label}
@@ -176,19 +176,19 @@ export default function MemberGrid() {
             </div>
 
             {/* Bio */}
-            <p className="text-[12.5px] text-hearten-muted mt-2 leading-[1.5] line-clamp-2">
+            <p className="text-sm text-hearten-muted mt-2 leading-[1.5] line-clamp-2">
               {m.bio}
             </p>
 
             {/* Footer */}
             <div className="flex items-center gap-2 mt-[14px]">
-              <button className="flex items-center justify-center gap-[6px] py-[7px] px-[14px] rounded-[10px] border border-hearten-rose bg-transparent text-hearten-rose text-[12.5px] font-semibold cursor-pointer transition-all duration-[0.15s] flex-1 hover:bg-hearten-rose hover:text-white">
+              <button className="flex items-center justify-center gap-[6px] py-[7px] px-[14px] rounded-[10px] border border-hearten-rose bg-transparent text-hearten-rose text-sm font-semibold cursor-pointer transition-all duration-[0.15s] flex-1 hover:bg-hearten-rose hover:text-white">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-[14px] h-[14px]">
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                 </svg>
                 Inbox
               </button>
-              <span className="text-[11.5px] text-hearten-dim">{m.posts} 帖</span>
+              <span className="text-xs text-hearten-dim">{m.posts} 帖</span>
             </div>
           </div>
         ))}
