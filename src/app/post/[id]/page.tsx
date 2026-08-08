@@ -117,7 +117,7 @@ export default function PostPage() {
   const handleSubmitComment = async () => {
     if (!replyText.trim() || !user) return;
     const c = await db.comments.create(user.id, postId, replyText);
-    if (c) { setReplyText(''); setMood(null); refreshComments(); }
+    if (c) { setReplyText(''); refreshComments(); }
   };
 
   const handleBookmark = async () => {
