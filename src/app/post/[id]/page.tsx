@@ -196,29 +196,25 @@ export default function PostPage() {
                 <h1 className="text-xl font-bold text-hearten-text mb-4">{post.title}</h1>
                 <div className={`text-hearten-muted leading-relaxed whitespace-pre-line mb-6 ${bodyClass}`}>{post.body}</div>
 
-                {/* Mood Reactions */}
-                <div className="flex items-center gap-2 mb-5">
+                <div className="flex items-center gap-5 pt-4 border-t border-hearten-border flex-wrap">
+                  <button onClick={handleHeartPost}
+                    className={`flex items-center gap-1.5 transition-colors text-sm ${hearted ? 'text-hearten-rose' : 'text-hearten-muted hover:text-hearten-rose'}`}>
+                    <Heart className={`w-4 h-4 ${hearted ? 'fill-current' : ''}`} /><span>{heartCount}</span>
+                  </button>
                   {MOODS.map(m => (
                     <button key={m.emoji}
                       onClick={() => {
                         if (!user) { window.dispatchEvent(new Event('hearten:open-login')); return; }
                         setMood(mood === m.label ? null : m.label);
                       }}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-all ${
+                      className={`text-lg transition-all ${
                         mood === m.label
-                          ? 'bg-hearten-rose/20 text-hearten-rose border border-hearten-rose/40'
-                          : 'border border-hearten-border text-hearten-muted hover:border-hearten-rose/40 hover:text-hearten-text'
+                          ? 'scale-110'
+                          : 'opacity-50 hover:opacity-100 hover:scale-110'
                       }`}>
-                      <span className="text-base leading-none">{m.emoji}</span>{m.label}
+                      {m.emoji}
                     </button>
                   ))}
-                </div>
-
-                <div className="flex items-center gap-6 pt-4 border-t border-hearten-border">
-                  <button onClick={handleHeartPost}
-                    className={`flex items-center gap-1.5 transition-colors text-sm ${hearted ? 'text-hearten-rose' : 'text-hearten-muted hover:text-hearten-rose'}`}>
-                    <Heart className={`w-4 h-4 ${hearted ? 'fill-current' : ''}`} /><span>{heartCount}</span>
-                  </button>
                   <button className="flex items-center gap-1.5 text-hearten-muted hover:text-blue-400 transition-colors text-sm">
                     <MessageCircle className="w-4 h-4" /><span>{commentCount} 則留言</span>
                   </button>

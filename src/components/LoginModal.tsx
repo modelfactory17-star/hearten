@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default function LoginModal({ open, onClose }: Props) {
-  const [tab, setTab] = useState<'login' | 'register'>('login');
+  const [tab, setTab] = useState<'login' | 'register' | 'forgot'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
@@ -40,6 +40,13 @@ export default function LoginModal({ open, onClose }: Props) {
           setTimeout(() => onClose(), 600);
         } else {
           setError(result.error ?? '錯誤');
+        }
+      } else if (tab === 'forgot') {
+        const result = await db.auth.resetPassword(email);
+        if (result.ok) {
+          setSuccess('重設密碼電郵已發送，請檢查收件箱');
+        } else {
+          setError(result.error ?? '發送失敗，請再試');
         }
       } else {
         const result = await db.auth.register(email, password, username);
@@ -79,7 +86,7 @@ export default function LoginModal({ open, onClose }: Props) {
     }
   };
 
-  const switchTab = (t: 'login' | 'register') => {
+  const switchTab = (t: 'login' | 'register' | 'forgot') => {
     setTab(t);
     setError('');
     setSuccess('');
@@ -180,6 +187,7 @@ export default function LoginModal({ open, onClose }: Props) {
             </div>
           )}
 
+          {tab !== 'forgot' && (
           <div>
             <label className="block text-sm font-medium text-hearten-text mb-1.5">密碼</label>
             <input
@@ -191,24 +199,41 @@ export default function LoginModal({ open, onClose }: Props) {
               onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
             />
           </div>
+          )}
 
           {error && <p className="text-hearten-rose text-sm">⚠️ {error}</p>}
           {success && <p className="text-green-400 text-sm">✅ {success}</p>}
 
           <button
             onClick={handleSubmit}
-            disabled={!email.trim() || !password || (tab === 'register' && !username.trim()) || loading}
+            disabled={!email.trim() || (tab !== 'forgot' && !password) || (tab === 'register' && !username.trim()) || loading}
             className="w-full py-2.5 rounded-xl bg-hearten-rose hover:bg-hearten-rose-light disabled:opacity-40 text-white font-medium text-sm transition-colors"
           >
-            {loading ? '處理中...' : tab === 'login' ? '登入' : '註冊'}
+            {loading ? '處理中...' : tab === 'login' ? '登入' : tab === 'register' ? '註冊' : '發送重設電郵'}
           </button>
 
+          {tab === 'forgot' ? (
+            <p className="text-xs text-hearten-dim text-center">
+              <button onClick={() => switchTab('login')} className="text-hearten-rose hover:underline">
+                ← 返回登入
+              </button>
+            </p>
+          ) : (
           <p className="text-xs text-hearten-dim text-center">
             {tab === 'login' ? '未有帳戶？' : '已經有帳戶？'}
             <button onClick={() => switchTab(tab === 'login' ? 'register' : 'login')} className="text-hearten-rose ml-1 hover:underline">
               {tab === 'login' ? '註冊' : '登入'}
             </button>
           </p>
+          )}
+
+          {tab === 'login' && (
+            <p className="text-xs text-center">
+              <button onClick={() => switchTab('forgot')} className="text-hearten-dim hover:text-hearten-rose transition-colors">
+                忘記密碼？
+              </button>
+            </p>
+          )}
             </>
           )}
         </div>

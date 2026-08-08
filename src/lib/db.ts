@@ -107,6 +107,14 @@ export const auth = {
     const { error } = await supabase.from('profiles').update(updates).eq('id', userId);
     return { ok: !error, error: error?.message };
   },
+
+  async resetPassword(email: string) {
+    const supabase = createClient();
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: `${window.location.origin}/auth/callback`,
+    });
+    return { ok: !error, error: error?.message };
+  },
 };
 
 // ─── Posts ────────────────────────────────────────────────
