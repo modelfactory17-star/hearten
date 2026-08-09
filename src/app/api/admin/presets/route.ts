@@ -30,7 +30,8 @@ export async function POST(request: NextRequest) {
     }
 
     const cleanName = username.trim();
-    const email = 'preset_' + cleanName + '@hearten.com.hk';
+    const safeId = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    const email = 'preset_' + safeId + '@hearten.com.hk';
     const pwdChars = Math.random().toString(36).slice(2, 10);
     const password = 'Hearten' + pwdChars + '!';
 
