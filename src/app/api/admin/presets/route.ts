@@ -25,7 +25,8 @@ async function supabaseAdmin(path: string, method: string, body?: unknown) {
 export async function GET() {
   try {
     const res = await supabaseAdmin('/rest/v1/profiles?select=id,username,email&account_type=eq.preset', 'GET');
-    return NextResponse.json(res);
+    const data = await res.json();
+    return NextResponse.json(data);
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     return NextResponse.json({ error: message }, { status: 500 });
