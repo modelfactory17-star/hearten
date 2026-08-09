@@ -32,7 +32,7 @@ function generateSlug(title: string): string {
 // List all posts (admin view, service key)
 export async function GET() {
   try {
-    const data = await supabaseAdmin('/rest/v1/posts?select=*&order=created_at.desc', 'GET');
+    const data = await supabaseAdmin('/rest/v1/posts?select=*,profiles!posts_user_id_fkey(username)&order=created_at.desc', 'GET');
     return NextResponse.json(data);
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
