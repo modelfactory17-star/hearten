@@ -156,11 +156,19 @@ export default function UserPage() {
   useEffect(() => {
     async function load() {
       setLoading(true);
-      const p = await db.auth.getUserByUsername(name);
-      setProfile(p as ProfileData | null);
-      if (p) {
-        const posts = await db.posts.getByUser(name);
-        setUserPosts(posts);
+      try {
+        const res = await fetch(`/api/profile?username=${encodeURIComponent(name)}`);
+        const data = await res.json();
+        if (data && data.profile) {
+          setProfile(data.profile as ProfileData);
+          setUserPosts(Array.isArray(data.posts) ? data.posts : []);
+        } else {
+          setProfile(null);
+          setUserPosts([]);
+        }
+      } catch {
+        setProfile(null);
+        setUserPosts([]);
       }
       setLoading(false);
     }

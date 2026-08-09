@@ -47,11 +47,13 @@ export default function AdminContent() {
     async function load() {
       setLoading(true);
       if (tab === 'dashboard') {
-        const s = await db.admin.stats();
+        const res = await fetch('/api/admin/stats');
+        const s = await res.json();
         if (!cancelled) { setStats(s); setLoading(false); }
       } else if (tab === 'users') {
-        const u = await db.admin.users();
-        if (!cancelled) { setUsers(u); setLoading(false); }
+        const res = await fetch('/api/admin/users');
+        const u = await res.json();
+        if (!cancelled) { setUsers(Array.isArray(u) ? u : []); setLoading(false); }
       } else if (tab === 'posts') {
         const res = await fetch('/api/admin/posts');
         const raw = await res.json();
@@ -215,7 +217,7 @@ export default function AdminContent() {
                 />
               </div>
             </div>
-            <button onClick={() => { setSearch(''); db.admin.users().then(setUsers); }} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-gray-400 hover:text-gray-200 hover:bg-[#1a1a2e] transition-colors">
+            <button onClick={async () => { setSearch(''); const res = await fetch('/api/admin/users'); const u = await res.json(); setUsers(Array.isArray(u) ? u : []); }} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-gray-400 hover:text-gray-200 hover:bg-[#1a1a2e] transition-colors">
               <RefreshCw className="w-3.5 h-3.5" />刷新
             </button>
           </div>

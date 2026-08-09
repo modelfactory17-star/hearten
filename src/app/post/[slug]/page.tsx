@@ -79,8 +79,9 @@ export default function PostPage() {
   const bodyClass = FONT_SIZES.find(f => f.key === fontSize)?.className ?? 'text-[16px]';
 
   const refreshComments = useCallback(async () => {
-    const comments = await db.comments.list(postId);
-    setUserComments(comments);
+    const res = await fetch(`/api/comments?post_id=${encodeURIComponent(postId)}`);
+    const comments = await res.json();
+    setUserComments(Array.isArray(comments) ? comments : []);
   }, [postId]);
 
   useEffect(() => {
@@ -94,7 +95,9 @@ export default function PostPage() {
       // Post queries (no user needed)
       db.likes.count('post', id).then(setHeartCount);
       db.moods.countByPost(id).then(setMoodCounts);
-      db.comments.list(id).then(setUserComments);
+      fetch(`/api/comments?post_id=${encodeURIComponent(id)}`)
+        .then(r => r.json())
+        .then(c => setUserComments(Array.isArray(c) ? c : []));
 
       // User-dependent queries
       db.auth.getUser().then(u => {

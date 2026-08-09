@@ -69,10 +69,13 @@ export default function CategoryPage() {
 
   useEffect(() => {
     if (!dbCategory) return;
-    db.posts.listByCategory(dbCategory).then((data) => {
-      setPosts(data);
-      setLoading(false);
-    });
+    fetch(`/api/posts?category=${encodeURIComponent(dbCategory)}`)
+      .then(r => r.json())
+      .then(data => {
+        setPosts(Array.isArray(data) ? data : []);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, [dbCategory]);
 
   if (!info) {
