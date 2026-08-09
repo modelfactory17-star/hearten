@@ -15,6 +15,20 @@ interface AdminPost { id: string; title: string; author: string; category: strin
 interface AdminComment { id: string; body: string; author: string; post: string; time: string; }
 interface AdminPreset { id: string; username: string; emoji: string; email: string; account_type: string; posts: number; }
 
+function timeAgo(dateStr: string): string {
+  const date = new Date(dateStr);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMin = Math.floor(diffMs / 60000);
+  const diffHr = Math.floor(diffMs / 3600000);
+  const diffDay = Math.floor(diffMs / 86400000);
+  if (diffMin < 1) return '啱啱';
+  if (diffMin < 60) return `${diffMin} 分鐘前`;
+  if (diffHr < 24) return `${diffHr} 小時前`;
+  if (diffDay < 7) return `${diffDay} 日前`;
+  return date.toLocaleDateString('zh-HK', { month: 'short', day: 'numeric' });
+}
+
 export default function AdminContent() {
   const { tab } = useAdminTab();
   const [search, setSearch] = useState('');
@@ -39,7 +53,16 @@ export default function AdminContent() {
         const u = await db.admin.users();
         if (!cancelled) { setUsers(u); setLoading(false); }
       } else if (tab === 'posts') {
-        const p = await db.admin.posts();
+        const res = await fetch('/api/admin/posts');
+        const raw = await res.json();
+        const p = (Array.isArray(raw) ? raw : []).map((row: Record<string, unknown>) => ({
+          id: row.id as string, title: row.title as string,
+          author: ((row.profiles as Record<string, unknown> | null)?.username as string) || '匿名用戶',
+          category: (row.category as string) || '',
+          hearts: (row.hearts as number) || 0,
+          comments: (row.replies as number) || 0,
+          time: timeAgo(row.created_at as string),
+        }));
         if (!cancelled) { setPosts(p); setLoading(false); }
       } else if (tab === 'comments') {
         const c = await db.admin.comments();
