@@ -5,6 +5,41 @@ import { useRouter } from 'next/navigation';
 import { db } from '@/lib/db';
 import type { Poll } from '@/lib/db';
 
+// Fallback demo polls when DB is empty
+const DEMO_POLLS: Poll[] = [
+  {
+    id: 'demo-home-1', slug: '', title: '💬 你覺得「已讀不回」幾耐算係有問題？',
+    description: '', status: 'active', totalVotes: 2847,
+    options: [
+      { id: 'h1a', text: '1-3 小時', votes: 1281 },
+      { id: 'h1b', text: '半日', votes: 854 },
+      { id: 'h1c', text: '1 日以上', votes: 512 },
+      { id: 'h1d', text: '冇問題，人人忙', votes: 200 },
+    ],
+    userVotes: [], createdAt: new Date().toISOString(),
+  },
+  {
+    id: 'demo-home-2', slug: '', title: '💍 結婚之後，你覺得財政應該點管理？',
+    description: '', status: 'active', totalVotes: 1932,
+    options: [
+      { id: 'h2a', text: '聯名戶口，共同管理', votes: 811 },
+      { id: 'h2b', text: '各自獨立，分擔開支', votes: 638 },
+      { id: 'h2c', text: '主力一方管晒', votes: 483 },
+    ],
+    userVotes: [], createdAt: new Date().toISOString(),
+  },
+  {
+    id: 'demo-home-3', slug: '', title: '❤️ 另一半最緊要咩特質？',
+    description: '', status: 'active', totalVotes: 3201,
+    options: [
+      { id: 'h3a', text: '幽默感', votes: 1152 },
+      { id: 'h3b', text: '責任感', votes: 960 },
+      { id: 'h3c', text: '溝通能力', votes: 1089 },
+    ],
+    userVotes: [], createdAt: new Date().toISOString(),
+  },
+];
+
 function formatVotes(n: number): string {
   return n >= 1000 ? `${(n / 1000).toFixed(1)}K` : n.toString();
 }
@@ -16,13 +51,16 @@ export default function PollSection() {
 
   useEffect(() => {
     db.polls.list().then(data => {
-      const active = data.filter(p => p.status === 'active').slice(0, 2);
-      setPolls(active);
+      const active = data.filter(p => p.status === 'active').slice(0, 3);
+      setPolls(active.length > 0 ? active : DEMO_POLLS);
       setLoading(false);
-    }).catch(() => setLoading(false));
+    }).catch(() => {
+      setPolls(DEMO_POLLS);
+      setLoading(false);
+    });
   }, []);
 
-  if (loading || polls.length === 0) return null;
+  if (loading) return null;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-[14px]">
@@ -69,7 +107,7 @@ export default function PollSection() {
               <span className="text-[11.5px] text-hearten-dim">
                 🗳 {formatVotes(poll.totalVotes)} 人已投票
               </span>
-              <span className="text-[11.5px] text-hearten-rose hover:underline">
+              <span className="text-[11.5px] text-hearten-rose font-medium">
                 去投票 →
               </span>
             </div>
