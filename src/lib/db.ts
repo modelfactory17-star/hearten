@@ -533,6 +533,88 @@ function timeAgo(dateStr: string): string {
   return date.toLocaleDateString('zh-HK', { month: 'short', day: 'numeric' });
 }
 
+// ─── Messages ──────────────────────────────────────────────
+
+export interface Message {
+  id: string;
+  sender_id: string;
+  receiver_id: string;
+  body: string;
+  read: boolean;
+  created_at: string;
+  sender_name?: string;
+  sender_emoji?: string;
+  receiver_name?: string;
+  receiver_emoji?: string;
+}
+
+export const messages = {
+  async send(senderId: string, receiverId: string, body: string): Promise<boolean> {
+    const supabase = createClient();
+    const { error } = await supabase.from('messages').insert({
+      sender_id: senderId, receiver_id: receiverId, body,
+    });
+    return !error;
+  },
+
+  async conversation(userId: string, otherId: string): Promise<Message[]> {
+    const supabase = createClient();
+    const { data } = await supabase.from('messages').select(`
+      *,
+      sender:sender_id (username, emoji),
+      receiver:receiver_id (username, emoji)
+    `).or(`sender_id.eq.${userId},receiver_id.eq.${userId}`)
+      .or(`sender_id.eq.${otherId},receiver_id.eq.${otherId}`)
+      .order('created_at', { ascending: true });
+
+    return (data || []).map((m: Record<string, unknown>) => ({
+      id: m.id as string,
+      sender_id: m.sender_id as string,
+      receiver_id: m.receiver_id as string,
+      body: m.body as string,
+      read: m.read as boolean,
+      created_at: m.created_at as string,
+      sender_name: (m.sender as { username?: string } | null)?.username,
+      sender_emoji: (m.sender as { emoji?: string } | null)?.emoji,
+      receiver_name: (m.receiver as { username?: string } | null)?.username,
+      receiver_emoji: (m.receiver as { emoji?: string } | null)?.emoji,
+    }));
+  },
+};
+
+// ─── Friendships ───────────────────────────────────────────
+
+export type FriendStatus = 'none' | 'pending_sent' | 'pending_received' | 'accepted';
+
+export const friendships = {
+  async request(requesterId: string, addresseeId: string): Promise<boolean> {
+    const supabase = createClient();
+    const { error } = await supabase.from('friendships').upsert({
+      requester_id: requesterId, addressee_id: addresseeId, status: 'pending',
+    }, { onConflict: 'requester_id,addressee_id' });
+    return !error;
+  },
+
+  async getStatus(userId: string, otherId: string): Promise<FriendStatus> {
+    const supabase = createClient();
+    // Check both directions
+    const { data } = await supabase.from('friendships').select('*')
+      .or(`and(requester_id.eq.${userId},addressee_id.eq.${otherId}),and(requester_id.eq.${otherId},addressee_id.eq.${userId})`)
+      .maybeSingle();
+
+    if (!data) return 'none';
+    if (data.status === 'accepted') return 'accepted';
+    if (data.requester_id === userId) return 'pending_sent';
+    return 'pending_received';
+  },
+
+  async respond(friendshipId: string, status: 'accepted' | 'rejected'): Promise<boolean> {
+    const supabase = createClient();
+    const { error } = await supabase.from('friendships').update({ status }).eq('id', friendshipId);
+    return !error;
+  },
+};
+
 // ─── Unified export ────────────────────────────────────────
 
-export const db = { auth, posts, comments, likes, bookmarks, moods, admin, polls };
+export const db = { auth, posts, comments, likes, bookmarks, moods, admin, polls, messages, friendships };

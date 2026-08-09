@@ -1,12 +1,12 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { Send, MessageSquare, Heart, FileText, UserPlus, LogOut, Settings, X, Check, Camera } from 'lucide-react';
+import { Send, MessageSquare, Heart, FileText, UserPlus, LogOut, Settings, X, Check, Camera, UserCheck, Clock } from 'lucide-react';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import LeftSidebar from '@/components/LeftSidebar';
 import RightSidebar from '@/components/RightSidebar';
-import { db, type AuthUser, type Post } from '@/lib/db';
+import { db, type AuthUser, type Post, type FriendStatus } from '@/lib/db';
 import { createClient } from '@/utils/supabase/client';
 import { useState, useEffect, useRef } from 'react';
 
@@ -32,10 +32,19 @@ export default function UserPage() {
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [userPosts, setUserPosts] = useState<Post[]>([]);
-  const [msgSent, setMsgSent] = useState(false);
   const [loading, setLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isOwnProfile = currentUser?.username === name;
+
+  // DM state
+  const [showMessageInput, setShowMessageInput] = useState(false);
+  const [messageText, setMessageText] = useState('');
+  const [sendingMsg, setSendingMsg] = useState(false);
+  const [msgSent, setMsgSent] = useState(false);
+
+  // Friend state
+  const [friendStatus, setFriendStatus] = useState<FriendStatus>('none');
+  const [friendLoading, setFriendLoading] = useState(false);
 
   const [showEdit, setShowEdit] = useState(false);
   const [editEmoji, setEditEmoji] = useState('');
@@ -100,6 +109,49 @@ export default function UserPage() {
     setUploading(false);
   }
 
+  // ─── DM ───
+  async function handleSendMessage() {
+    if (!currentUser || !profile || !messageText.trim()) return;
+    setSendingMsg(true);
+    const ok = await db.messages.send(currentUser.id, profile.id, messageText.trim());
+    if (ok) {
+      setMessageText('');
+      setMsgSent(true);
+      setTimeout(() => setMsgSent(false), 2500);
+      setShowMessageInput(false);
+    }
+    setSendingMsg(false);
+  }
+
+  // ─── Friend ───
+  async function handleFriendAction() {
+    if (!currentUser || !profile || friendLoading) return;
+    if (!currentUser.id) {
+      window.dispatchEvent(new Event('hearten:open-login'));
+      return;
+    }
+    setFriendLoading(true);
+    if (friendStatus === 'none') {
+      const ok = await db.friendships.request(currentUser.id, profile.id);
+      if (ok) setFriendStatus('pending_sent');
+    }
+    // accepted/rejected states are handled by the other user
+    setFriendLoading(false);
+  }
+
+  async function handleAcceptFriend() {
+    if (!currentUser || !profile || friendLoading) return;
+    setFriendLoading(true);
+    const supabase = createClient();
+    const { data } = await supabase.from('friendships').select('id')
+      .eq('requester_id', profile.id).eq('addressee_id', currentUser.id).eq('status', 'pending').maybeSingle();
+    if (data) {
+      await db.friendships.respond(data.id, 'accepted');
+      setFriendStatus('accepted');
+    }
+    setFriendLoading(false);
+  }
+
   useEffect(() => { db.auth.getUser().then(setCurrentUser); }, []);
   useEffect(() => {
     async function load() {
@@ -114,6 +166,12 @@ export default function UserPage() {
     }
     load();
   }, [name]);
+
+  // Load friendship status
+  useEffect(() => {
+    if (!currentUser || !profile || isOwnProfile) return;
+    db.friendships.getStatus(currentUser.id, profile.id).then(setFriendStatus);
+  }, [currentUser, profile, isOwnProfile]);
 
   const layout = (content: React.ReactNode) => (
     <div className="min-h-screen bg-hearten-bg">
@@ -156,6 +214,48 @@ export default function UserPage() {
       </div>
     );
   }
+
+  const friendButton = () => {
+    if (!currentUser) {
+      return (
+        <button onClick={() => window.dispatchEvent(new Event('hearten:open-login'))}
+          className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-hearten-border hover:border-hearten-rose text-hearten-text hover:text-hearten-rose font-medium text-base transition-colors">
+          <UserPlus className="w-5 h-5" />加到好友
+        </button>
+      );
+    }
+
+    switch (friendStatus) {
+      case 'none':
+        return (
+          <button onClick={handleFriendAction} disabled={friendLoading}
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-hearten-border hover:border-hearten-rose text-hearten-text hover:text-hearten-rose font-medium text-base transition-colors">
+            <UserPlus className="w-5 h-5" />{friendLoading ? '處理中...' : '加到好友'}
+          </button>
+        );
+      case 'pending_sent':
+        return (
+          <button disabled
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-amber-500/30 bg-amber-500/5 text-amber-400 font-medium text-base">
+            <Clock className="w-5 h-5" />已發送好友請求
+          </button>
+        );
+      case 'pending_received':
+        return (
+          <button onClick={handleAcceptFriend} disabled={friendLoading}
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-medium text-base transition-colors">
+            <UserCheck className="w-5 h-5" />{friendLoading ? '處理中...' : '接受好友請求'}
+          </button>
+        );
+      case 'accepted':
+        return (
+          <button disabled
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-emerald-500/30 bg-emerald-500/5 text-emerald-400 font-medium text-base">
+            <UserCheck className="w-5 h-5" />已成為好友
+          </button>
+        );
+    }
+  };
 
   return layout(
     <>
@@ -207,6 +307,8 @@ export default function UserPage() {
                 <div className="text-sm text-hearten-dim mt-0.5">獲讚</div>
               </div>
             </div>
+
+            {/* Action Buttons */}
             <div className="flex gap-3 mt-5">
               {isOwnProfile ? (
                 <>
@@ -219,16 +321,48 @@ export default function UserPage() {
                 </>
               ) : (
                 <>
-                  <button onClick={() => { if (!currentUser) { window.dispatchEvent(new Event('hearten:open-login')); return; } setMsgSent(true); setTimeout(() => setMsgSent(false), 2500); }} className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-hearten-rose hover:bg-hearten-rose-light text-white font-medium text-base transition-colors">
-                    <Send className="w-5 h-5" />
-                    {msgSent ? '已發送 ✉️' : currentUser ? '發送訊息' : '登入以發送訊息'}
-                  </button>
-                  <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-hearten-border hover:border-hearten-rose text-hearten-text hover:text-hearten-rose font-medium text-base transition-colors">
-                    <UserPlus className="w-5 h-5" />加到好友
-                  </button>
+                  {/* Message button */}
+                  {!currentUser ? (
+                    <button onClick={() => window.dispatchEvent(new Event('hearten:open-login'))}
+                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-hearten-rose hover:bg-hearten-rose-light text-white font-medium text-base transition-colors">
+                      <Send className="w-5 h-5" />登入以發送訊息
+                    </button>
+                  ) : msgSent ? (
+                    <button disabled className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500/20 text-emerald-400 font-medium text-base">
+                      <Check className="w-5 h-5" />已發送 ✉️
+                    </button>
+                  ) : (
+                    <button onClick={() => setShowMessageInput(v => !v)}
+                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-hearten-rose hover:bg-hearten-rose-light text-white font-medium text-base transition-colors">
+                      <Send className="w-5 h-5" />發送訊息
+                    </button>
+                  )}
+                  {/* Friend button */}
+                  {friendButton()}
                 </>
               )}
             </div>
+
+            {/* Inline Message Input */}
+            {showMessageInput && currentUser && (
+              <div className="mt-4 flex gap-2">
+                <input
+                  value={messageText}
+                  onChange={e => setMessageText(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && handleSendMessage()}
+                  placeholder="輸入訊息..."
+                  autoFocus
+                  className="flex-1 bg-hearten-bg border border-hearten-border rounded-lg px-3 py-2 text-sm text-hearten-text placeholder-hearten-muted outline-none focus:border-hearten-rose"
+                />
+                <button
+                  onClick={handleSendMessage}
+                  disabled={sendingMsg || !messageText.trim()}
+                  className="px-4 py-2 rounded-lg bg-hearten-rose hover:bg-hearten-rose-light text-white text-sm font-medium transition-colors disabled:opacity-40"
+                >
+                  {sendingMsg ? '...' : '發送'}
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
