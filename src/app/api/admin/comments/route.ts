@@ -18,6 +18,16 @@ async function supabaseAdmin(path: string, method: string, body?: unknown) {
   return res.json();
 }
 
+export async function GET() {
+  try {
+    const data = await supabaseAdmin('/rest/v1/comments?select=*,profiles!comments_user_id_fkey(username),posts(title)&order=created_at.desc&limit=100', 'GET');
+    return NextResponse.json(data);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { user_id, post_id, body, parent_id } = await request.json();

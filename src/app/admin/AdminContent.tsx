@@ -12,7 +12,7 @@ import {
 
 interface AdminUser { id: string; username: string; emoji: string; posts: number; joined: string; status: 'active' | 'banned' | 'flagged'; }
 interface AdminPost { id: string; title: string; author: string; username: string; category: string; hearts: number; comments: number; time: string; }
-interface AdminComment { id: string; body: string; author: string; post: string; time: string; }
+interface AdminComment { id: string; body: string; author: string; username: string; post: string; time: string; }
 interface AdminPreset { id: string; username: string; emoji: string; email: string; account_type: string; posts: number; }
 
 function timeAgo(dateStr: string): string {
@@ -66,7 +66,15 @@ export default function AdminContent() {
         }));
         if (!cancelled) { setPosts(p); setLoading(false); }
       } else if (tab === 'comments') {
-        const c = await db.admin.comments();
+        const res = await fetch('/api/admin/comments');
+        const raw = await res.json();
+        const c = (Array.isArray(raw) ? raw : []).map((row: Record<string, unknown>) => ({
+          id: row.id as string, body: row.body as string,
+          author: ((row.profiles as Record<string, unknown> | null)?.username as string) || '匿名用戶',
+          username: ((row.profiles as Record<string, unknown> | null)?.username as string) || '',
+          post: ((row.posts as Record<string, unknown> | null)?.title as string) || '',
+          time: timeAgo(row.created_at as string),
+        }));
         if (!cancelled) { setComments(c); setLoading(false); }
       } else if (tab === 'presets') {
         const p = await db.admin.presets();
@@ -234,7 +242,8 @@ export default function AdminContent() {
                       <div className="w-8 h-8 rounded-full bg-[#e11d48]/20 flex items-center justify-center text-sm">
                         {user.emoji}
                       </div>
-                      <span className="text-sm text-gray-200 font-medium">{user.username}</span>
+                      <a href={`/user/${encodeURIComponent(user.username)}`} target="_blank" rel="noopener noreferrer"
+                        className="text-sm text-[#e11d48] hover:underline font-medium">{user.username}</a>
                     </div>
                   </td>
                   <td className="py-3 px-4 text-sm text-gray-500 font-mono text-xs truncate max-w-[120px]">{user.id}</td>
@@ -364,7 +373,18 @@ export default function AdminContent() {
                 />
               </div>
             </div>
-            <button onClick={() => db.admin.comments().then(setComments)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-gray-400 hover:text-gray-200 hover:bg-[#1a1a2e] transition-colors">
+            <button onClick={async () => {
+              const res = await fetch('/api/admin/comments');
+              const raw = await res.json();
+              const c = (Array.isArray(raw) ? raw : []).map((row: Record<string, unknown>) => ({
+                id: row.id as string, body: row.body as string,
+                author: ((row.profiles as Record<string, unknown> | null)?.username as string) || '匿名用戶',
+                username: ((row.profiles as Record<string, unknown> | null)?.username as string) || '',
+                post: ((row.posts as Record<string, unknown> | null)?.title as string) || '',
+                time: timeAgo(row.created_at as string),
+              }));
+              setComments(c);
+            }} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-gray-400 hover:text-gray-200 hover:bg-[#1a1a2e] transition-colors">
               <RefreshCw className="w-3.5 h-3.5" />刷新
             </button>
           </div>
@@ -388,7 +408,14 @@ export default function AdminContent() {
                   <td className="py-3 px-4 max-w-xs">
                     <span className="text-sm text-gray-300 line-clamp-1">{comment.body}</span>
                   </td>
-                  <td className="py-3 px-4 text-sm text-gray-400">{comment.author}</td>
+                  <td className="py-3 px-4 text-sm">
+                    {comment.username ? (
+                      <a href={`/user/${encodeURIComponent(comment.username)}`} target="_blank" rel="noopener noreferrer"
+                        className="text-[#e11d48] hover:underline">{comment.author}</a>
+                    ) : (
+                      <span className="text-gray-400">{comment.author}</span>
+                    )}
+                  </td>
                   <td className="py-3 px-4 text-sm text-gray-500 line-clamp-1 max-w-[200px]">{comment.post}</td>
                   <td className="py-3 px-4 text-sm text-gray-500">{comment.time}</td>
                   <td className="py-3 px-4 text-right">
