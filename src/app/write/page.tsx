@@ -10,6 +10,24 @@ import RightSidebar from '@/components/RightSidebar';
 import { db, type AuthUser } from '@/lib/db';
 import { createClient } from '@/utils/supabase/client';
 
+/** Resize + compress image via canvas. Returns JPEG blob at ~200-400KB for 5MB input. */
+function compressImage(file: File, maxWidth: number, quality: number): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const img = new window.Image();
+    img.onload = () => {
+      let { width, height } = img;
+      if (width > maxWidth) { height = Math.round(height * maxWidth / width); width = maxWidth; }
+      const canvas = document.createElement('canvas');
+      canvas.width = width; canvas.height = height;
+      const ctx = canvas.getContext('2d')!;
+      ctx.drawImage(img, 0, 0, width, height);
+      canvas.toBlob(b => b ? resolve(b) : reject(new Error('canvas empty')), 'image/jpeg', quality);
+    };
+    img.onerror = () => reject(new Error('image load failed'));
+    img.src = URL.createObjectURL(file);
+  });
+}
+
 const CATEGORIES = [
   { id: 'dating-life', icon: '💑', name: '戀愛日常' },
   { id: 'crush', icon: '💕', name: '暗戀表白' },
@@ -68,12 +86,19 @@ export default function WritePage() {
     const file = e.target.files?.[0];
     if (!file || !user) return;
     if (!file.type.startsWith('image/')) { setError('只支援圖片格式'); return; }
-    if (file.size > 5 * 1024 * 1024) { setError('圖片太大，上限 5MB'); return; }
+    if (file.size > 10 * 1024 * 1024) { setError('圖片太大，上限 10MB'); return; }
     setError('');
     setUploadingImg(true);
+
+    // Compress before upload
+    let blob: Blob = file;
+    try {
+      blob = await compressImage(file, 1200, 0.75);
+    } catch { /* fallback to original */ }
+
     const supabase = createClient();
-    const path = `post-images/${user.id}/${Date.now()}.${file.name.split('.').pop()}`;
-    const { error: upErr } = await supabase.storage.from('post-images').upload(path, file);
+    const path = `post-images/${user.id}/${Date.now()}.jpg`;
+    const { error: upErr } = await supabase.storage.from('post-images').upload(path, blob, { contentType: 'image/jpeg' });
     if (!upErr) {
       const { data: { publicUrl } } = supabase.storage.from('post-images').getPublicUrl(path);
       setUploadedImages(prev => [...prev, publicUrl]);
