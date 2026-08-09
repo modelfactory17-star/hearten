@@ -29,6 +29,17 @@ function generateSlug(title: string): string {
   return `${base}-${suffix}`;
 }
 
+// List all posts (admin view, service key)
+export async function GET() {
+  try {
+    const data = await supabaseAdmin('/rest/v1/posts?select=*&order=created_at.desc', 'GET');
+    return NextResponse.json(data);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { user_id, title, body, category, category_id } = await request.json();
