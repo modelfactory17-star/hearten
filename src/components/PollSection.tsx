@@ -8,7 +8,7 @@ import type { Poll } from '@/lib/db';
 // Fallback demo polls when DB is empty
 const DEMO_POLLS: Poll[] = [
   {
-    id: 'demo-home-1', slug: '', title: '💬 你覺得「已讀不回」幾耐算係有問題？',
+    id: 'demo-home-1', title: '💬 你覺得「已讀不回」幾耐算係有問題？',
     description: '', status: 'active', totalVotes: 2847,
     options: [
       { id: 'h1a', text: '1-3 小時', votes: 1281 },
@@ -19,7 +19,7 @@ const DEMO_POLLS: Poll[] = [
     userVotes: [], createdAt: new Date().toISOString(),
   },
   {
-    id: 'demo-home-2', slug: '', title: '💍 結婚之後，你覺得財政應該點管理？',
+    id: 'demo-home-2', title: '💍 結婚之後，你覺得財政應該點管理？',
     description: '', status: 'active', totalVotes: 1932,
     options: [
       { id: 'h2a', text: '聯名戶口，共同管理', votes: 811 },
@@ -29,7 +29,7 @@ const DEMO_POLLS: Poll[] = [
     userVotes: [], createdAt: new Date().toISOString(),
   },
   {
-    id: 'demo-home-3', slug: '', title: '❤️ 另一半最緊要咩特質？',
+    id: 'demo-home-3', title: '❤️ 另一半最緊要咩特質？',
     description: '', status: 'active', totalVotes: 3201,
     options: [
       { id: 'h3a', text: '幽默感', votes: 1152 },
