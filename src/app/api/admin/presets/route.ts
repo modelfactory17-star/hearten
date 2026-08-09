@@ -21,6 +21,17 @@ async function supabaseAdmin(path: string, method: string, body?: unknown) {
   return res;
 }
 
+// List preset accounts
+export async function GET() {
+  try {
+    const res = await supabaseAdmin('/rest/v1/profiles?select=id,username,email&account_type=eq.preset', 'GET');
+    return NextResponse.json(res);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
+
 // Create new preset account
 export async function POST(request: NextRequest) {
   try {
