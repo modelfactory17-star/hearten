@@ -1,13 +1,8 @@
 import type { Metadata } from "next";
-import { Noto_Sans_HK } from "next/font/google";
 import "./globals.css";
 
-const notoSansHK = Noto_Sans_HK({
-  subsets: ["latin"],
-  weight: ["400", "500", "700", "900"],
-  display: "swap",
-  variable: "--font-noto",
-});
+// Temp: Google Fonts blocked on build, using system fallback
+// import { Noto_Sans_HK } from "next/font/google";
 
 export const metadata: Metadata = {
   title: "Hearten — 香港最暖嘅愛情討論區",
@@ -30,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="zh-HK" suppressHydrationWarning className={`${notoSansHK.variable}`}>
+    <html lang="zh-HK" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
