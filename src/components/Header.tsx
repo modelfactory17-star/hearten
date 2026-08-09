@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Search, Bell, User, Sun, Moon, LogOut } from 'lucide-react';
+import { Search, User, Sun, Moon, LogOut, MessageCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { db, type AuthUser } from '@/lib/db';
 import { createClient } from '@/utils/supabase/client';
@@ -12,6 +12,7 @@ export default function Header({ onMenuToggle }: { onMenuToggle?: () => void }) 
   const [user, setUser] = useState<AuthUser | null>(null);
   const [showLogin, setShowLogin] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [unreadCount, setUnreadCount] = useState(0);
   const router = useRouter();
 
   useEffect(() => {
@@ -25,7 +26,29 @@ export default function Header({ onMenuToggle }: { onMenuToggle?: () => void }) 
     };
   }, []);
 
-  // Refresh user on auth change
+  // Fetch unread message count
+  useEffect(() => {
+    if (!user?.id) { setUnreadCount(0); return; }
+    fetch(`/api/messages?user_id=${encodeURIComponent(user.id)}`)
+      .then(r => r.json())
+      .then((data: Array<{ unread: number }>) => {
+        const total = (data || []).reduce((sum, c) => sum + (c.unread || 0), 0);
+        setUnreadCount(total);
+      })
+      .catch(() => {});
+    // Poll every 30s
+    const interval = setInterval(() => {
+      if (!user?.id) return;
+      fetch(`/api/messages?user_id=${encodeURIComponent(user.id)}`)
+        .then(r => r.json())
+        .then((data: Array<{ unread: number }>) => {
+          const total = (data || []).reduce((sum, c) => sum + (c.unread || 0), 0);
+          setUnreadCount(total);
+        })
+        .catch(() => {});
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [user?.id]);
   useEffect(() => {
     const { data: { subscription } } = createClient().auth.onAuthStateChange((_event, session) => {
       if (session) db.auth.getUser().then(setUser);
@@ -104,8 +127,14 @@ export default function Header({ onMenuToggle }: { onMenuToggle?: () => void }) 
               {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
 
-            <button className="p-2 rounded-lg hover:bg-hearten-card text-hearten-muted hover:text-hearten-text transition-colors">
-              <Bell className="w-5 h-5" />
+            <button onClick={() => router.push('/messages')}
+              className="p-2 rounded-lg hover:bg-hearten-card text-hearten-muted hover:text-hearten-text transition-colors relative">
+              <MessageCircle className="w-5 h-5" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 w-4.5 h-4.5 rounded-full bg-hearten-rose text-white text-[10px] font-bold flex items-center justify-center leading-none" style={{ minWidth: '18px', height: '18px', padding: '0 2px' }}>
+                  {unreadCount > 99 ? '99+' : unreadCount}
+                </span>
+              )}
             </button>
 
             {user ? (
