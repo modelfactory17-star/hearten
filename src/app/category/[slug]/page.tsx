@@ -180,7 +180,7 @@ export default function CategoryPage() {
                   replies={post.replies}
                   time={post.time}
                   anonymous={post.anonymous}
-                  onClick={() => router.push(`/post/${post.id}`)}
+                  onClick={() => router.push(`/post/${post.slug}`)}
                 />
               ))}
             </div>

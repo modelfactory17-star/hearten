@@ -14,6 +14,7 @@ export interface AuthUser {
 
 export interface Post {
   id: string;
+  slug: string;
   emoji: string;
   avatar_url: string | null;
   title: string;
@@ -122,7 +123,8 @@ export const auth = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapPost(row: any): Post {
   return {
-    id: row.id, emoji: row.profiles?.emoji || row.emoji || '😔',
+    id: row.id, slug: row.slug || '',
+    emoji: row.profiles?.emoji || row.emoji || '😔',
     avatar_url: row.profiles?.avatar_url || null,
     title: row.title, body: row.body,
     preview: row.preview || row.body?.slice(0, 120),
@@ -131,6 +133,19 @@ function mapPost(row: any): Post {
     time: timeAgo(row.created_at),
     anonymous: row.profiles?.username || '匿名用戶',
   };
+}
+
+// ─── Slug generator ───────────────────────────────────────
+
+function generateSlug(title: string): string {
+  const base = title
+    .replace(/[^\w\u4e00-\u9fff\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .slice(0, 30)
+    .replace(/-$/, '');
+  const suffix = Math.random().toString(36).slice(2, 8);
+  return `${base}-${suffix}`;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -159,6 +174,12 @@ export const posts = {
     return data ? mapPost(data) : null;
   },
 
+  async getBySlug(slug: string): Promise<Post | null> {
+    const supabase = createClient();
+    const { data } = await supabase.from('posts').select('*, profiles!posts_user_id_fkey(username, emoji, avatar_url)').eq('slug', slug).single();
+    return data ? mapPost(data) : null;
+  },
+
   async listByCategory(categoryId: string): Promise<Post[]> {
     const supabase = createClient();
     const { data } = await supabase.from('posts').select('*, profiles!posts_user_id_fkey(username, emoji, avatar_url)').eq('category_id', categoryId).order('created_at', { ascending: false });
@@ -169,9 +190,10 @@ export const posts = {
     const supabase = createClient();
     const preview = body.slice(0, 120) + (body.length > 120 ? '...' : '');
     const catIcon = ({ 'dating-life':'💑',crush:'💕',breakup:'💔',marriage:'💍',lgbtq:'🌈',treehole:'🌳',tarot:'🃏',work:'💼',school:'🎓',family:'👨‍👩‍👧',dating:'📋',bedroom:'🔞' } as Record<string,string>)[categoryId] || '💬';
+    const slug = generateSlug(title);
 
     const { data, error } = await supabase.from('posts').insert({
-      user_id: userId, title, body, preview,
+      user_id: userId, title, body, preview, slug,
       category: `${catIcon} ${category}`, category_id: categoryId,
     }).select('*, profiles!posts_user_id_fkey(username, emoji, avatar_url)').single();
     if (error) {

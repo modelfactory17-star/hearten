@@ -56,9 +56,10 @@ async function sharePost(title: string) {
 export default function PostPage() {
   const params = useParams();
   const router = useRouter();
-  const postId = params.id as string;
+  const slug = params.slug as string;
 
   const [post, setPost] = useState<Post | null>(null);
+  const [postId, setPostId] = useState<string>(''); // resolved UUID from slug
   const [heartCount, setHeartCount] = useState(0);
   const [hearted, setHearted] = useState(false);
   const [replyText, setReplyText] = useState('');
@@ -83,24 +84,29 @@ export default function PostPage() {
   }, [postId]);
 
   useEffect(() => {
-    db.auth.getUser().then(u => {
-      setUser(u);
-      if (u) {
-        db.likes.isLiked(u.id, 'post', postId).then(setHearted);
-        db.moods.getUserMoods(u.id, postId).then(setUserMoods);
-      }
+    // Resolve post from slug first, then load all post-dependent data
+    db.posts.getBySlug(slug).then(p => {
+      if (!p) return;
+      setPost(p);
+      const id = p.id;
+      setPostId(id);
+
+      // Post queries (no user needed)
+      db.likes.count('post', id).then(setHeartCount);
+      db.moods.countByPost(id).then(setMoodCounts);
+      db.comments.list(id).then(setUserComments);
+
+      // User-dependent queries
+      db.auth.getUser().then(u => {
+        setUser(u);
+        if (u) {
+          db.likes.isLiked(u.id, 'post', id).then(setHearted);
+          db.moods.getUserMoods(u.id, id).then(setUserMoods);
+        }
+      });
     });
-    db.likes.count('post', postId).then(setHeartCount);
-    db.moods.countByPost(postId).then(setMoodCounts);
-    refreshComments();
-    if (!post) {
-      db.posts.list().then(posts => {
-        const found = posts.find(p => p.id === postId);
-        if (found) setPost(found);
-      }).catch(() => {});
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [slug]);
 
   useEffect(() => {
     if (!user) { setBookmarked(false); return; }

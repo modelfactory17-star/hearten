@@ -243,7 +243,7 @@ export default function UserPage() {
           ) : (
             <div className="space-y-2">
               {userPosts.map((post) => (
-                <button key={post.id} onClick={() => router.push(`/post/${post.id}`)} className="w-full text-left bg-hearten-card border border-hearten-border rounded-xl p-4 hover:border-gray-600 transition-colors">
+                <button key={post.id} onClick={() => router.push(`/post/${post.slug}`)} className="w-full text-left bg-hearten-card border border-hearten-border rounded-xl p-4 hover:border-gray-600 transition-colors">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="px-1.5 py-0.5 rounded-md bg-hearten-rose/10 text-hearten-rose text-xs font-medium">{post.category}</span>
                     <span className="text-sm text-hearten-muted">{post.time}</span>

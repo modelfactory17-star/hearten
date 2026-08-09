@@ -3,8 +3,11 @@
 -- Run in Supabase SQL Editor
 -- ============================================
 
+-- 0. Add role column to profiles FIRST (policies below reference it)
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS role TEXT DEFAULT 'member';
+
 -- 1. Polls table
-CREATE TABLE polls (
+CREATE TABLE IF NOT EXISTS polls (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   title TEXT NOT NULL,
   description TEXT DEFAULT '',
@@ -61,8 +64,5 @@ CREATE POLICY "Public read votes" ON poll_votes FOR SELECT USING (true);
 CREATE POLICY "Auth insert votes" ON poll_votes FOR INSERT 
   WITH CHECK (auth.uid() = user_id);
 
--- 4. Add role column to profiles (if not exists)
-ALTER TABLE profiles ADD COLUMN IF NOT EXISTS role TEXT DEFAULT 'member';
-
--- 5. Set your user as admin (replace with your email)
+-- N. Set your user as admin (replace with your email)
 -- UPDATE profiles SET role = 'admin' WHERE email = 'your-email@example.com';
