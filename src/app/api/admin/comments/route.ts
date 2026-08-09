@@ -32,7 +32,14 @@ export async function POST(request: NextRequest) {
     });
 
     // Update post reply count
-    await supabaseAdmin('/rest/v1/rpc/increment_post_replies', 'POST', { post_id });
+    const postArr = await supabaseAdmin(
+      '/rest/v1/posts?select=replies&id=eq.' + encodeURIComponent(post_id), 'GET'
+    );
+    const currentReplies = (Array.isArray(postArr) && postArr[0]?.replies) || 0;
+    await supabaseAdmin(
+      '/rest/v1/posts?id=eq.' + encodeURIComponent(post_id), 'PATCH',
+      { replies: currentReplies + 1 }
+    );
 
     return NextResponse.json({ ok: true, comment: data?.[0] || data });
   } catch (err) {
