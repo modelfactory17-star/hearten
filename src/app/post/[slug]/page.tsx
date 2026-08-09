@@ -252,6 +252,18 @@ export default function PostPage() {
                 <div className="flex-1 h-px bg-hearten-border" />
               </div>
 
+              <div className="space-y-0 mb-4">
+                {displayedComments.length === 0 ? (
+                  <p className="text-center text-hearten-muted text-sm py-8">
+                    {authorOnly ? '該作者未有留言' : '仲未有留言。做第一個留言嘅人？ 💭'}
+                  </p>
+                ) : (
+                  displayedComments.map(comment => (
+                    <CommentItem key={comment.id} comment={comment} postId={postId} onCommentAdded={refreshComments} />
+                  ))
+                )}
+              </div>
+
               {user ? (
                 <div className="bg-hearten-card border border-hearten-border rounded-xl p-4 mb-4">
                   <div className="flex items-center gap-2 mb-3">
@@ -284,18 +296,6 @@ export default function PostPage() {
                     className="px-4 py-2 rounded-lg bg-hearten-rose hover:bg-hearten-rose-light text-white text-sm font-medium transition-colors">登入 / 註冊</button>
                 </div>
               )}
-
-              <div className="space-y-0">
-                {displayedComments.length === 0 ? (
-                  <p className="text-center text-hearten-muted text-sm py-8">
-                    {authorOnly ? '該作者未有留言' : '仲未有留言。做第一個留言嘅人？ 💭'}
-                  </p>
-                ) : (
-                  displayedComments.map(comment => (
-                    <CommentItem key={comment.id} comment={comment} postId={postId} onCommentAdded={refreshComments} />
-                  ))
-                )}
-              </div>
             </>
           )}
         </main>
