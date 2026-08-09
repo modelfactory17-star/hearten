@@ -208,7 +208,21 @@ export default function PostPage() {
                 </div>
 
                 <h1 className="text-xl font-bold text-hearten-text mb-4">{post.title}</h1>
-                <div className={`text-hearten-muted leading-relaxed whitespace-pre-line mb-6 ${bodyClass}`}>{post.body}</div>
+
+                {/* Image gallery */}
+                {post.images && post.images.length > 0 && (
+                  <div className="grid grid-cols-2 gap-2 mb-4">
+                    {post.images.map((url, i) => (
+                      <a key={i} href={url} target="_blank" rel="noopener noreferrer"
+                        className="rounded-xl overflow-hidden border border-hearten-border hover:border-hearten-rose/50 transition-colors">
+                        <img src={url} alt="" className="w-full h-48 object-cover" />
+                      </a>
+                    ))}
+                  </div>
+                )}
+
+                {/* Body with video embeds */}
+                <BodyWithEmbeds body={post.body} bodyClass={bodyClass} />
 
                 <div className="flex items-center gap-5 pt-4 border-t border-hearten-border flex-wrap">
                   <button onClick={handleHeartPost}
@@ -388,6 +402,70 @@ function CommentItem({ comment, postId, onCommentAdded, depth = 0 }: {
       {comment.replies.map(reply => (
         <CommentItem key={reply.id} comment={reply} postId={postId} onCommentAdded={onCommentAdded} depth={depth + 1} />
       ))}
+    </div>
+  );
+}
+
+// ─── Body renderer with YouTube/Vimeo embeds ───────────────
+
+function BodyWithEmbeds({ body, bodyClass }: { body: string; bodyClass: string }) {
+  const ytRegex = /(https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+))/g;
+  const vimeoRegex = /(https?:\/\/(?:www\.)?vimeo\.com\/(\d+))/g;
+
+  const parts: { type: 'text' | 'youtube' | 'vimeo'; content: string }[] = [];
+  let lastIndex = 0;
+  const allMatches: { index: number; end: number; type: 'youtube' | 'vimeo'; id: string }[] = [];
+
+  let m: RegExpExecArray | null;
+  while ((m = ytRegex.exec(body)) !== null) {
+    allMatches.push({ index: m.index, end: m.index + m[0].length, type: 'youtube', id: m[2] });
+  }
+  while ((m = vimeoRegex.exec(body)) !== null) {
+    allMatches.push({ index: m.index, end: m.index + m[0].length, type: 'vimeo', id: m[2] });
+  }
+  allMatches.sort((a, b) => a.index - b.index);
+
+  for (const match of allMatches) {
+    if (match.index > lastIndex) {
+      parts.push({ type: 'text', content: body.slice(lastIndex, match.index) });
+    }
+    parts.push({ type: match.type, content: match.id });
+    lastIndex = match.end;
+  }
+  if (lastIndex < body.length) {
+    parts.push({ type: 'text', content: body.slice(lastIndex) });
+  }
+
+  if (parts.length === 0) {
+    return <div className={`text-hearten-muted leading-relaxed whitespace-pre-line mb-6 ${bodyClass}`}>{body}</div>;
+  }
+
+  return (
+    <div className="mb-6">
+      {parts.map((part, i) => {
+        if (part.type === 'text') {
+          return <div key={i} className={`text-hearten-muted leading-relaxed whitespace-pre-line ${bodyClass}`}>{part.content}</div>;
+        }
+        if (part.type === 'youtube') {
+          return (
+            <div key={i} className="my-4 rounded-xl overflow-hidden border border-hearten-border">
+              <iframe src={`https://www.youtube.com/embed/${part.content}`}
+                className="w-full aspect-video" allowFullScreen
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" />
+            </div>
+          );
+        }
+        if (part.type === 'vimeo') {
+          return (
+            <div key={i} className="my-4 rounded-xl overflow-hidden border border-hearten-border">
+              <iframe src={`https://player.vimeo.com/video/${part.content}`}
+                className="w-full aspect-video" allowFullScreen
+                allow="autoplay; fullscreen; picture-in-picture" />
+            </div>
+          );
+        }
+        return null;
+      })}
     </div>
   );
 }

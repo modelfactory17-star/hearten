@@ -26,6 +26,7 @@ export interface Post {
   replies: number;
   time: string;
   anonymous: string;
+  images: string[];
 }
 
 export interface Comment {
@@ -132,6 +133,7 @@ function mapPost(row: any): Post {
     hearts: row.hearts || 0, replies: row.replies || 0,
     time: timeAgo(row.created_at),
     anonymous: row.profiles?.username || '匿名用戶',
+    images: Array.isArray(row.images) ? row.images : [],
   };
 }
 
@@ -186,7 +188,7 @@ export const posts = {
     return (data || []).map(mapPost);
   },
 
-  async create(userId: string, title: string, body: string, category: string, categoryId: string): Promise<Post | null> {
+  async create(userId: string, title: string, body: string, category: string, categoryId: string, images: string[] = []): Promise<Post | null> {
     const supabase = createClient();
     const preview = body.slice(0, 120) + (body.length > 120 ? '...' : '');
     const catIcon = ({ 'dating-life':'💑',crush:'💕',breakup:'💔',marriage:'💍',lgbtq:'🌈',treehole:'🌳',tarot:'🃏',work:'💼',school:'🎓',family:'👨‍👩‍👧',dating:'📋',bedroom:'🔞' } as Record<string,string>)[categoryId] || '💬';
@@ -195,6 +197,7 @@ export const posts = {
     const { data, error } = await supabase.from('posts').insert({
       user_id: userId, title, body, preview, slug,
       category: `${catIcon} ${category}`, category_id: categoryId,
+      images: images.length > 0 ? images : null,
     }).select('*, profiles!posts_user_id_fkey(username, emoji, avatar_url)').single();
     if (error) {
       console.error('[db.posts.create] Supabase error:', error);

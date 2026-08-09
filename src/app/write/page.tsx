@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Send } from 'lucide-react';
+import { Send, Image, X } from 'lucide-react';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import LeftSidebar from '@/components/LeftSidebar';
 import RightSidebar from '@/components/RightSidebar';
 import { db, type AuthUser } from '@/lib/db';
+import { createClient } from '@/utils/supabase/client';
 
 const CATEGORIES = [
   { id: 'dating-life', icon: '💑', name: '戀愛日常' },
@@ -36,6 +37,11 @@ export default function WritePage() {
   const [loading, setLoading] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Image upload
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [uploadingImg, setUploadingImg] = useState(false);
+  const imageRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     db.auth.getUser().then(setUser);
   }, []);
@@ -51,12 +57,33 @@ export default function WritePage() {
     setError('');
     setLoading(true);
     const cat = CATEGORIES.find(c => c.id === category)!;
-    const newPost = await db.posts.create(user.id, title.trim(), body.trim(), cat.name, category);
+    const newPost = await db.posts.create(user.id, title.trim(), body.trim(), cat.name, category, uploadedImages);
     setLoading(false);
     if (!newPost) { setError('發佈失敗，請再試'); return; }
     setNewPostSlug(newPost.slug);
     setSubmitted(true);
   };
+
+  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    if (!file.type.startsWith('image/')) return;
+    if (file.size > 5 * 1024 * 1024) { setError('圖片太大，上限 5MB'); return; }
+    setUploadingImg(true);
+    const supabase = createClient();
+    const path = `post-images/${user.id}/${Date.now()}.${file.name.split('.').pop()}`;
+    const { error: upErr } = await supabase.storage.from('post-images').upload(path, file);
+    if (!upErr) {
+      const { data: { publicUrl } } = supabase.storage.from('post-images').getPublicUrl(path);
+      setUploadedImages(prev => [...prev, publicUrl]);
+    }
+    setUploadingImg(false);
+    if (imageRef.current) imageRef.current.value = '';
+  }
+
+  function removeImage(index: number) {
+    setUploadedImages(prev => prev.filter((_, i) => i !== index));
+  }
 
   const layout = (content: React.ReactNode) => (
     <div className="min-h-screen bg-hearten-bg">
@@ -159,6 +186,30 @@ export default function WritePage() {
             rows={8}
             className="w-full bg-hearten-bg border border-hearten-border rounded-lg px-4 py-3 text-base text-hearten-text placeholder-hearten-muted outline-none resize-none focus:border-hearten-rose transition-colors"
           />
+        </div>
+
+        {/* Images */}
+        <div className="mb-5">
+          <label className="block text-sm font-medium text-hearten-text mb-2">附加圖片</label>
+          {uploadedImages.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-3">
+              {uploadedImages.map((url, i) => (
+                <div key={i} className="relative w-20 h-20 rounded-lg overflow-hidden border border-hearten-border">
+                  <img src={url} alt="" className="w-full h-full object-cover" />
+                  <button onClick={() => removeImage(i)}
+                    className="absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-black/60 text-white flex items-center justify-center">
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+          <input ref={imageRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+          <button onClick={() => imageRef.current?.click()} disabled={uploadingImg}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-hearten-border hover:border-hearten-rose text-hearten-muted hover:text-hearten-text text-sm transition-colors">
+            <Image className="w-4 h-4" />
+            {uploadingImg ? '上傳中...' : uploadedImages.length > 0 ? `再加多張 (${uploadedImages.length})` : '加入圖片'}
+          </button>
         </div>
 
         {/* Error */}
