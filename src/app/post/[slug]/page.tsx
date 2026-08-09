@@ -409,7 +409,7 @@ function CommentItem({ comment, postId, onCommentAdded, depth = 0 }: {
 // ─── Body renderer with YouTube/Vimeo embeds ───────────────
 
 function BodyWithEmbeds({ body, bodyClass }: { body: string; bodyClass: string }) {
-  const ytRegex = /(https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+))/g;
+  const ytRegex = /(https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+))(?:[&\w.=/%~?-]*)?/g;
   const vimeoRegex = /(https?:\/\/(?:www\.)?vimeo\.com\/(\d+))/g;
 
   const parts: { type: 'text' | 'youtube' | 'vimeo'; content: string }[] = [];

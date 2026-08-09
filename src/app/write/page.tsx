@@ -67,8 +67,9 @@ export default function WritePage() {
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file || !user) return;
-    if (!file.type.startsWith('image/')) return;
+    if (!file.type.startsWith('image/')) { setError('只支援圖片格式'); return; }
     if (file.size > 5 * 1024 * 1024) { setError('圖片太大，上限 5MB'); return; }
+    setError('');
     setUploadingImg(true);
     const supabase = createClient();
     const path = `post-images/${user.id}/${Date.now()}.${file.name.split('.').pop()}`;
@@ -76,6 +77,8 @@ export default function WritePage() {
     if (!upErr) {
       const { data: { publicUrl } } = supabase.storage.from('post-images').getPublicUrl(path);
       setUploadedImages(prev => [...prev, publicUrl]);
+    } else {
+      setError(`上傳失敗：${upErr.message}`);
     }
     setUploadingImg(false);
     if (imageRef.current) imageRef.current.value = '';
