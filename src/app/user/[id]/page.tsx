@@ -1,12 +1,12 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { Send, MessageSquare, Heart, FileText, UserPlus, LogOut, Settings, X, Check, Camera, UserCheck, Clock } from 'lucide-react';
+import { Send, MessageSquare, Heart, FileText, UserPlus, LogOut, Settings, X, Check, Camera, UserCheck, Clock, Star, Ban, Trash2 } from 'lucide-react';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import LeftSidebar from '@/components/LeftSidebar';
 import RightSidebar from '@/components/RightSidebar';
-import { db, type AuthUser, type Post, type FriendStatus } from '@/lib/db';
+import { db, type AuthUser, type Post, type FriendStatus, type FriendItem } from '@/lib/db';
 import { createClient } from '@/utils/supabase/client';
 import { useState, useEffect, useRef } from 'react';
 
@@ -46,6 +46,10 @@ export default function UserPage() {
   const [friendStatus, setFriendStatus] = useState<FriendStatus>('none');
   const [friendLoading, setFriendLoading] = useState(false);
 
+  // Friend list state (own profile)
+  const [friends, setFriends] = useState<FriendItem[]>([]);
+  const [friendsLoading, setFriendsLoading] = useState(false);
+
   const [showEdit, setShowEdit] = useState(false);
   const [editEmoji, setEditEmoji] = useState('');
   const [editBio, setEditBio] = useState('');
@@ -54,6 +58,7 @@ export default function UserPage() {
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState('');
   const fileRef = useRef<HTMLInputElement>(null);
+  const editFileRef = useRef<HTMLInputElement>(null);
 
   async function openEdit() {
     setEditEmoji(profile?.emoji || '🐱');
@@ -180,6 +185,37 @@ export default function UserPage() {
     if (!currentUser || !profile || isOwnProfile) return;
     db.friendships.getStatus(currentUser.id, profile.id).then(setFriendStatus);
   }, [currentUser, profile, isOwnProfile]);
+
+  // Load friend list (own profile)
+  useEffect(() => {
+    if (!currentUser || !isOwnProfile) return;
+    setFriendsLoading(true);
+    db.friendships.list(currentUser.id).then(data => {
+      setFriends(Array.isArray(data) ? data : []);
+      setFriendsLoading(false);
+    });
+  }, [currentUser, isOwnProfile]);
+
+  // ─── Friend list actions ───
+  async function handleStarFriend(friendshipId: string) {
+    const newVal = await db.friendships.toggleStar(friendshipId);
+    if (newVal !== null) {
+      setFriends(prev => prev.map(f => f.id === friendshipId ? { ...f, starred: newVal } : f));
+    }
+  }
+
+  async function handleBlockFriend(friendshipId: string) {
+    const newVal = await db.friendships.toggleBlock(friendshipId);
+    if (newVal !== null) {
+      setFriends(prev => prev.map(f => f.id === friendshipId ? { ...f, blocked: newVal } : f));
+    }
+  }
+
+  async function handleDeleteFriend(friendshipId: string) {
+    if (!confirm('確定要刪除呢位好友？')) return;
+    const ok = await db.friendships.remove(friendshipId);
+    if (ok) setFriends(prev => prev.filter(f => f.id !== friendshipId));
+  }
 
   const layout = (content: React.ReactNode) => (
     <div className="min-h-screen bg-hearten-bg">
@@ -374,6 +410,57 @@ export default function UserPage() {
           </div>
         </div>
 
+        {/* Friend List (own profile only) */}
+        {isOwnProfile && (
+          <div className="mt-6">
+            <div className="flex items-center gap-3 mb-4">
+              <h2 className="text-base font-bold text-hearten-muted uppercase tracking-wider">👥 好友 ({friends.length})</h2>
+              <div className="flex-1 h-px bg-hearten-border" />
+            </div>
+            {friendsLoading ? (
+              <p className="text-center text-hearten-dim text-sm py-4">載入中...</p>
+            ) : friends.length === 0 ? (
+              <p className="text-center text-hearten-muted text-sm py-4">尚未新增好友，去其他會員頁面加好友啦！</p>
+            ) : (
+              <div className="space-y-2">
+                {friends.map((f) => (
+                  <div key={f.id} className={`flex items-center gap-3 bg-hearten-card border rounded-xl p-3 transition-colors ${f.blocked ? 'border-red-500/20 bg-red-500/5' : 'border-hearten-border hover:border-hearten-border-hover'}`}>
+                    <a href={`/user/${encodeURIComponent(f.friend?.username || '')}`} target="_blank" rel="noopener noreferrer"
+                      className="w-10 h-10 rounded-full bg-hearten-rose/20 flex items-center justify-center text-lg shrink-0 overflow-hidden hover:ring-2 hover:ring-hearten-rose/40 transition-all">
+                      {f.friend?.avatar_url ? (
+                        <img src={f.friend.avatar_url} alt="" className="w-full h-full object-cover" />
+                      ) : f.friend?.emoji || '👤'}
+                    </a>
+                    <a href={`/user/${encodeURIComponent(f.friend?.username || '')}`} target="_blank" rel="noopener noreferrer"
+                      className="flex-1 min-w-0 text-sm font-medium text-hearten-text hover:text-hearten-rose transition-colors truncate">
+                      {f.friend?.username || '未知用戶'}
+                      {f.starred && <span className="ml-1.5 text-amber-400">⭐</span>}
+                      {f.blocked && <span className="ml-1.5 text-xs text-red-400">(已封鎖)</span>}
+                    </a>
+                    <div className="flex items-center gap-1 shrink-0">
+                      <button onClick={() => handleStarFriend(f.id)}
+                        className={`p-1.5 rounded-lg transition-colors ${f.starred ? 'text-amber-400 bg-amber-400/10' : 'text-hearten-dim hover:text-amber-400 hover:bg-amber-400/5'}`}
+                        title={f.starred ? '取消星標' : '加星標'}>
+                        <Star className={`w-4 h-4 ${f.starred ? 'fill-amber-400' : ''}`} />
+                      </button>
+                      <button onClick={() => handleBlockFriend(f.id)}
+                        className={`p-1.5 rounded-lg transition-colors ${f.blocked ? 'text-red-400 bg-red-400/10' : 'text-hearten-dim hover:text-red-400 hover:bg-red-400/5'}`}
+                        title={f.blocked ? '解除封鎖' : '封鎖'}>
+                        <Ban className="w-4 h-4" />
+                      </button>
+                      <button onClick={() => handleDeleteFriend(f.id)}
+                        className="p-1.5 rounded-lg text-hearten-dim hover:text-red-400 hover:bg-red-400/5 transition-colors"
+                        title="刪除好友">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Recent Posts */}
         <div className="mt-8">
           <div className="flex items-center gap-3 mb-4">
@@ -413,11 +500,32 @@ export default function UserPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-hearten-text mb-2">頭像</label>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 mb-3">
                 {EMOJIS.map(e => (
                   <button key={e} onClick={() => setEditEmoji(e)} className={`w-10 h-10 flex items-center justify-center text-xl rounded-lg transition-all ${editEmoji === e ? 'bg-hearten-rose/20 ring-2 ring-hearten-rose scale-110' : 'bg-hearten-bg hover:bg-hearten-rose/10'}`}>{e}</button>
                 ))}
               </div>
+              <div className="flex items-center gap-3">
+                <button onClick={() => editFileRef.current?.click()} disabled={uploading}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg border border-hearten-border hover:border-hearten-rose text-hearten-text text-sm transition-colors">
+                  <Camera className="w-4 h-4" />
+                  {uploading ? '上傳中...' : '上傳自定頭像'}
+                </button>
+                <input ref={editFileRef} type="file" accept="image/*" onChange={handleUpload} className="hidden" />
+                {profile?.avatar_url && (
+                  <button onClick={async () => {
+                    const p = profile;
+                    if (!p || !p.avatar_url) return;
+                    const supabase = createClient();
+                    const urlPath = p.avatar_url.split('/').slice(-2).join('/');
+                    await supabase.storage.from('avatars').remove([urlPath]);
+                    await db.auth.updateProfile(p.id, { avatar_url: null });
+                    setProfile({ ...p, avatar_url: null });
+                  }}
+                    className="text-xs text-hearten-dim hover:text-red-400 transition-colors">移除頭像</button>
+                )}
+              </div>
+              {uploadError && <p className="text-sm text-red-400 mt-2">{uploadError}</p>}
             </div>
             <div>
               <label className="block text-sm font-medium text-hearten-text mb-2">個人簡介</label>

@@ -103,7 +103,7 @@ export const auth = {
     return data || null;
   },
 
-  async updateProfile(userId: string, updates: { emoji?: string; bio?: string; status?: string; avatar_url?: string }) {
+  async updateProfile(userId: string, updates: { emoji?: string; bio?: string; status?: string; avatar_url?: string | null }) {
     const supabase = createClient();
     const { error } = await supabase.from('profiles').update(updates).eq('id', userId);
     return { ok: !error, error: error?.message };
@@ -586,6 +586,14 @@ export const messages = {
 
 export type FriendStatus = 'none' | 'pending_sent' | 'pending_received' | 'accepted';
 
+export interface FriendItem {
+  id: string;
+  friend: { id: string; username: string; emoji: string; avatar_url: string | null } | null;
+  starred: boolean;
+  blocked: boolean;
+  created_at: string;
+}
+
 export const friendships = {
   async request(requesterId: string, addresseeId: string): Promise<boolean> {
     const supabase = createClient();
@@ -612,6 +620,44 @@ export const friendships = {
     const supabase = createClient();
     const { error } = await supabase.from('friendships').update({ status }).eq('id', friendshipId);
     return !error;
+  },
+
+  /** List accepted friends for a user (via API to bypass RLS) */
+  async list(userId: string): Promise<FriendItem[]> {
+    const res = await fetch(`/api/friends?user_id=${encodeURIComponent(userId)}`);
+    if (!res.ok) return [];
+    return res.json();
+  },
+
+  /** Toggle star on a friendship (via API) */
+  async toggleStar(friendshipId: string): Promise<boolean | null> {
+    const res = await fetch('/api/friends', {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'star', friendship_id: friendshipId }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.starred;
+  },
+
+  /** Toggle block on a friendship (via API) */
+  async toggleBlock(friendshipId: string): Promise<boolean | null> {
+    const res = await fetch('/api/friends', {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'block', friendship_id: friendshipId }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.blocked;
+  },
+
+  /** Delete a friendship (via API) */
+  async remove(friendshipId: string): Promise<boolean> {
+    const res = await fetch('/api/friends', {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'delete', friendship_id: friendshipId }),
+    });
+    return res.ok;
   },
 };
 
