@@ -82,7 +82,9 @@ export async function DELETE(request: NextRequest) {
     await supabaseAdmin('/rest/v1/posts?user_id=eq.' + encodeURIComponent(id), 'DELETE');
     // 2. Delete user's comments
     await supabaseAdmin('/rest/v1/comments?user_id=eq.' + encodeURIComponent(id), 'DELETE');
-    // 3. Delete auth user (profile cascades via trigger)
+    // 3. Delete profile first (FK to auth.users)
+    await supabaseAdmin('/rest/v1/profiles?id=eq.' + encodeURIComponent(id), 'DELETE');
+    // 4. Delete auth user
     await supabaseAdmin('/auth/v1/admin/users/' + encodeURIComponent(id), 'DELETE');
 
     return NextResponse.json({ ok: true });
