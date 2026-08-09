@@ -176,9 +176,7 @@ export const posts = {
 
   async getBySlug(slug: string): Promise<Post | null> {
     const supabase = createClient();
-    console.log('[db.posts.getBySlug] querying slug:', slug, 'encoded:', encodeURIComponent(slug));
-    const { data, error } = await supabase.from('posts').select('*, profiles!posts_user_id_fkey(username, emoji, avatar_url)').eq('slug', slug).single();
-    console.log('[db.posts.getBySlug] result:', data ? `found: ${data.title}` : 'NULL', error ? `error: ${error.message}` : '');
+    const { data } = await supabase.from('posts').select('*, profiles!posts_user_id_fkey(username, emoji, avatar_url)').eq('slug', slug).single();
     return data ? mapPost(data) : null;
   },
 
