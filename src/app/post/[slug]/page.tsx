@@ -85,7 +85,9 @@ export default function PostPage() {
 
   useEffect(() => {
     // Resolve post from slug first, then load all post-dependent data
+    console.log('[PostPage] Looking up slug:', slug);
     db.posts.getBySlug(slug).then(p => {
+      console.log('[PostPage] getBySlug result:', p ? `found id=${p.id}` : 'NULL');
       if (!p) return;
       setPost(p);
       const id = p.id;
