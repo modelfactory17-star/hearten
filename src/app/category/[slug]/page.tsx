@@ -7,7 +7,7 @@ import LeftSidebar from '@/components/LeftSidebar';
 import RightSidebar from '@/components/RightSidebar';
 import Footer from '@/components/Footer';
 import FeedCard from '@/components/FeedCard';
-import { db, type Post } from '@/lib/db';
+import { type Post } from '@/lib/db';
 
 // URL slug → db category_id mapping (CategoryGrid uses different slugs than db)
 const SLUG_TO_DB: Record<string, string> = {
