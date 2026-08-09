@@ -72,6 +72,26 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// Delete preset account and all their content
+export async function DELETE(request: NextRequest) {
+  try {
+    const { id } = await request.json();
+    if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 });
+
+    // 1. Delete user's posts (comments cascade via FK)
+    await supabaseAdmin('/rest/v1/posts?user_id=eq.' + encodeURIComponent(id), 'DELETE');
+    // 2. Delete user's comments
+    await supabaseAdmin('/rest/v1/comments?user_id=eq.' + encodeURIComponent(id), 'DELETE');
+    // 3. Delete auth user (profile cascades via trigger)
+    await supabaseAdmin('/auth/v1/admin/users/' + encodeURIComponent(id), 'DELETE');
+
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
+
 // Toggle account_type between 'member' and 'preset'
 export async function PATCH(request: NextRequest) {
   try {
