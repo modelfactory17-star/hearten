@@ -11,7 +11,7 @@ import {
 // ─── Types ──────────────────────────────────────────────────
 
 interface AdminUser { id: string; username: string; emoji: string; posts: number; joined: string; status: 'active' | 'banned' | 'flagged'; }
-interface AdminPost { id: string; title: string; author: string; category: string; hearts: number; comments: number; time: string; }
+interface AdminPost { id: string; title: string; author: string; username: string; category: string; hearts: number; comments: number; time: string; }
 interface AdminComment { id: string; body: string; author: string; post: string; time: string; }
 interface AdminPreset { id: string; username: string; emoji: string; email: string; account_type: string; posts: number; }
 
@@ -58,6 +58,7 @@ export default function AdminContent() {
         const p = (Array.isArray(raw) ? raw : []).map((row: Record<string, unknown>) => ({
           id: row.id as string, title: row.title as string,
           author: ((row.profiles as Record<string, unknown> | null)?.username as string) || '匿名用戶',
+          username: ((row.profiles as Record<string, unknown> | null)?.username as string) || '',
           category: (row.category as string) || '',
           hearts: (row.hearts as number) || 0,
           comments: (row.replies as number) || 0,
@@ -276,7 +277,20 @@ export default function AdminContent() {
                 />
               </div>
             </div>
-            <button onClick={() => db.admin.posts().then(setPosts)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-gray-400 hover:text-gray-200 hover:bg-[#1a1a2e] transition-colors">
+            <button onClick={async () => {
+              const res = await fetch('/api/admin/posts');
+              const raw = await res.json();
+              const p = (Array.isArray(raw) ? raw : []).map((row: Record<string, unknown>) => ({
+                id: row.id as string, title: row.title as string,
+                author: ((row.profiles as Record<string, unknown> | null)?.username as string) || '匿名用戶',
+                username: ((row.profiles as Record<string, unknown> | null)?.username as string) || '',
+                category: (row.category as string) || '',
+                hearts: (row.hearts as number) || 0,
+                comments: (row.replies as number) || 0,
+                time: timeAgo(row.created_at as string),
+              }));
+              setPosts(p);
+            }} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-gray-400 hover:text-gray-200 hover:bg-[#1a1a2e] transition-colors">
               <RefreshCw className="w-3.5 h-3.5" />刷新
             </button>
           </div>
@@ -302,7 +316,14 @@ export default function AdminContent() {
                   <td className="py-3 px-4">
                     <span className="text-sm text-gray-200 font-medium line-clamp-1">{post.title}</span>
                   </td>
-                  <td className="py-3 px-4 text-sm text-gray-400">{post.author}</td>
+                  <td className="py-3 px-4 text-sm">
+                    {post.username ? (
+                      <a href={`/user/${encodeURIComponent(post.username)}`} target="_blank" rel="noopener noreferrer"
+                        className="text-[#e11d48] hover:underline">{post.author}</a>
+                    ) : (
+                      <span className="text-gray-400">{post.author}</span>
+                    )}
+                  </td>
                   <td className="py-3 px-4 text-center">
                     <span className="inline-block px-2 py-0.5 rounded text-[10px] bg-[#e11d48]/10 text-[#e11d48] font-medium">
                       {post.category}
