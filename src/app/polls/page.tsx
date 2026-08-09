@@ -114,7 +114,6 @@ function PollCard({ poll, userId, isAdmin, onVote, onClose }: {
   };
 
   const maxVoteForBar = Math.max(1, ...poll.options.map(o => o.votes));
-  const barPct = (votes: number) => Math.round((votes / maxVoteForBar) * 100);
 
   return (
     <div className="bg-hearten-card border border-hearten-border rounded-xl p-5 sm:p-6">
@@ -155,8 +154,8 @@ function PollCard({ poll, userId, isAdmin, onVote, onClose }: {
                 <div
                   className="absolute inset-0 rounded-lg transition-all duration-500"
                   style={{
-                    width: `${barPct(opt.votes)}%`,
-                    backgroundColor: isSelected ? 'rgb(225 29 72 / 0.15)' : 'rgb(100 100 120 / 0.08)',
+                    opacity: Math.max(0.15, opt.votes / maxVoteForBar),
+                    backgroundColor: isSelected ? 'rgb(225 29 72)' : 'rgb(100 100 120)',
                   }}
                 />
               )}
@@ -398,18 +397,19 @@ export default function PollsPage() {
   };
 
   useEffect(() => {
-    // Check auth on mount, then load polls with userId
+    // Check auth — use getSession() for instant cached result
     (async () => {
-      const user = await db.auth.getUser();
-      if (user) {
-        setUserId(user.id);
-        // Check admin: fetch profile for role
-        const supabase = (await import('@/utils/supabase/client')).createClient();
-        const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+      const supabase = (await import('@/utils/supabase/client')).createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const userId = session.user.id;
+        setUserId(userId);
+        // Check admin
+        const { data: profile } = await supabase.from('profiles').select('role').eq('id', userId).single();
         setIsAdmin(profile?.role === 'admin');
-        // Load polls with userId
+        // Load polls
         setLoading(true);
-        const data = await db.polls.list(user.id);
+        const data = await db.polls.list(userId);
         if (data.length === 0) {
           setPolls(DEMO_POLLS);
           setUseDemo(true);

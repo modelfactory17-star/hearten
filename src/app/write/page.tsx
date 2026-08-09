@@ -30,6 +30,7 @@ export default function WritePage() {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [newPostSlug, setNewPostSlug] = useState('');
   const [error, setError] = useState('');
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(false);
@@ -53,6 +54,7 @@ export default function WritePage() {
     const newPost = await db.posts.create(user.id, title.trim(), body.trim(), cat.name, category);
     setLoading(false);
     if (!newPost) { setError('發佈失敗，請再試'); return; }
+    setNewPostSlug(newPost.slug);
     setSubmitted(true);
   };
 
@@ -92,8 +94,11 @@ export default function WritePage() {
           你嘅心事已經發布到「{CATEGORIES.find(c => c.id === category)?.name}」。
         </p>
         <p className="text-hearten-dim text-sm mb-8">其他會員而家可以睇到同回覆你嘅心事。</p>
-        <div className="flex gap-3 justify-center">
-          <button onClick={() => router.push('/')} className="px-6 py-2.5 rounded-xl bg-hearten-rose text-white font-medium transition-colors hover:bg-hearten-rose-light">
+        <div className="flex gap-3 justify-center flex-wrap">
+          <button onClick={() => router.push(`/post/${newPostSlug}`)} className="px-6 py-2.5 rounded-xl bg-hearten-rose text-white font-medium transition-colors hover:bg-hearten-rose-light">
+            睇自己個 Post
+          </button>
+          <button onClick={() => router.push('/')} className="px-6 py-2.5 rounded-xl border border-hearten-border text-hearten-text hover:border-hearten-rose transition-colors font-medium">
             睇其他心事
           </button>
           <button onClick={() => { setSubmitted(false); setTitle(''); setBody(''); setCategory(''); }} className="px-6 py-2.5 rounded-xl border border-hearten-border text-hearten-text hover:border-hearten-rose transition-colors font-medium">
