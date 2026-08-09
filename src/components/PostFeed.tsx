@@ -1,9 +1,23 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { db, type Post } from '@/lib/db';
+import { type Post } from '@/lib/db';
 import FeedCard from '@/components/FeedCard';
 import { useRouter } from 'next/navigation';
+
+function timeAgo(dateStr: string): string {
+  const date = new Date(dateStr);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMin = Math.floor(diffMs / 60000);
+  const diffHr = Math.floor(diffMs / 3600000);
+  const diffDay = Math.floor(diffMs / 86400000);
+  if (diffMin < 1) return '啱啱';
+  if (diffMin < 60) return `${diffMin} 分鐘前`;
+  if (diffHr < 24) return `${diffHr} 小時前`;
+  if (diffDay < 7) return `${diffDay} 日前`;
+  return date.toLocaleDateString('zh-HK', { month: 'short', day: 'numeric' });
+}
 
 export default function PostFeed() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -12,18 +26,35 @@ export default function PostFeed() {
   const router = useRouter();
 
   useEffect(() => {
-    // Read search query from URL
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       setQuery(params.get('q')?.trim() || '');
     }
-    db.posts.list().then((data) => {
-      setPosts(data);
-      setLoading(false);
-    }).catch((err: Error) => {
-      console.error('[PostFeed] Error:', err);
-      setLoading(false);
-    });
+    fetch('/api/posts')
+      .then(r => r.json())
+      .then((data: Array<Record<string, unknown>>) => {
+        const mapped: Post[] = (data || []).map((row: Record<string, unknown>) => ({
+          id: row.id as string,
+          slug: (row.slug as string) || '',
+          emoji: ((row.profiles as Record<string, unknown> | null)?.emoji as string) || (row.emoji as string) || '😔',
+          avatar_url: ((row.profiles as Record<string, unknown> | null)?.avatar_url as string) || null,
+          title: row.title as string,
+          body: row.body as string,
+          preview: (row.preview as string) || (row.body as string)?.slice(0, 120),
+          category: row.category as string,
+          categoryId: row.category_id as string,
+          hearts: (row.hearts as number) || 0,
+          replies: (row.replies as number) || 0,
+          time: timeAgo(row.created_at as string),
+          anonymous: ((row.profiles as Record<string, unknown> | null)?.username as string) || '匿名用戶',
+        }));
+        setPosts(mapped);
+        setLoading(false);
+      })
+      .catch((err: Error) => {
+        console.error('[PostFeed] Error:', err);
+        setLoading(false);
+      });
   }, []);
 
   const filtered = query
