@@ -84,10 +84,11 @@ const DEMO_POLLS: Poll[] = [
 
 // ─── Poll Card Component ───
 
-function PollCard({ poll, userId, isAdmin, onVote, onClose }: {
+function PollCard({ poll, userId, isAdmin, authChecked, onVote, onClose }: {
   poll: Poll;
   userId: string | null;
   isAdmin: boolean;
+  authChecked: boolean;
   onVote: (pollId: string, optionIds: string[]) => void;
   onClose: (pollId: string) => void;
 }) {
@@ -147,6 +148,7 @@ function PollCard({ poll, userId, isAdmin, onVote, onClose }: {
         {poll.options.map((opt) => {
           const isSelected = selected.includes(opt.id);
           const showBar = !isActive || hasVoted;
+          const pct = Math.round((opt.votes / maxVoteForBar) * 100);
 
           return (
             <div key={opt.id} className="relative">
@@ -154,8 +156,9 @@ function PollCard({ poll, userId, isAdmin, onVote, onClose }: {
                 <div
                   className="absolute inset-0 rounded-lg transition-all duration-500"
                   style={{
-                    opacity: Math.max(0.15, opt.votes / maxVoteForBar),
-                    backgroundColor: isSelected ? 'rgb(225 29 72)' : 'rgb(100 100 120)',
+                    width: `${pct}%`,
+                    backgroundColor: isSelected ? 'rgb(225 29 72 / 0.25)' : 'rgb(148 163 184 / 0.12)',
+                    minWidth: '4px',
                   }}
                 />
               )}
@@ -206,7 +209,7 @@ function PollCard({ poll, userId, isAdmin, onVote, onClose }: {
 
       {/* Vote button + info */}
       <div className="mt-4 flex items-center justify-between">
-        {!userId ? (
+        {!authChecked ? null : !userId ? (
           <p className="text-sm text-hearten-dim">
             <button
               onClick={() => window.dispatchEvent(new Event('hearten:open-login'))}
@@ -381,6 +384,7 @@ export default function PollsPage() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
   const [useDemo, setUseDemo] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
 
   const reloadPolls = async () => {
     setLoading(true);
@@ -424,6 +428,7 @@ export default function PollsPage() {
         setUseDemo(true);
         setLoading(false);
       }
+      setAuthChecked(true);
     })();
   }, []);
 
@@ -519,7 +524,7 @@ export default function PollsPage() {
                   </div>
                   <div className="space-y-4">
                     {activePolls.map(p => (
-                      <PollCard key={p.id} poll={p} userId={userId} isAdmin={isAdmin} onVote={handleVote} onClose={handleClose} />
+                      <PollCard key={p.id} poll={p} userId={userId} isAdmin={isAdmin} authChecked={authChecked} onVote={handleVote} onClose={handleClose} />
                     ))}
                   </div>
                 </section>
@@ -534,7 +539,7 @@ export default function PollsPage() {
                   </div>
                   <div className="space-y-4">
                     {closedPolls.map(p => (
-                      <PollCard key={p.id} poll={p} userId={userId} isAdmin={isAdmin} onVote={handleVote} onClose={handleClose} />
+                      <PollCard key={p.id} poll={p} userId={userId} isAdmin={isAdmin} authChecked={authChecked} onVote={handleVote} onClose={handleClose} />
                     ))}
                   </div>
                 </section>
