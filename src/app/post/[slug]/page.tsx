@@ -255,7 +255,11 @@ export default function PostPage() {
               {user ? (
                 <div className="bg-hearten-card border border-hearten-border rounded-xl p-4 mb-4">
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="text-sm">{user.emoji}</span>
+                    <div className="w-7 h-7 rounded-full bg-hearten-rose/20 flex items-center justify-center text-sm shrink-0 overflow-hidden">
+                      {user.avatar_url ? (
+                        <img src={user.avatar_url} alt="" className="w-full h-full object-cover" />
+                      ) : user.emoji}
+                    </div>
                     <span className="text-sm font-medium text-hearten-text">{user.username}</span>
                   </div>
                   <textarea value={replyText} onChange={e => setReplyText(e.target.value)}
