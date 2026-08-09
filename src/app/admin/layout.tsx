@@ -3,16 +3,16 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import {
-  LayoutDashboard, Users, FileText, MessageSquare, Flag,
+  LayoutDashboard, Users, FileText, MessageSquare, UserCog, Flag,
   BarChart3, Settings, LogOut
 } from 'lucide-react';
 import AdminContext, { NAV_ITEMS } from './AdminContext';
 
-type Tab = 'dashboard' | 'users' | 'posts' | 'comments' | 'reports' | 'analytics' | 'settings';
+type Tab = 'dashboard' | 'users' | 'posts' | 'comments' | 'presets' | 'reports' | 'analytics' | 'settings';
 
 const NAV_ICONS: Record<Tab, React.ComponentType<{ className?: string }>> = {
   dashboard: LayoutDashboard, users: Users, posts: FileText, comments: MessageSquare,
-  reports: Flag, analytics: BarChart3, settings: Settings,
+  presets: UserCog, reports: Flag, analytics: BarChart3, settings: Settings,
 };
 
 const NAV_BADGES: Partial<Record<Tab, number>> = { reports: 3 };

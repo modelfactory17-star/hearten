@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { db } from '@/lib/db';
 import {
   Users, FileText, MessageSquare, Heart,
-  Trash2, Search, RefreshCw
+  Trash2, Search, RefreshCw, Plus, UserCog
 } from 'lucide-react';
 
 // ─── Types ──────────────────────────────────────────────────
@@ -13,6 +13,7 @@ import {
 interface AdminUser { id: string; username: string; emoji: string; posts: number; joined: string; status: 'active' | 'banned' | 'flagged'; }
 interface AdminPost { id: string; title: string; author: string; category: string; hearts: number; comments: number; time: string; }
 interface AdminComment { id: string; body: string; author: string; post: string; time: string; }
+interface AdminPreset { id: string; username: string; emoji: string; email: string; account_type: string; posts: number; }
 
 export default function AdminContent() {
   const { tab } = useAdminTab();
@@ -25,6 +26,7 @@ export default function AdminContent() {
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [posts, setPosts] = useState<AdminPost[]>([]);
   const [comments, setComments] = useState<AdminComment[]>([]);
+  const [presets, setPresets] = useState<AdminPreset[]>([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -42,6 +44,9 @@ export default function AdminContent() {
       } else if (tab === 'comments') {
         const c = await db.admin.comments();
         if (!cancelled) { setComments(c); setLoading(false); }
+      } else if (tab === 'presets') {
+        const p = await db.admin.presets();
+        if (!cancelled) { setPresets(p); setLoading(false); }
       } else {
         setLoading(false);
       }
@@ -360,6 +365,159 @@ export default function AdminContent() {
           </div>
         </div>
       )}
+
+      {/* ─── PRESETS ─── */}
+      {tab === 'presets' && <PresetsPanel presets={presets} loading={loading} onRefresh={() => db.admin.presets().then(setPresets)} />}
+    </div>
+  );
+}
+
+// ─── Presets Panel ───
+
+function PresetsPanel({ presets, loading, onRefresh }: { presets: AdminPreset[]; loading: boolean; onRefresh: () => void }) {
+  const [creating, setCreating] = useState(false);
+  const [newName, setNewName] = useState('');
+  const [result, setResult] = useState<{ username: string; email: string; password: string } | null>(null);
+  const [toggling, setToggling] = useState<string | null>(null);
+
+  async function handleCreate() {
+    if (!newName.trim() || newName.trim().length < 2) return;
+    setCreating(true);
+    const res = await fetch('/api/admin/presets', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: newName.trim() }),
+    });
+    const data = await res.json();
+    if (data.ok) {
+      setResult(data.user);
+      setNewName('');
+      onRefresh();
+    } else {
+      alert('建立失敗：' + (data.error || '未知錯誤'));
+    }
+    setCreating(false);
+  }
+
+  async function handleToggle(id: string, currentType: string) {
+    setToggling(id);
+    const res = await fetch('/api/admin/presets', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, account_type: currentType }),
+    });
+    const data = await res.json();
+    if (data.ok) {
+      onRefresh();
+    } else {
+      alert('切換失敗：' + (data.error || '未知錯誤'));
+    }
+    setToggling(null);
+  }
+
+  return (
+    <div className="space-y-4">
+      {/* Create Card */}
+      <div className="bg-[#0d0d14] border border-[#1a1a2e] rounded-xl p-5">
+        <h3 className="text-sm font-medium text-gray-300 mb-4 flex items-center gap-2">
+          <Plus className="w-4 h-4 text-[#e11d48]" />
+          建立預設 Account
+        </h3>
+        <div className="flex items-center gap-3">
+          <input
+            value={newName}
+            onChange={e => setNewName(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && handleCreate()}
+            placeholder="輸入用戶名稱..."
+            className="flex-1 bg-[#1a1a2e] border border-[#2a2a3e] rounded-lg px-4 py-2.5 text-sm text-gray-200 placeholder-gray-600 outline-none focus:border-[#e11d48] transition-colors"
+          />
+          <button
+            onClick={handleCreate}
+            disabled={creating || !newName.trim()}
+            className="px-5 py-2.5 rounded-lg bg-[#e11d48] hover:bg-[#e11d48]/80 text-white text-sm font-medium transition-colors disabled:opacity-40 shrink-0"
+          >
+            {creating ? '建立中...' : '建立'}
+          </button>
+        </div>
+
+        {result && (
+          <div className="mt-4 p-4 bg-emerald-400/10 border border-emerald-400/30 rounded-lg space-y-1 text-sm">
+            <p className="text-emerald-400 font-semibold">✅ Account 已建立</p>
+            <p className="text-gray-300">用戶名：<span className="text-white font-mono">{result.username}</span></p>
+            <p className="text-gray-300">電郵：<span className="text-white font-mono text-xs">{result.email}</span></p>
+            <p className="text-gray-300">密碼：<span className="text-white font-mono">{result.password}</span></p>
+            <button onClick={() => setResult(null)} className="mt-2 text-xs text-gray-500 hover:text-gray-300">關閉</button>
+          </div>
+        )}
+      </div>
+
+      {/* Presets List */}
+      <div className="bg-[#0d0d14] border border-[#1a1a2e] rounded-xl overflow-hidden">
+        <div className="flex items-center justify-between p-4 border-b border-[#1a1a2e]">
+          <span className="text-sm font-medium text-gray-300 flex items-center gap-2">
+            <UserCog className="w-4 h-4 text-[#e11d48]" />
+            預設 Account 列表
+          </span>
+          <button onClick={onRefresh} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-gray-400 hover:text-gray-200 hover:bg-[#1a1a2e] transition-colors">
+            <RefreshCw className="w-3.5 h-3.5" />刷新
+          </button>
+        </div>
+
+        {loading ? (
+          <div className="flex items-center justify-center py-20 text-gray-500 text-sm">載入中...</div>
+        ) : presets.length === 0 ? (
+          <div className="flex items-center justify-center py-16 text-gray-500 text-sm">
+            未有預設 Account — 喺上面建立
+          </div>
+        ) : (
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-[#1a1a2e] text-xs text-gray-500 uppercase tracking-wider">
+                <th className="text-left py-3 px-4 font-medium">用戶</th>
+                <th className="text-left py-3 px-4 font-medium">電郵</th>
+                <th className="text-center py-3 px-4 font-medium">文章</th>
+                <th className="text-center py-3 px-4 font-medium">類型</th>
+                <th className="text-right py-3 px-4 font-medium">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              {presets.map(p => (
+                <tr key={p.id} className="border-b border-[#1a1a2e] hover:bg-[#111118] transition-colors">
+                  <td className="py-3 px-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-purple-400/20 flex items-center justify-center text-sm">
+                        {p.emoji}
+                      </div>
+                      <span className="text-sm text-gray-200 font-medium">{p.username}</span>
+                    </div>
+                  </td>
+                  <td className="py-3 px-4 text-sm text-gray-500 font-mono text-xs">{p.email}</td>
+                  <td className="py-3 px-4 text-center text-sm text-gray-300">{p.posts}</td>
+                  <td className="py-3 px-4 text-center">
+                    <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-medium bg-purple-400/10 text-purple-400">
+                      預設
+                    </span>
+                  </td>
+                  <td className="py-3 px-4 text-right">
+                    <button
+                      onClick={() => handleToggle(p.id, p.account_type)}
+                      disabled={toggling === p.id}
+                      className="px-3 py-1.5 rounded-lg text-xs text-gray-400 hover:text-amber-400 hover:bg-amber-400/10 transition-colors disabled:opacity-30"
+                      title="切換為一般會員"
+                    >
+                      {toggling === p.id ? '...' : '設為一般'}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+
+        <div className="flex items-center justify-between p-4 border-t border-[#1a1a2e]">
+          <span className="text-xs text-gray-500">共 {presets.length} 個預設 Account</span>
+        </div>
+      </div>
     </div>
   );
 }

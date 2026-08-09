@@ -323,6 +323,17 @@ export const admin = {
       time: timeAgo(row.created_at as string),
     }));
   },
+
+  async presets() {
+    const supabase = createClient();
+    const { data } = await supabase.from('profiles').select('id, username, emoji, email, account_type, posts_count').eq('account_type', 'preset').order('username');
+    return (data || []).map((p: Record<string, unknown>) => ({
+      id: p.id as string, username: p.username as string,
+      emoji: p.emoji as string, email: p.email as string,
+      account_type: p.account_type as string,
+      posts: p.posts_count as number,
+    }));
+  },
 };
 
 // ─── Bookmarks ────────────────────────────────────────────
