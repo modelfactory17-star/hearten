@@ -20,6 +20,7 @@ interface ProfileData {
   joined: string;
   posts_count: number;
   hearts_received: number;
+  email?: string;
 }
 
 const EMOJIS = ['🐱','🐶','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🐔','🐧','🐦','🦄','🐙','🦋','🌺','🐳','🐬','🦉','🦩','🐉'];
@@ -29,12 +30,21 @@ export default function UserPage() {
   const params = useParams();
   const router = useRouter();
   const name = decodeURIComponent(params.id as string);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [userPosts, setUserPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const isOwnProfile = currentUser?.username === name;
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const p = new URLSearchParams(window.location.search);
+      setIsAdmin(p.get('admin') === '1');
+    }
+  }, []);
+
+  const isOwnProfile = currentUser?.username === name || isAdmin;
 
   // DM state
   const [showMessageInput, setShowMessageInput] = useState(false);
@@ -54,6 +64,7 @@ export default function UserPage() {
   const [editEmoji, setEditEmoji] = useState('');
   const [editBio, setEditBio] = useState('');
   const [editStatus, setEditStatus] = useState('');
+  const [editMessageNotif, setEditMessageNotif] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState('');
@@ -64,6 +75,7 @@ export default function UserPage() {
     setEditEmoji(profile?.emoji || '🐱');
     setEditBio(profile?.bio || '');
     setEditStatus(profile?.status || '');
+    setEditMessageNotif(currentUser?.message_notifications ?? false);
     setShowEdit(true);
   }
 
@@ -74,9 +86,14 @@ export default function UserPage() {
       emoji: editEmoji,
       bio: editBio,
       status: editStatus,
+      message_notifications: editMessageNotif,
     });
     if (result.ok) {
       setProfile({ ...profile, emoji: editEmoji, bio: editBio, status: editStatus });
+      // Update currentUser's message_notifications locally
+      if (currentUser) {
+        setCurrentUser({ ...currentUser, message_notifications: editMessageNotif });
+      }
       setShowEdit(false);
     }
     setSaving(false);
@@ -334,6 +351,11 @@ export default function UserPage() {
               {profile.status && <span className="px-2.5 py-0.5 rounded-full bg-hearten-rose/10 text-hearten-rose text-sm">{profile.status}</span>}
               <span className="text-sm text-hearten-dim">加入：{profile.joined}</span>
             </div>
+            {isOwnProfile && profile.email && (
+              <div className="mt-2 text-center">
+                <span className="text-xs text-hearten-dim">📧 {profile.email}</span>
+              </div>
+            )}
             <div className="grid grid-cols-3 gap-4 mt-6 py-5 border-y border-hearten-border">
               <div className="text-center">
                 <div className="flex items-center justify-center gap-1 text-hearten-muted mb-1"><FileText className="w-5 h-5" /></div>
@@ -540,6 +562,18 @@ export default function UserPage() {
                   <button key={s} onClick={() => setEditStatus(s)} className={`px-3 py-1.5 rounded-full text-sm transition-all ${editStatus === s ? 'bg-hearten-rose text-white' : 'bg-hearten-bg text-hearten-muted hover:bg-hearten-rose/10 hover:text-hearten-text'}`}>{s || '唔想講'}</button>
                 ))}
               </div>
+            </div>
+            <div className="flex items-center justify-between py-2">
+              <div>
+                <span className="text-sm font-medium text-hearten-text">📬 訊息電郵通知</span>
+                <p className="text-xs text-hearten-dim mt-0.5">有人 send 訊息俾你時，發送電郵提示</p>
+              </div>
+              <button
+                onClick={() => setEditMessageNotif(!editMessageNotif)}
+                className={`relative w-11 h-6 rounded-full transition-colors ${editMessageNotif ? 'bg-hearten-rose' : 'bg-hearten-border'}`}
+              >
+                <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform ${editMessageNotif ? 'translate-x-5' : ''}`} />
+              </button>
             </div>
             <button onClick={handleSave} disabled={saving}
               className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-hearten-rose hover:bg-hearten-rose-light text-white font-medium text-base transition-colors disabled:opacity-50">

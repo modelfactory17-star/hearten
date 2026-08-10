@@ -1,28 +1,64 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import AdBanner from './AdBanner';
+import Link from 'next/link';
 
-const hotTopics = [
-  { emoji: '💬', text: '已讀不回算唔算有問題', num: '2.8K' },
-  { emoji: '🌍', text: '遠距離戀愛點維持', num: '132' },
-  { emoji: '💔', text: '發現另一半有第三者', num: '98' },
-  { emoji: '😔', text: '30歲仲未拍過拖', num: '87' },
-  { emoji: '🥀', text: '分手後點放低', num: '74' },
+interface HotTopic {
+  emoji: string;
+  text: string;
+  num: string;
+  slug: string;
+  image?: string | null;
+}
+
+interface SidebarMember {
+  emoji: string;
+  text: string;
+  id: string;
+  username: string;
+}
+
+interface ActiveUser {
+  emoji: string;
+  text: string;
+  num: string;
+  id: string;
+  username: string;
+}
+
+const fallbackHotTopics: HotTopic[] = [
+  { emoji: '💬', text: '已讀不回算唔算有問題', num: '2.8K', slug: '' },
+  { emoji: '🌍', text: '遠距離戀愛點維持', num: '132', slug: '' },
+  { emoji: '💔', text: '發現另一半有第三者', num: '98', slug: '' },
 ];
 
-const newMembers = [
-  { emoji: '🙋', text: '港島阿傑 · 💼 在職' },
-  { emoji: '👩‍🎓', text: '港大護理系 · 🎓 在學' },
-  { emoji: '🧑', text: '中大文學生 · 🎓 在學' },
+const fallbackNewMembers: SidebarMember[] = [
+  { emoji: '🙋', text: '港島阿傑 · 💼 在職', id: '', username: '' },
+  { emoji: '👩‍🎓', text: '港大護理系 · 🎓 在學', id: '', username: '' },
 ];
 
-const activeUsers = [
-  { emoji: '🐱', text: '月光下的貓', num: '23 帖' },
-  { emoji: '🍋', text: '檸檬茶走甜', num: '19 帖' },
-  { emoji: '🌊', text: '維港的風', num: '17 帖' },
+const fallbackActiveUsers: ActiveUser[] = [
+  { emoji: '🐱', text: '月光下的貓', num: '23 帖', id: '', username: '' },
+  { emoji: '🍋', text: '檸檬茶走甜', num: '19 帖', id: '', username: '' },
 ];
 
 export default function RightSidebar() {
+  const [hotTopics, setHotTopics] = useState<HotTopic[]>(fallbackHotTopics);
+  const [newMembers, setNewMembers] = useState<SidebarMember[]>(fallbackNewMembers);
+  const [activeUsers, setActiveUsers] = useState<ActiveUser[]>(fallbackActiveUsers);
+
+  useEffect(() => {
+    fetch('/api/sidebar')
+      .then(r => r.json())
+      .then(data => {
+        if (data.hotTopics) setHotTopics(data.hotTopics);
+        if (data.newMembers) setNewMembers(data.newMembers);
+        if (data.activeUsers) setActiveUsers(data.activeUsers);
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <aside className="w-[280px] shrink-0 border-l border-hearten-border h-[calc(100vh-56px)] sticky top-14 overflow-y-auto px-4 py-5 max-[1100px]:hidden">
       {/* Ad Banner */}
@@ -38,16 +74,20 @@ export default function RightSidebar() {
         </div>
         <div className="flex flex-col gap-[2px]">
           {hotTopics.map((topic) => (
-            <button
+            <Link
               key={topic.text}
+              href={topic.slug ? `/post/${topic.slug}` : '#'}
               className="flex items-center gap-3 py-[9px] px-3 rounded-[10px] bg-transparent hover:bg-hearten-card cursor-pointer transition-colors duration-[0.15s] text-left w-full"
             >
               <span className="text-[15px]">{topic.emoji}</span>
-              <span className="flex-1 text-base font-semibold text-hearten-muted whitespace-nowrap overflow-hidden text-ellipsis group-hover:text-hearten-text">
+              <span className="flex-1 text-base font-semibold text-hearten-muted whitespace-nowrap overflow-hidden text-ellipsis">
                 {topic.text}
               </span>
               <span className="text-sm text-hearten-dim flex-shrink-0">{topic.num}</span>
-            </button>
+              {topic.image && (
+                <img src={topic.image} alt="" className="w-9 h-9 rounded-md object-cover flex-shrink-0" />
+              )}
+            </Link>
           ))}
         </div>
       </div>
@@ -63,8 +103,9 @@ export default function RightSidebar() {
         </div>
         <div className="flex flex-col gap-[2px]">
           {newMembers.map((member) => (
-            <button
+            <Link
               key={member.text}
+              href={member.username ? `/user/${encodeURIComponent(member.username)}` : '#'}
               className="flex items-center gap-3 py-[9px] px-3 rounded-[10px] bg-transparent hover:bg-hearten-card cursor-pointer transition-colors duration-[0.15s] text-left w-full"
             >
               <div className="w-[34px] h-[34px] flex-shrink-0 rounded-full bg-hearten-card border border-hearten-border flex items-center justify-center text-[15px]">
@@ -74,7 +115,7 @@ export default function RightSidebar() {
                 {member.text}
               </span>
               <span className="text-sm text-hearten-dim flex-shrink-0">新</span>
-            </button>
+            </Link>
           ))}
         </div>
       </div>
@@ -90,8 +131,9 @@ export default function RightSidebar() {
         </div>
         <div className="flex flex-col gap-[2px]">
           {activeUsers.map((user) => (
-            <button
+            <Link
               key={user.text}
+              href={user.username ? `/user/${encodeURIComponent(user.username)}` : '#'}
               className="flex items-center gap-3 py-[9px] px-3 rounded-[10px] bg-transparent hover:bg-hearten-card cursor-pointer transition-colors duration-[0.15s] text-left w-full"
             >
               <div className="w-[34px] h-[34px] flex-shrink-0 rounded-full bg-hearten-card border border-hearten-border flex items-center justify-center text-[15px]">
@@ -101,7 +143,7 @@ export default function RightSidebar() {
                 {user.text}
               </span>
               <span className="text-sm text-hearten-dim flex-shrink-0">{user.num}</span>
-            </button>
+            </Link>
           ))}
         </div>
       </div>

@@ -10,6 +10,7 @@ export interface AuthUser {
   emoji: string;
   avatar_url: string | null;
   joined: string;
+  message_notifications: boolean;
 }
 
 export interface Post {
@@ -88,23 +89,24 @@ export const auth = {
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return null;
-    const { data: profile } = await supabase.from('profiles').select('username, emoji, avatar_url, joined').eq('id', user.id).single();
+    const { data: profile } = await supabase.from('profiles').select('username, emoji, avatar_url, joined, message_notifications').eq('id', user.id).single();
     return {
       id: user.id,
       username: profile?.username ?? user.user_metadata?.username ?? 'user',
       emoji: profile?.emoji ?? '🐱',
       avatar_url: profile?.avatar_url ?? null,
       joined: profile?.joined ?? '',
+      message_notifications: profile?.message_notifications ?? false,
     };
   },
 
   async getUserByUsername(username: string) {
     const supabase = createClient();
-    const { data } = await supabase.from('profiles').select('id, username, emoji, avatar_url, bio, status, joined, posts_count, hearts_received').eq('username', username).single();
+    const { data } = await supabase.from('profiles').select('id, username, emoji, avatar_url, bio, status, joined, posts_count, hearts_received, email').eq('username', username).single();
     return data || null;
   },
 
-  async updateProfile(userId: string, updates: { emoji?: string; bio?: string; status?: string; avatar_url?: string | null }) {
+  async updateProfile(userId: string, updates: { emoji?: string; bio?: string; status?: string; avatar_url?: string | null; message_notifications?: boolean }) {
     const supabase = createClient();
     const { error } = await supabase.from('profiles').update(updates).eq('id', userId);
     return { ok: !error, error: error?.message };

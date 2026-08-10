@@ -32,6 +32,7 @@ function mapPosts(raw: unknown) {
     replies: (row.replies as number) || 0,
     time: timeAgo(row.created_at as string),
     anonymous: ((row.profiles as Record<string, unknown> | null)?.username as string) || '匿名用戶',
+    images: (row.images as string[]) || [],
   }));
 }
 

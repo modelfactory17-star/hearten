@@ -17,6 +17,7 @@ interface PostItem {
   id: string; slug: string; emoji: string; avatar_url: string | null;
   title: string; body: string; preview: string; category: string; categoryId: string;
   hearts: number; replies: number; time: string; anonymous: string;
+  images?: string[];
 }
 
 export default function Home() {
@@ -88,7 +89,7 @@ export default function Home() {
             <div className="text-center py-12 text-hearten-muted text-base">暫時未有帖文，做第一個分享心事嘅人 💬</div>
           ) : (
             <div className="flex flex-col gap-3">
-              {posts.map((post) => (
+              {posts.slice(0, 50).map((post) => (
                 <FeedCard
                   key={post.id}
                   id={post.id}
@@ -101,6 +102,7 @@ export default function Home() {
                   replies={post.replies}
                   time={post.time}
                   anonymous={post.anonymous}
+                  images={post.images}
                   onClick={() => router.push(`/post/${post.slug}`)}
                 />
               ))}

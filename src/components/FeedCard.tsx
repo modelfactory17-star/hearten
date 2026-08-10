@@ -16,6 +16,7 @@ interface FeedCardProps {
   replies: number;
   time: string;
   anonymous: string;
+  images?: string[];
   onClick?: () => void;
 }
 
@@ -30,6 +31,7 @@ export default function FeedCard({
   replies,
   time,
   anonymous,
+  images,
   onClick,
 }: FeedCardProps) {
   const router = useRouter();
@@ -136,6 +138,11 @@ export default function FeedCard({
             </button>
           </div>
         </div>
+
+        {/* Thumbnail */}
+        {images && images.length > 0 && (
+          <img src={images[0]} alt="" className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg object-cover flex-shrink-0" />
+        )}
       </div>
     </article>
   );

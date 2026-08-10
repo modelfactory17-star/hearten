@@ -213,10 +213,10 @@ export default function PostPage() {
                 {post.images && post.images.length > 0 && (
                   <div className="grid grid-cols-2 gap-2 mb-4">
                     {post.images.map((url, i) => (
-                      <a key={i} href={url} target="_blank" rel="noopener noreferrer"
-                        className="rounded-xl overflow-hidden border border-hearten-border hover:border-hearten-rose/50 transition-colors">
+                      <div key={i}
+                        className="rounded-xl overflow-hidden border border-hearten-border">
                         <img src={url} alt="" className="w-full h-48 object-cover" />
-                      </a>
+                      </div>
                     ))}
                   </div>
                 )}

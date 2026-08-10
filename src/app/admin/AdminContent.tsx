@@ -244,7 +244,7 @@ export default function AdminContent() {
                       <div className="w-8 h-8 rounded-full bg-[#e11d48]/20 flex items-center justify-center text-sm">
                         {user.emoji}
                       </div>
-                      <a href={`/user/${encodeURIComponent(user.username)}`} target="_blank" rel="noopener noreferrer"
+                      <a href={`/user/${encodeURIComponent(user.username)}?admin=1`} target="_blank" rel="noopener noreferrer"
                         className="text-sm text-[#e11d48] hover:underline font-medium">{user.username}</a>
                     </div>
                   </td>
@@ -329,7 +329,7 @@ export default function AdminContent() {
                   </td>
                   <td className="py-3 px-4 text-sm">
                     {post.username ? (
-                      <a href={`/user/${encodeURIComponent(post.username)}`} target="_blank" rel="noopener noreferrer"
+                      <a href={`/user/${encodeURIComponent(post.username)}?admin=1`} target="_blank" rel="noopener noreferrer"
                         className="text-[#e11d48] hover:underline">{post.author}</a>
                     ) : (
                       <span className="text-gray-400">{post.author}</span>
@@ -412,7 +412,7 @@ export default function AdminContent() {
                   </td>
                   <td className="py-3 px-4 text-sm">
                     {comment.username ? (
-                      <a href={`/user/${encodeURIComponent(comment.username)}`} target="_blank" rel="noopener noreferrer"
+                      <a href={`/user/${encodeURIComponent(comment.username)}?admin=1`} target="_blank" rel="noopener noreferrer"
                         className="text-[#e11d48] hover:underline">{comment.author}</a>
                     ) : (
                       <span className="text-gray-400">{comment.author}</span>
@@ -561,7 +561,7 @@ function PresetsPanel({ presets, loading, onRefresh }: { presets: AdminPreset[];
                       <div className="w-8 h-8 rounded-full bg-purple-400/20 flex items-center justify-center text-sm">
                         {p.emoji}
                       </div>
-                      <span className="text-sm text-gray-200 font-medium">{p.username}</span>
+                      <a href={`/user/${encodeURIComponent(p.username)}?admin=1`} target="_blank" rel="noopener noreferrer" className="text-sm text-[#e11d48] hover:underline font-medium">{p.username}</a>
                     </div>
                   </td>
                   <td className="py-3 px-4 text-sm text-gray-500 font-mono text-xs">{p.email}</td>
