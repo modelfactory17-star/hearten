@@ -89,7 +89,7 @@ export default function Home() {
             <div className="text-center py-12 text-hearten-muted text-base">暫時未有帖文，做第一個分享心事嘅人 💬</div>
           ) : (
             <div className="flex flex-col gap-3">
-              {posts.slice(0, 50).map((post) => (
+              {posts.slice(0, 10).map((post) => (
                 <FeedCard
                   key={post.id}
                   id={post.id}
