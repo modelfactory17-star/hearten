@@ -7,7 +7,7 @@ export async function GET() {
   try {
     // Get profiles
     const profileRes = await fetch(
-      `${URL}/rest/v1/profiles?select=id,username,emoji,joined,bio,status`,
+      `${URL}/rest/v1/profiles?select=id,username,emoji,joined,bio,status&account_type=neq.preset`,
       { headers: { apikey: KEY, Authorization: `Bearer ${KEY}` } }
     );
     const profiles = await profileRes.json();
