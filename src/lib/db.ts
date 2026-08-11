@@ -294,7 +294,7 @@ export const admin = {
 
   async users() {
     const supabase = createClient();
-    const { data: profiles } = await supabase.from('profiles').select('id, username, emoji, joined');
+    const { data: profiles } = await supabase.from('profiles').select('id, username, emoji, joined').neq('account_type', 'preset');
     // Get post counts per user
     const { data: postCounts } = await supabase.from('posts').select('user_id');
     const counts: Record<string, number> = {};
