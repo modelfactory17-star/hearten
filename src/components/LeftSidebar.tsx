@@ -1,28 +1,39 @@
 'use client';
 
 import { useRouter, usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
 
-const categories: { label: string; count?: string; badge?: string; href: string }[] = [
-  { label: '💑 戀愛日常', href: '/category/dating-life' },
-  { label: '💕 暗戀表白', count: '285', href: '/category/crush' },
-  { label: '💔 分手復合', count: '342', href: '/category/breakup' },
-  { label: '💍 婚姻關係', count: '198', href: '/category/marriage' },
-  { label: '🌈 LGBTQ+', count: '156', href: '/category/lgbtq' },
-  { label: '🌳 心靈樹窿', count: '423', href: '/category/treehole' },
-  { label: '🃏 塔羅占卜', count: '87', href: '/category/tarot' },
-  { label: '💼 在職戀愛', badge: 'new', href: '/category/work-love' },
-  { label: '🎓 在學戀愛', badge: 'new', href: '/category/school-love' },
-  { label: '👨‍👩‍👧 家庭關係', badge: 'new', href: '/category/family' },
-  { label: '📋 交友配套', badge: 'new', href: '/category/dating-kit' },
-  { label: '🔞 一知半解', count: '203', href: '/category/bedroom' },
+const categories: { label: string; badge?: string; href: string; catId?: string }[] = [
+  { label: '💑 戀愛日常', href: '/category/dating-life', catId: 'dating-life' },
+  { label: '💕 暗戀表白', href: '/category/crush', catId: 'crush' },
+  { label: '💔 分手復合', href: '/category/breakup', catId: 'breakup' },
+  { label: '💍 婚姻關係', href: '/category/marriage', catId: 'marriage' },
+  { label: '🌈 LGBTQ+', href: '/category/lgbtq', catId: 'lgbtq' },
+  { label: '🌳 心靈樹窿', href: '/category/treehole', catId: 'treehole' },
+  { label: '🃏 塔羅占卜', href: '/category/tarot', catId: 'tarot' },
+  { label: '💼 在職戀愛', href: '/category/work-love', catId: 'work-love' },
+  { label: '🎓 在學戀愛', href: '/category/school-love', catId: 'school-love' },
+  { label: '👨‍👩‍👧 家庭關係', href: '/category/family', catId: 'family' },
+  { label: '📋 交友配套', href: '/category/dating-kit', catId: 'dating-kit' },
+  { label: '🔞 一知半解', href: '/category/bedroom', catId: 'bedroom' },
   { label: '📊 投票', badge: 'hot', href: '/polls' },
-  { label: '📰 熱門話題', count: '89', href: '/hot-topics' },
+  { label: '📰 熱門話題', badge: 'hot', href: '/hot-topics' },
   { label: '👥 推薦會員', badge: 'new', href: '/members' },
 ];
 
 export default function LeftSidebar() {
   const router = useRouter();
   const pathname = usePathname();
+  const [stats, setStats] = useState<Record<string, { total: number; today: number }>>({});
+
+  useEffect(() => {
+    fetch('/api/sidebar')
+      .then(r => r.json())
+      .then(data => {
+        if (data.categoryStats) setStats(data.categoryStats);
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <aside className="w-[220px] shrink-0 border-r border-hearten-border h-[calc(100vh-56px)] sticky top-14 overflow-y-auto px-4 py-5">
@@ -46,8 +57,8 @@ export default function LeftSidebar() {
               `}
             >
               {cat.label}
-              {cat.count && (
-                <span className="ml-auto text-sm text-hearten-dim">{cat.count}</span>
+              {cat.catId && stats[cat.catId] && (
+                <span className="ml-auto text-sm text-hearten-dim">{stats[cat.catId].total}</span>
               )}
               {cat.badge === 'new' && (
                 <span className="ml-auto text-[11px] font-semibold px-[6px] py-[2px] rounded-[8px] bg-hearten-rose text-white">

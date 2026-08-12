@@ -81,7 +81,30 @@ export async function GET() {
       }
     }
 
-    return NextResponse.json({ hotTopics, newMembers, activeUsers }, {
+    // 4. Category counts — total + today
+    const allPostsRes = await fetch(
+      `${URL}/rest/v1/posts?select=category_id,created_at`,
+      { headers }
+    );
+    const allPostsRaw = await allPostsRes.json();
+    const posts = Array.isArray(allPostsRaw) ? allPostsRaw : [];
+    
+    const catIds = ['dating-life','crush','breakup','marriage','lgbtq','treehole','tarot','work-love','school-love','family','dating-kit','bedroom'];
+    const categoryStats: Record<string, { total: number; today: number }> = {};
+    for (const cid of catIds) categoryStats[cid] = { total: 0, today: 0 };
+    
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+    
+    for (const p of posts) {
+      const cid = p.category_id as string;
+      if (categoryStats[cid]) {
+        categoryStats[cid].total++;
+        if ((p.created_at as string) >= todayStart) categoryStats[cid].today++;
+      }
+    }
+
+    return NextResponse.json({ hotTopics, newMembers, activeUsers, categoryStats }, {
       headers: { 'Cache-Control': 'no-store, max-age=0' }
     });
   } catch (err) {
