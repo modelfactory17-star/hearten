@@ -211,11 +211,11 @@ export const posts = {
     return mapPost(data);
   },
 
-  async update(postId: string, userId: string, title: string, body: string): Promise<Post | null> {
+  async update(postId: string, userId: string, title: string, body: string, images?: string[]): Promise<Post | null> {
     const supabase = createClient();
     const preview = body.slice(0, 120) + (body.length > 120 ? '...' : '');
     const { data, error } = await supabase.from('posts').update({
-      title, body, preview,
+      title, body, preview, images: images && images.length > 0 ? images : null,
     }).eq('id', postId).eq('user_id', userId)
       .select('*, profiles!posts_user_id_fkey(username, emoji, avatar_url)').single();
     if (error || !data) return null;

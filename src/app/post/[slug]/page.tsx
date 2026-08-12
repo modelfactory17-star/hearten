@@ -1,14 +1,15 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { Heart, MessageCircle, Share2, ArrowLeft, Flag, Eye, EyeOff, Bookmark, Edit3 } from 'lucide-react';
+import { Heart, MessageCircle, Share2, ArrowLeft, Flag, Eye, EyeOff, Bookmark, Edit3, Image, X } from 'lucide-react';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import LeftSidebar from '@/components/LeftSidebar';
 import RightSidebar from '@/components/RightSidebar';
 import { db, type AuthUser } from '@/lib/db';
 import type { Post, Comment } from '@/lib/db';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
+import { createClient } from '@/utils/supabase/client';
 
 const MOODS = [
   { emoji: '😊', label: '支持', key: 'support' },
@@ -77,7 +78,10 @@ export default function PostPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState('');
   const [editBody, setEditBody] = useState('');
+  const [editImages, setEditImages] = useState<string[]>([]);
   const [editSaving, setEditSaving] = useState(false);
+  const [editUploading, setEditUploading] = useState(false);
+  const editImageRef = useRef<HTMLInputElement>(null);
 
   const tree = buildTree([], userComments);
   const displayedComments = authorOnly ? tree.filter(c => c.isOP) : tree;
@@ -153,15 +157,37 @@ export default function PostPage() {
     if (!post) return;
     setEditTitle(post.title);
     setEditBody(post.body);
+    setEditImages([...post.images]);
     setIsEditing(true);
+  };
+
+  const handleEditImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    if (!file.type.startsWith('image/')) return;
+    if (file.size > 10 * 1024 * 1024) return;
+    setEditUploading(true);
+    const supabase = createClient();
+    const path = `post-images/${user.id}/${Date.now()}.jpg`;
+    const { error: upErr } = await supabase.storage.from('post-images').upload(path, file, { contentType: file.type });
+    if (!upErr) {
+      const { data: { publicUrl } } = supabase.storage.from('post-images').getPublicUrl(path);
+      setEditImages(prev => [...prev, publicUrl]);
+    }
+    setEditUploading(false);
+    if (editImageRef.current) editImageRef.current.value = '';
+  };
+
+  const removeEditImage = (index: number) => {
+    setEditImages(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleSaveEdit = async () => {
     if (!post || !user || !editTitle.trim() || !editBody.trim()) return;
     setEditSaving(true);
-    const updated = await db.posts.update(post.id, user.id, editTitle.trim(), editBody.trim());
+    const updated = await db.posts.update(post.id, user.id, editTitle.trim(), editBody.trim(), editImages);
     if (updated) {
-      setPost({ ...post, title: updated.title, body: updated.body, preview: editBody.trim().slice(0, 120) + (editBody.trim().length > 120 ? '...' : '') });
+      setPost({ ...post, title: updated.title, body: updated.body, images: updated.images, preview: editBody.trim().slice(0, 120) + (editBody.trim().length > 120 ? '...' : '') });
       setIsEditing(false);
     }
     setEditSaving(false);
@@ -253,6 +279,26 @@ export default function PostPage() {
                       rows={10}
                       className="w-full bg-hearten-bg border border-hearten-border rounded-lg px-4 py-3 text-base text-hearten-text outline-none resize-none focus:border-hearten-rose transition-colors mb-4"
                     />
+                    {/* Edit images */}
+                    {editImages.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        {editImages.map((url, i) => (
+                          <div key={i} className="relative w-24 h-24 rounded-lg overflow-hidden border border-hearten-border">
+                            <img src={url} alt="" className="w-full h-full object-cover" />
+                            <button onClick={() => removeEditImage(i)}
+                              className="absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-black/60 text-white flex items-center justify-center">
+                              <X className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    <input ref={editImageRef} type="file" accept="image/*" onChange={handleEditImageUpload} className="hidden" />
+                    <button onClick={() => editImageRef.current?.click()} disabled={editUploading}
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg border border-hearten-border hover:border-hearten-rose text-hearten-muted hover:text-hearten-text text-sm transition-colors mb-4">
+                      <Image className="w-4 h-4" />
+                      {editUploading ? '上傳中...' : editImages.length > 0 ? `再加多張 (${editImages.length})` : '加入圖片'}
+                    </button>
                     <div className="flex items-center gap-2 mb-4">
                       <button onClick={handleSaveEdit} disabled={editSaving || !editTitle.trim() || !editBody.trim()}
                         className="px-4 py-2 rounded-lg bg-hearten-rose hover:bg-hearten-rose-light disabled:opacity-40 text-white text-sm font-medium transition-colors">
