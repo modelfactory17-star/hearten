@@ -207,6 +207,20 @@ export default function WritePage() {
         {/* Body */}
         <div className="mb-5">
           <label className="block text-sm font-medium text-hearten-text mb-2">內容</label>
+          {/* Image preview inside message box */}
+          {uploadedImages.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-3">
+              {uploadedImages.map((url, i) => (
+                <div key={i} className="relative w-24 h-24 rounded-lg overflow-hidden border border-hearten-border">
+                  <img src={url} alt="" className="w-full h-full object-cover" />
+                  <button onClick={() => removeImage(i)}
+                    className="absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-black/60 text-white flex items-center justify-center">
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
           <textarea
             value={body}
             onChange={(e) => setBody(e.target.value)}
@@ -219,19 +233,6 @@ export default function WritePage() {
         {/* Images */}
         <div className="mb-5">
           <label className="block text-sm font-medium text-hearten-text mb-2">附加圖片</label>
-          {uploadedImages.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-3">
-              {uploadedImages.map((url, i) => (
-                <div key={i} className="relative w-20 h-20 rounded-lg overflow-hidden border border-hearten-border">
-                  <img src={url} alt="" className="w-full h-full object-cover" />
-                  <button onClick={() => removeImage(i)}
-                    className="absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-black/60 text-white flex items-center justify-center">
-                    <X className="w-3 h-3" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
           <input ref={imageRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
           <button onClick={() => imageRef.current?.click()} disabled={uploadingImg}
             className="flex items-center gap-2 px-4 py-2 rounded-lg border border-hearten-border hover:border-hearten-rose text-hearten-muted hover:text-hearten-text text-sm transition-colors">

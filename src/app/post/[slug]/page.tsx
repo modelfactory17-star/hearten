@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { Heart, MessageCircle, Share2, ArrowLeft, Flag, Eye, EyeOff, Bookmark } from 'lucide-react';
+import { Heart, MessageCircle, Share2, ArrowLeft, Flag, Eye, EyeOff, Bookmark, Edit3 } from 'lucide-react';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import LeftSidebar from '@/components/LeftSidebar';
@@ -73,6 +73,12 @@ export default function PostPage() {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Edit mode
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState('');
+  const [editBody, setEditBody] = useState('');
+  const [editSaving, setEditSaving] = useState(false);
+
   const tree = buildTree([], userComments);
   const displayedComments = authorOnly ? tree.filter(c => c.isOP) : tree;
   const commentCount = userComments.length;
@@ -141,6 +147,26 @@ export default function PostPage() {
     setTimeout(() => setShareDone(false), 2000);
   };
 
+  const isOwner = !!(user && post && user.id === post.userId);
+
+  const handleEdit = () => {
+    if (!post) return;
+    setEditTitle(post.title);
+    setEditBody(post.body);
+    setIsEditing(true);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!post || !user || !editTitle.trim() || !editBody.trim()) return;
+    setEditSaving(true);
+    const updated = await db.posts.update(post.id, user.id, editTitle.trim(), editBody.trim());
+    if (updated) {
+      setPost({ ...post, title: updated.title, body: updated.body, preview: editBody.trim().slice(0, 120) + (editBody.trim().length > 120 ? '...' : '') });
+      setIsEditing(false);
+    }
+    setEditSaving(false);
+  };
+
   return (
     <div className="min-h-screen bg-hearten-bg">
       <Header onMenuToggle={() => setMobileMenuOpen(v => !v)} />
@@ -200,6 +226,12 @@ export default function PostPage() {
                           className={`px-2 py-1 text-xs transition-colors ${fontSize === f.key ? 'bg-hearten-rose text-white' : 'text-hearten-muted hover:text-hearten-text hover:bg-hearten-card'}`}>{f.label}</button>
                       ))}
                     </div>
+                    {isOwner && !isEditing && (
+                      <button onClick={handleEdit}
+                        className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs text-hearten-muted hover:text-hearten-rose hover:bg-hearten-card transition-colors">
+                        <Edit3 className="w-3.5 h-3.5" />編輯
+                      </button>
+                    )}
                     <button onClick={() => setAuthorOnly(!authorOnly)}
                       className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs transition-colors ${authorOnly ? 'bg-hearten-amber/20 text-hearten-amber' : 'text-hearten-muted hover:text-hearten-text hover:bg-hearten-card'}`}>
                       {authorOnly ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}只看該作者
@@ -207,22 +239,51 @@ export default function PostPage() {
                   </div>
                 </div>
 
-                <h1 className="text-xl font-bold text-hearten-text mb-4">{post.title}</h1>
+                {isEditing ? (
+                  <>
+                    <input
+                      value={editTitle}
+                      onChange={(e) => setEditTitle(e.target.value)}
+                      maxLength={80}
+                      className="w-full bg-hearten-bg border border-hearten-border rounded-lg px-4 py-2 text-xl font-bold text-hearten-text outline-none focus:border-hearten-rose transition-colors mb-4"
+                    />
+                    <textarea
+                      value={editBody}
+                      onChange={(e) => setEditBody(e.target.value)}
+                      rows={10}
+                      className="w-full bg-hearten-bg border border-hearten-border rounded-lg px-4 py-3 text-base text-hearten-text outline-none resize-none focus:border-hearten-rose transition-colors mb-4"
+                    />
+                    <div className="flex items-center gap-2 mb-4">
+                      <button onClick={handleSaveEdit} disabled={editSaving || !editTitle.trim() || !editBody.trim()}
+                        className="px-4 py-2 rounded-lg bg-hearten-rose hover:bg-hearten-rose-light disabled:opacity-40 text-white text-sm font-medium transition-colors">
+                        {editSaving ? '儲存中...' : '儲存'}
+                      </button>
+                      <button onClick={() => setIsEditing(false)}
+                        className="px-4 py-2 rounded-lg border border-hearten-border text-hearten-muted hover:text-hearten-text text-sm transition-colors">
+                        取消
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <h1 className="text-xl font-bold text-hearten-text mb-4">{post.title}</h1>
 
-                {/* Image gallery */}
-                {post.images && post.images.length > 0 && (
-                  <div className="grid grid-cols-2 gap-2 mb-4">
-                    {post.images.map((url, i) => (
-                      <div key={i}
-                        className="rounded-xl overflow-hidden border border-hearten-border">
-                        <img src={url} alt="" className="w-full h-48 object-cover" />
+                    {/* Image gallery */}
+                    {post.images && post.images.length > 0 && (
+                      <div className="grid grid-cols-2 gap-2 mb-4">
+                        {post.images.map((url, i) => (
+                          <div key={i}
+                            className="rounded-xl overflow-hidden border border-hearten-border">
+                            <img src={url} alt="" className="w-full h-48 object-cover" />
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                )}
+                    )}
 
-                {/* Body with video embeds */}
-                <BodyWithEmbeds body={post.body} bodyClass={bodyClass} />
+                    {/* Body with video embeds */}
+                    <BodyWithEmbeds body={post.body} bodyClass={bodyClass} />
+                  </>
+                )}
 
                 <div className="flex items-center gap-5 pt-4 border-t border-hearten-border flex-wrap">
                   <button onClick={handleHeartPost}

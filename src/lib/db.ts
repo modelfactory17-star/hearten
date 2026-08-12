@@ -16,6 +16,7 @@ export interface AuthUser {
 export interface Post {
   id: string;
   slug: string;
+  userId: string;
   emoji: string;
   avatar_url: string | null;
   title: string;
@@ -127,6 +128,7 @@ export const auth = {
 function mapPost(row: any): Post {
   return {
     id: row.id, slug: row.slug || '',
+    userId: row.user_id,
     emoji: row.profiles?.emoji || row.emoji || '😔',
     avatar_url: row.profiles?.avatar_url || null,
     title: row.title, body: row.body,
@@ -206,6 +208,17 @@ export const posts = {
       return null;
     }
     if (!data) return null;
+    return mapPost(data);
+  },
+
+  async update(postId: string, userId: string, title: string, body: string): Promise<Post | null> {
+    const supabase = createClient();
+    const preview = body.slice(0, 120) + (body.length > 120 ? '...' : '');
+    const { data, error } = await supabase.from('posts').update({
+      title, body, preview,
+    }).eq('id', postId).eq('user_id', userId)
+      .select('*, profiles!posts_user_id_fkey(username, emoji, avatar_url)').single();
+    if (error || !data) return null;
     return mapPost(data);
   },
 
