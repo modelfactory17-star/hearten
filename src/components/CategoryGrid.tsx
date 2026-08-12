@@ -59,9 +59,9 @@ export default function CategoryGrid() {
           <span className="relative z-[2] text-sm text-hearten-muted mb-[6px] leading-[1.4]">
             {cat.desc}
           </span>
-          <span className="relative z-[2] flex items-center gap-[6px] text-xs text-hearten-dim">
+          <span className="relative z-[2] flex items-center gap-[6px] text-xs text-hearten-muted">
             <span>{cat.count} 篇</span>
-            <span className="w-[3px] h-[3px] rounded-full bg-hearten-dim" />
+            <span className="w-[3px] h-[3px] rounded-full bg-hearten-muted" />
             <span>{cat.today === 'new' || cat.today === '18+' ? cat.today : `今日 ${cat.today}`}</span>
           </span>
         </button>
