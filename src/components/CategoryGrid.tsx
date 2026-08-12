@@ -39,12 +39,17 @@ export default function CategoryGrid() {
   const [stats, setStats] = useState<Record<string, { total: number; today: number }>>({});
 
   useEffect(() => {
-    fetch('/api/sidebar')
-      .then(r => r.json())
-      .then(data => {
-        if (data.categoryStats) setStats(data.categoryStats);
-      })
-      .catch(() => {});
+    const fetchStats = () => {
+      fetch('/api/sidebar')
+        .then(r => r.json())
+        .then(data => {
+          if (data.categoryStats) setStats(data.categoryStats);
+        })
+        .catch(() => {});
+    };
+    fetchStats();
+    const interval = setInterval(fetchStats, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
