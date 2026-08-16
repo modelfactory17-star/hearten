@@ -27,26 +27,10 @@ interface ActiveUser {
   username: string;
 }
 
-const fallbackHotTopics: HotTopic[] = [
-  { emoji: '💬', text: '已讀不回算唔算有問題', num: '2.8K', slug: '' },
-  { emoji: '🌍', text: '遠距離戀愛點維持', num: '132', slug: '' },
-  { emoji: '💔', text: '發現另一半有第三者', num: '98', slug: '' },
-];
-
-const fallbackNewMembers: SidebarMember[] = [
-  { emoji: '🙋', text: '港島阿傑 · 💼 在職', id: '', username: '' },
-  { emoji: '👩‍🎓', text: '港大護理系 · 🎓 在學', id: '', username: '' },
-];
-
-const fallbackActiveUsers: ActiveUser[] = [
-  { emoji: '🐱', text: '月光下的貓', num: '23 帖', id: '', username: '' },
-  { emoji: '🍋', text: '檸檬茶走甜', num: '19 帖', id: '', username: '' },
-];
-
 export default function RightSidebar() {
-  const [hotTopics, setHotTopics] = useState<HotTopic[]>(fallbackHotTopics);
-  const [newMembers, setNewMembers] = useState<SidebarMember[]>(fallbackNewMembers);
-  const [activeUsers, setActiveUsers] = useState<ActiveUser[]>(fallbackActiveUsers);
+  const [hotTopics, setHotTopics] = useState<HotTopic[]>([]);
+  const [newMembers, setNewMembers] = useState<SidebarMember[]>([]);
+  const [activeUsers, setActiveUsers] = useState<ActiveUser[]>([]);
 
   useEffect(() => {
     fetch('/api/sidebar')
