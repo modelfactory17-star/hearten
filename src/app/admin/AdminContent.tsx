@@ -182,69 +182,6 @@ export default function AdminContent() {
               </div>
             ))}
           </div>
-
-          {/* Charts placeholder */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-[#0d0d14] border border-[#1a1a2e] rounded-xl p-5">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-medium text-gray-300">📈 用戶增長</h3>
-                <select className="bg-[#1a1a2e] border border-[#2a2a3e] rounded-lg px-3 py-1 text-xs text-gray-400 outline-none">
-                  <option>過去 7 日</option>
-                  <option>過去 30 日</option>
-                </select>
-              </div>
-              <div className="h-48 flex items-end gap-2 px-2">
-                {[35, 42, 28, 55, 38, 48, 62].map((h, i) => (
-                  <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                    <div className="w-full bg-[#e11d48]/60 hover:bg-[#e11d48] rounded-t transition-all cursor-pointer" style={{ height: `${h * 2}px` }} />
-                    <span className="text-[10px] text-gray-600">{['一','二','三','四','五','六','日'][i]}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="bg-[#0d0d14] border border-[#1a1a2e] rounded-xl p-5">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-medium text-gray-300">📊 文章分類分佈</h3>
-              </div>
-              <div className="space-y-3">
-                {[
-                  { label: '心靈樹窿', pct: 28, color: 'bg-emerald-500' },
-                  { label: '分手復合', pct: 22, color: 'bg-[#e11d48]' },
-                  { label: '暗戀表白', pct: 18, color: 'bg-pink-400' },
-                  { label: '婚姻關係', pct: 14, color: 'bg-purple-400' },
-                  { label: 'LGBTQ+', pct: 10, color: 'bg-blue-400' },
-                  { label: '其他', pct: 8, color: 'bg-gray-500' },
-                ].map(item => (
-                  <div key={item.label} className="flex items-center gap-3">
-                    <span className="text-xs text-gray-400 w-20 text-right">{item.label}</span>
-                    <div className="flex-1 bg-[#1a1a2e] rounded-full h-2">
-                      <div className={`h-full rounded-full ${item.color}`} style={{ width: `${item.pct}%` }} />
-                    </div>
-                    <span className="text-xs text-gray-500 w-8">{item.pct}%</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Recent activity */}
-          <div className="bg-[#0d0d14] border border-[#1a1a2e] rounded-xl p-5">
-            <h3 className="text-sm font-medium text-gray-300 mb-4">🕐 最近動態</h3>
-            <div className="space-y-3">
-              {[
-                { action: '新用戶註冊', detail: '檸檬茶走甜 加入了 Hearten', time: '2 分鐘前', color: 'text-blue-400' },
-                { action: '新文章', detail: '「遠距離戀愛點維持」發布於 心靈樹窿', time: '15 分鐘前', color: 'text-emerald-400' },
-                { action: '留言舉報', detail: 'spam_bot_01 的留言被舉報', time: '30 分鐘前', color: 'text-amber-400' },
-                { action: '用戶被停權', detail: 'man168 已被停權', time: '1 小時前', color: 'text-[#e11d48]' },
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-3 text-sm">
-                  <div className={`w-2 h-2 rounded-full ${item.color}`} />
-                  <span className="text-gray-300 flex-1">{item.detail}</span>
-                  <span className="text-xs text-gray-600">{item.time}</span>
-                </div>
-              ))}
-            </div>
-          </div>
         </>
         )}
       </>

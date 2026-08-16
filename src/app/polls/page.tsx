@@ -7,81 +7,6 @@ import RightSidebar from '@/components/RightSidebar';
 import Footer from '@/components/Footer';
 import { db, Poll } from '@/lib/db';
 
-// ─── Demo fallback data (shown when DB has no polls) ───
-
-const DEMO_POLLS: Poll[] = [
-  {
-    id: 'demo-1', title: '你最鍾意邊種約會方式？',
-    description: '第一次約會嘅時候，邊種方式最得你心？',
-    status: 'active', totalVotes: 156,
-    options: [
-      { id: 'd1a', text: '🎬 睇戲 + 食飯', votes: 68 },
-      { id: 'd1b', text: '☕ 咖啡店傾偈', votes: 42 },
-      { id: 'd1c', text: '🌳 公園散步', votes: 21 },
-      { id: 'd1d', text: '🎨 手作工作坊', votes: 25 },
-    ],
-    userVotes: [], createdAt: new Date().toISOString(),
-  },
-  {
-    id: 'demo-2', title: '另一半最需要咩特質？',
-    description: '揀伴侶嘅時候，邊樣最重要？（可選多項）',
-    status: 'active', totalVotes: 312,
-    options: [
-      { id: 'd2a', text: '💬 溝通能力', votes: 128 },
-      { id: 'd2b', text: '😂 幽默感', votes: 89 },
-      { id: 'd2c', text: '🫂 同理心', votes: 56 },
-      { id: 'd2d', text: '💪 責任感', votes: 39 },
-    ],
-    userVotes: [], createdAt: new Date().toISOString(),
-  },
-  {
-    id: 'demo-3', title: '你點睇異地戀？',
-    description: 'Long D 有冇將來？分享你嘅睇法',
-    status: 'active', totalVotes: 198,
-    options: [
-      { id: 'd3a', text: '❤️ 只要有愛就得', votes: 72 },
-      { id: 'd3b', text: '⚠️ 好難維持，但可以試', votes: 84 },
-      { id: 'd3c', text: '❌ 唔睇好，遲早分手', votes: 42 },
-    ],
-    userVotes: [], createdAt: new Date().toISOString(),
-  },
-  {
-    id: 'demo-4', title: '情人節禮物預算幾多？',
-    description: '上個情人節，你花咗幾多錢買禮物？',
-    status: 'closed', totalVotes: 445,
-    options: [
-      { id: 'd4a', text: '💰 $500 以下', votes: 180 },
-      { id: 'd4b', text: '💸 $500 - $1,000', votes: 156 },
-      { id: 'd4c', text: '💎 $1,000 - $3,000', votes: 78 },
-      { id: 'd4d', text: '👑 $3,000 以上', votes: 31 },
-    ],
-    userVotes: [], createdAt: new Date().toISOString(),
-  },
-  {
-    id: 'demo-5', title: '結婚要唔要擺酒？',
-    description: '傳統擺酒 vs 簡單註冊，你點揀？',
-    status: 'closed', totalVotes: 387,
-    options: [
-      { id: 'd5a', text: '🎉 一定要擺，開心 share', votes: 145 },
-      { id: 'd5b', text: '🤝 簡單食餐飯算', votes: 167 },
-      { id: 'd5c', text: '✈️ 旅行結婚更開心', votes: 75 },
-    ],
-    userVotes: [], createdAt: new Date().toISOString(),
-  },
-  {
-    id: 'demo-6', title: '另一半同屋企人相處問題？',
-    description: '屋企人唔鍾意你另一半，你會點做？',
-    status: 'closed', totalVotes: 298,
-    options: [
-      { id: 'd6a', text: '🙋 企另一半嗰邊', votes: 112 },
-      { id: 'd6b', text: '🏠 盡量協調兩邊', votes: 98 },
-      { id: 'd6c', text: '😔 聽屋企人話分手', votes: 45 },
-      { id: 'd6d', text: '⏳ 俾啲時間大家', votes: 43 },
-    ],
-    userVotes: [], createdAt: new Date().toISOString(),
-  },
-];
-
 // ─── Poll Card Component ───
 
 function PollCard({ poll, userId, isAdmin, authChecked, onVote, onClose }: {
@@ -383,20 +308,12 @@ export default function PollsPage() {
   const [userId, setUserId] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
-  const [useDemo, setUseDemo] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
 
   const reloadPolls = async () => {
     setLoading(true);
-    if (!useDemo) {
-      const data = await db.polls.list(userId || undefined);
-      if (data.length > 0) {
-        setPolls(data);
-      } else {
-        setPolls(DEMO_POLLS);
-        setUseDemo(true);
-      }
-    }
+    const data = await db.polls.list(userId || undefined);
+    setPolls(data);
     setLoading(false);
   };
 
@@ -414,18 +331,12 @@ export default function PollsPage() {
         // Load polls
         setLoading(true);
         const data = await db.polls.list(userId);
-        if (data.length === 0) {
-          setPolls(DEMO_POLLS);
-          setUseDemo(true);
-        } else {
-          setPolls(data);
-          setUseDemo(false);
-        }
+        setPolls(data);
         setLoading(false);
       } else {
         setLoading(true);
-        setPolls(DEMO_POLLS);
-        setUseDemo(true);
+        const data = await db.polls.list();
+        setPolls(data);
         setLoading(false);
       }
       setAuthChecked(true);
@@ -433,33 +344,12 @@ export default function PollsPage() {
   }, []);
 
   const handleVote = async (pollId: string, optionIds: string[]) => {
-    if (!userId || useDemo) {
-      // Demo: simulate vote locally
-      setPolls(prev => prev.map(p => {
-        if (p.id !== pollId) return p;
-        const newOpts = p.options.map(o => ({
-          ...o,
-          votes: optionIds.includes(o.id) ? o.votes + (p.userVotes.includes(o.id) ? 0 : 1) : o.votes - (p.userVotes.includes(o.id) && !optionIds.includes(o.id) ? 1 : 0),
-        }));
-        return {
-          ...p,
-          options: newOpts,
-          userVotes: optionIds,
-          totalVotes: p.totalVotes + (p.userVotes.length === 0 ? 1 : 0),
-        };
-      }));
-      return;
-    }
-
+    if (!userId) return;
     const ok = await db.polls.vote(pollId, optionIds, userId);
     if (ok) reloadPolls();
   };
 
   const handleClose = async (pollId: string) => {
-    if (useDemo) {
-      setPolls(prev => prev.map(p => p.id === pollId ? { ...p, status: 'closed' as const } : p));
-      return;
-    }
     const ok = await db.polls.closePoll(pollId);
     if (ok) reloadPolls();
   };
