@@ -72,7 +72,7 @@ export async function GET() {
     }
 
     return NextResponse.json({ hotTopics, newMembers, activeUsers, categoryStats }, {
-      headers: { 'Cache-Control': 'no-store, max-age=0' }
+      headers: { 'Cache-Control': 's-maxage=60, stale-while-revalidate=120' }
     });
   } catch (err) {
     return NextResponse.json({ error: String(err) }, { status: 500 });
