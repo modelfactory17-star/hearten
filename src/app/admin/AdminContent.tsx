@@ -5,14 +5,14 @@ import { useState, useEffect } from 'react';
 import { db } from '@/lib/db';
 import {
   Users, FileText, MessageSquare, Heart,
-  Trash2, Search, RefreshCw, Plus, UserCog
+  Trash2, Search, RefreshCw, Plus, UserCog, Pencil, X
 } from 'lucide-react';
 
 // ─── Types ──────────────────────────────────────────────────
 
 interface AdminUser { id: string; username: string; emoji: string; posts: number; joined: string; status: 'active' | 'banned' | 'flagged'; }
-interface AdminPost { id: string; title: string; author: string; username: string; category: string; hearts: number; comments: number; time: string; }
-interface AdminComment { id: string; body: string; author: string; username: string; post: string; time: string; }
+interface AdminPost { id: string; title: string; author: string; username: string; category: string; hearts: number; comments: number; time: string; body?: string; category_id?: string; emoji?: string; created_at?: string; }
+interface AdminComment { id: string; body: string; author: string; username: string; post: string; time: string; created_at?: string; }
 interface AdminPreset { id: string; username: string; emoji: string; email: string; account_type: string; posts: number; }
 
 function timeAgo(dateStr: string): string {
@@ -29,11 +29,62 @@ function timeAgo(dateStr: string): string {
   return date.toLocaleDateString('zh-HK', { month: 'short', day: 'numeric' });
 }
 
+const CATEGORIES = [
+  { id: 'dating-life', icon: '💑', name: '戀愛日常' },
+  { id: 'crush', icon: '💕', name: '暗戀表白' },
+  { id: 'breakup', icon: '💔', name: '分手復合' },
+  { id: 'marriage', icon: '💍', name: '婚姻關係' },
+  { id: 'lgbtq', icon: '🌈', name: 'LGBTQ+' },
+  { id: 'treehole', icon: '🌳', name: '心靈樹窿' },
+  { id: 'tarot', icon: '🃏', name: '塔羅占卜' },
+  { id: 'work', icon: '💼', name: '在職戀愛' },
+  { id: 'school', icon: '🎓', name: '在學戀愛' },
+  { id: 'family', icon: '👨‍👩‍👧', name: '家庭關係' },
+  { id: 'dating', icon: '📋', name: '交友配套' },
+  { id: 'bedroom', icon: '🔞', name: '一知半解' },
+];
+
+function mapPostRow(row: Record<string, unknown>): AdminPost {
+  return {
+    id: row.id as string, title: row.title as string,
+    author: ((row.profiles as Record<string, unknown> | null)?.username as string) || '匿名用戶',
+    username: ((row.profiles as Record<string, unknown> | null)?.username as string) || '',
+    category: (row.category as string) || '',
+    hearts: (row.hearts as number) || 0,
+    comments: (row.replies as number) || 0,
+    time: timeAgo(row.created_at as string),
+    body: (row.body as string) || '',
+    category_id: (row.category_id as string) || '',
+    emoji: (row.emoji as string) || '😔',
+    created_at: (row.created_at as string) || '',
+  };
+}
+
+function mapCommentRow(row: Record<string, unknown>): AdminComment {
+  return {
+    id: row.id as string, body: row.body as string,
+    author: ((row.profiles as Record<string, unknown> | null)?.username as string) || '匿名用戶',
+    username: ((row.profiles as Record<string, unknown> | null)?.username as string) || '',
+    post: ((row.posts as Record<string, unknown> | null)?.title as string) || '',
+    time: timeAgo(row.created_at as string),
+    created_at: (row.created_at as string) || '',
+  };
+}
+
+function toLocalInput(iso: string): string {
+  if (!iso) return '';
+  const d = new Date(iso);
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
 export default function AdminContent() {
   const { tab } = useAdminTab();
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [postForm, setPostForm] = useState<{ post: AdminPost | null } | null>(null);
+  const [commentForm, setCommentForm] = useState<{ comment: AdminComment | null } | null>(null);
 
   // Data
   const [stats, setStats] = useState({ users: 0, posts: 0, comments: 0, hearts: 0 });
@@ -57,26 +108,12 @@ export default function AdminContent() {
       } else if (tab === 'posts') {
         const res = await fetch('/api/admin/posts');
         const raw = await res.json();
-        const p = (Array.isArray(raw) ? raw : []).map((row: Record<string, unknown>) => ({
-          id: row.id as string, title: row.title as string,
-          author: ((row.profiles as Record<string, unknown> | null)?.username as string) || '匿名用戶',
-          username: ((row.profiles as Record<string, unknown> | null)?.username as string) || '',
-          category: (row.category as string) || '',
-          hearts: (row.hearts as number) || 0,
-          comments: (row.replies as number) || 0,
-          time: timeAgo(row.created_at as string),
-        }));
+        const p = (Array.isArray(raw) ? raw : []).map(mapPostRow);
         if (!cancelled) { setPosts(p); setLoading(false); }
       } else if (tab === 'comments') {
         const res = await fetch('/api/admin/comments');
         const raw = await res.json();
-        const c = (Array.isArray(raw) ? raw : []).map((row: Record<string, unknown>) => ({
-          id: row.id as string, body: row.body as string,
-          author: ((row.profiles as Record<string, unknown> | null)?.username as string) || '匿名用戶',
-          username: ((row.profiles as Record<string, unknown> | null)?.username as string) || '',
-          post: ((row.posts as Record<string, unknown> | null)?.title as string) || '',
-          time: timeAgo(row.created_at as string),
-        }));
+        const c = (Array.isArray(raw) ? raw : []).map(mapCommentRow);
         if (!cancelled) { setComments(c); setLoading(false); }
       } else if (tab === 'presets') {
         const p = await db.admin.presets();
@@ -102,6 +139,18 @@ export default function AdminContent() {
       alert(`刪除失敗：${error}`);
     }
     setDeleting(null);
+  }
+
+  async function refreshPosts() {
+    const res = await fetch('/api/admin/posts');
+    const raw = await res.json();
+    setPosts((Array.isArray(raw) ? raw : []).map(mapPostRow));
+  }
+
+  async function refreshComments() {
+    const res = await fetch('/api/admin/comments');
+    const raw = await res.json();
+    setComments((Array.isArray(raw) ? raw : []).map(mapCommentRow));
   }
 
   return (
@@ -288,22 +337,19 @@ export default function AdminContent() {
                 />
               </div>
             </div>
-            <button onClick={async () => {
-              const res = await fetch('/api/admin/posts');
-              const raw = await res.json();
-              const p = (Array.isArray(raw) ? raw : []).map((row: Record<string, unknown>) => ({
-                id: row.id as string, title: row.title as string,
-                author: ((row.profiles as Record<string, unknown> | null)?.username as string) || '匿名用戶',
-                username: ((row.profiles as Record<string, unknown> | null)?.username as string) || '',
-                category: (row.category as string) || '',
-                hearts: (row.hearts as number) || 0,
-                comments: (row.replies as number) || 0,
-                time: timeAgo(row.created_at as string),
-              }));
-              setPosts(p);
-            }} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-gray-400 hover:text-gray-200 hover:bg-[#1a1a2e] transition-colors">
-              <RefreshCw className="w-3.5 h-3.5" />刷新
-            </button>
+            <div className="flex items-center gap-2">
+              <button onClick={() => setPostForm({ post: null })} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs bg-[#e11d48] hover:bg-[#e11d48]/80 text-white transition-colors">
+                <Plus className="w-3.5 h-3.5" />加文章
+              </button>
+              <button onClick={async () => {
+                const res = await fetch('/api/admin/posts');
+                const raw = await res.json();
+                const p = (Array.isArray(raw) ? raw : []).map(mapPostRow);
+                setPosts(p);
+              }} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-gray-400 hover:text-gray-200 hover:bg-[#1a1a2e] transition-colors">
+                <RefreshCw className="w-3.5 h-3.5" />刷新
+              </button>
+            </div>
           </div>
 
           {loading ? (
@@ -345,6 +391,9 @@ export default function AdminContent() {
                   <td className="py-3 px-4 text-sm text-gray-500">{post.time}</td>
                   <td className="py-3 px-4 text-right">
                     <div className="flex items-center justify-end gap-1">
+                      <button onClick={() => setPostForm({ post })} className="p-1.5 rounded-lg text-gray-500 hover:text-[#e11d48] hover:bg-[#e11d48]/10 transition-colors" title="編輯">
+                        <Pencil className="w-3.5 h-3.5" />
+                      </button>
                       <button onClick={() => handleDelete('post', post.id)} disabled={deleting === post.id} className="p-1.5 rounded-lg text-gray-500 hover:text-[#e11d48] hover:bg-[#e11d48]/10 transition-colors disabled:opacity-30" title="刪除">
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -375,20 +424,19 @@ export default function AdminContent() {
                 />
               </div>
             </div>
-            <button onClick={async () => {
-              const res = await fetch('/api/admin/comments');
-              const raw = await res.json();
-              const c = (Array.isArray(raw) ? raw : []).map((row: Record<string, unknown>) => ({
-                id: row.id as string, body: row.body as string,
-                author: ((row.profiles as Record<string, unknown> | null)?.username as string) || '匿名用戶',
-                username: ((row.profiles as Record<string, unknown> | null)?.username as string) || '',
-                post: ((row.posts as Record<string, unknown> | null)?.title as string) || '',
-                time: timeAgo(row.created_at as string),
-              }));
-              setComments(c);
-            }} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-gray-400 hover:text-gray-200 hover:bg-[#1a1a2e] transition-colors">
-              <RefreshCw className="w-3.5 h-3.5" />刷新
-            </button>
+            <div className="flex items-center gap-2">
+              <button onClick={() => setCommentForm({ comment: null })} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs bg-[#e11d48] hover:bg-[#e11d48]/80 text-white transition-colors">
+                <Plus className="w-3.5 h-3.5" />加留言
+              </button>
+              <button onClick={async () => {
+                const res = await fetch('/api/admin/comments');
+                const raw = await res.json();
+                const c = (Array.isArray(raw) ? raw : []).map(mapCommentRow);
+                setComments(c);
+              }} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-gray-400 hover:text-gray-200 hover:bg-[#1a1a2e] transition-colors">
+                <RefreshCw className="w-3.5 h-3.5" />刷新
+              </button>
+            </div>
           </div>
 
           {loading ? (
@@ -422,6 +470,9 @@ export default function AdminContent() {
                   <td className="py-3 px-4 text-sm text-gray-500">{comment.time}</td>
                   <td className="py-3 px-4 text-right">
                     <div className="flex items-center justify-end gap-1">
+                      <button onClick={() => setCommentForm({ comment })} className="p-1.5 rounded-lg text-gray-500 hover:text-[#e11d48] hover:bg-[#e11d48]/10 transition-colors" title="編輯">
+                        <Pencil className="w-3.5 h-3.5" />
+                      </button>
                       <button onClick={() => handleDelete('comment', comment.id)} disabled={deleting === comment.id} className="p-1.5 rounded-lg text-gray-500 hover:text-[#e11d48] hover:bg-[#e11d48]/10 transition-colors disabled:opacity-30" title="刪除">
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -441,6 +492,9 @@ export default function AdminContent() {
 
       {/* ─── PRESETS ─── */}
       {tab === 'presets' && <PresetsPanel presets={presets} loading={loading} onRefresh={() => db.admin.presets().then(setPresets)} />}
+
+      {postForm && <PostFormModal post={postForm.post} onClose={() => setPostForm(null)} onSaved={() => { setPostForm(null); refreshPosts(); }} />}
+      {commentForm && <CommentFormModal comment={commentForm.comment} onClose={() => setCommentForm(null)} onSaved={() => { setCommentForm(null); refreshComments(); }} />}
     </div>
   );
 }
@@ -589,6 +643,186 @@ function PresetsPanel({ presets, loading, onRefresh }: { presets: AdminPreset[];
 
         <div className="flex items-center justify-between p-4 border-t border-[#1a1a2e]">
           <span className="text-xs text-gray-500">共 {presets.length} 個預設 Account</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Post Form Modal ───
+
+type AuthorOpt = { id: string; username: string; emoji: string };
+
+function PostFormModal({ post, onClose, onSaved }: { post: AdminPost | null; onClose: () => void; onSaved: () => void }) {
+  const [title, setTitle] = useState(post?.title || '');
+  const [body, setBody] = useState(post?.body || '');
+  const [categoryId, setCategoryId] = useState(post?.category_id || 'dating-life');
+  const [createdAt, setCreatedAt] = useState(toLocalInput(post?.created_at || new Date().toISOString()));
+  const [userId, setUserId] = useState('');
+  const [authors, setAuthors] = useState<AuthorOpt[]>([]);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (!post) {
+      Promise.all([db.admin.users(), db.admin.presets()]).then(([real, preset]) => {
+        const all: AuthorOpt[] = [
+          ...((real as unknown as AuthorOpt[]) || []).map(u => ({ id: u.id, username: u.username, emoji: u.emoji || '🐱' })),
+          ...((preset as unknown as AuthorOpt[]) || []).map(u => ({ id: u.id, username: u.username, emoji: u.emoji || '🐱' })),
+        ];
+        setAuthors(all);
+        if (all.length) setUserId(all[0].id);
+      });
+    }
+  }, [post]);
+
+  async function save() {
+    if (!title.trim() || !body.trim()) { alert('標題同內文不能為空'); return; }
+    if (!post && !userId) { alert('請選擇作者'); return; }
+    setSaving(true);
+    const cat = CATEGORIES.find(c => c.id === categoryId);
+    const category = cat ? `${cat.icon} ${cat.name}` : categoryId;
+    const payload: Record<string, unknown> = {
+      title: title.trim(), body, category, category_id: categoryId,
+      created_at: createdAt ? new Date(createdAt).toISOString() : undefined,
+    };
+    if (post) payload.id = post.id;
+    else payload.user_id = userId;
+    const res = await fetch('/api/admin/posts', {
+      method: post ? 'PATCH' : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    setSaving(false);
+    if (res.ok) onSaved();
+    else { const { error } = await res.json(); alert('儲存失敗：' + (error || '未知錯誤')); }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={onClose}>
+      <div className="w-full max-w-lg bg-[#0d0d14] border border-[#1a1a2e] rounded-xl p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between mb-5">
+          <h3 className="text-sm font-medium text-gray-200">{post ? '編輯文章' : '加文章'}</h3>
+          <button onClick={onClose} className="p-1.5 rounded-lg text-gray-500 hover:text-gray-200"><X className="w-4 h-4" /></button>
+        </div>
+        <div className="space-y-4">
+          {!post && (
+            <div>
+              <label className="text-xs text-gray-500 mb-1.5 block">作者</label>
+              <select value={userId} onChange={e => setUserId(e.target.value)} className="w-full bg-[#1a1a2e] border border-[#2a2a3e] rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#e11d48]">
+                {authors.map(a => <option key={a.id} value={a.id}>{a.emoji} {a.username}</option>)}
+              </select>
+            </div>
+          )}
+          <div>
+            <label className="text-xs text-gray-500 mb-1.5 block">分類</label>
+            <select value={categoryId} onChange={e => setCategoryId(e.target.value)} className="w-full bg-[#1a1a2e] border border-[#2a2a3e] rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#e11d48]">
+              {CATEGORIES.map(c => <option key={c.id} value={c.id}>{c.icon} {c.name}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className="text-xs text-gray-500 mb-1.5 block">標題</label>
+            <input value={title} onChange={e => setTitle(e.target.value)} className="w-full bg-[#1a1a2e] border border-[#2a2a3e] rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#e11d48]" />
+          </div>
+          <div>
+            <label className="text-xs text-gray-500 mb-1.5 block">內文</label>
+            <textarea value={body} onChange={e => setBody(e.target.value)} rows={6} className="w-full bg-[#1a1a2e] border border-[#2a2a3e] rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#e11d48] resize-y" />
+          </div>
+          <div>
+            <label className="text-xs text-gray-500 mb-1.5 block">日期時間（可改，留空用而家）</label>
+            <input type="datetime-local" value={createdAt} onChange={e => setCreatedAt(e.target.value)} className="w-full bg-[#1a1a2e] border border-[#2a2a3e] rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#e11d48]" />
+          </div>
+          <div className="flex justify-end gap-2 pt-2">
+            <button onClick={onClose} className="px-4 py-2 rounded-lg text-xs text-gray-400 hover:text-gray-200 hover:bg-[#1a1a2e] transition-colors">取消</button>
+            <button onClick={save} disabled={saving} className="px-5 py-2 rounded-lg bg-[#e11d48] hover:bg-[#e11d48]/80 text-white text-sm font-medium transition-colors disabled:opacity-40">{saving ? '儲存中...' : '儲存'}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Comment Form Modal ───
+
+function CommentFormModal({ comment, onClose, onSaved }: { comment: AdminComment | null; onClose: () => void; onSaved: () => void }) {
+  const [body, setBody] = useState(comment?.body || '');
+  const [createdAt, setCreatedAt] = useState(toLocalInput(comment?.created_at || new Date().toISOString()));
+  const [userId, setUserId] = useState('');
+  const [postId, setPostId] = useState('');
+  const [authors, setAuthors] = useState<AuthorOpt[]>([]);
+  const [posts, setPosts] = useState<{ id: string; title: string }[]>([]);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (!comment) {
+      Promise.all([db.admin.users(), db.admin.presets()]).then(([real, preset]) => {
+        const all: AuthorOpt[] = [
+          ...((real as unknown as AuthorOpt[]) || []).map(u => ({ id: u.id, username: u.username, emoji: u.emoji || '🐱' })),
+          ...((preset as unknown as AuthorOpt[]) || []).map(u => ({ id: u.id, username: u.username, emoji: u.emoji || '🐱' })),
+        ];
+        setAuthors(all);
+        if (all.length) setUserId(all[0].id);
+      });
+      fetch('/api/admin/posts').then(r => r.json()).then(raw => {
+        const arr = (Array.isArray(raw) ? raw : []).map((row: Record<string, unknown>) => ({ id: row.id as string, title: row.title as string }));
+        setPosts(arr);
+        if (arr.length) setPostId(arr[0].id);
+      });
+    }
+  }, [comment]);
+
+  async function save() {
+    if (!body.trim()) { alert('留言內容不能為空'); return; }
+    if (!comment && (!userId || !postId)) { alert('請選擇作者同文章'); return; }
+    setSaving(true);
+    const payload: Record<string, unknown> = { body, created_at: createdAt ? new Date(createdAt).toISOString() : undefined };
+    if (comment) payload.id = comment.id;
+    else { payload.user_id = userId; payload.post_id = postId; }
+    const res = await fetch('/api/admin/comments', {
+      method: comment ? 'PATCH' : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    setSaving(false);
+    if (res.ok) onSaved();
+    else { const { error } = await res.json(); alert('儲存失敗：' + (error || '未知錯誤')); }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={onClose}>
+      <div className="w-full max-w-lg bg-[#0d0d14] border border-[#1a1a2e] rounded-xl p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between mb-5">
+          <h3 className="text-sm font-medium text-gray-200">{comment ? '編輯留言' : '加留言'}</h3>
+          <button onClick={onClose} className="p-1.5 rounded-lg text-gray-500 hover:text-gray-200"><X className="w-4 h-4" /></button>
+        </div>
+        <div className="space-y-4">
+          {!comment && (
+            <>
+              <div>
+                <label className="text-xs text-gray-500 mb-1.5 block">作者</label>
+                <select value={userId} onChange={e => setUserId(e.target.value)} className="w-full bg-[#1a1a2e] border border-[#2a2a3e] rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#e11d48]">
+                  {authors.map(a => <option key={a.id} value={a.id}>{a.emoji} {a.username}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="text-xs text-gray-500 mb-1.5 block">回覆文章</label>
+                <select value={postId} onChange={e => setPostId(e.target.value)} className="w-full bg-[#1a1a2e] border border-[#2a2a3e] rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#e11d48]">
+                  {posts.map(p => <option key={p.id} value={p.id}>{p.title}</option>)}
+                </select>
+              </div>
+            </>
+          )}
+          <div>
+            <label className="text-xs text-gray-500 mb-1.5 block">留言內容</label>
+            <textarea value={body} onChange={e => setBody(e.target.value)} rows={5} className="w-full bg-[#1a1a2e] border border-[#2a2a3e] rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#e11d48] resize-y" />
+          </div>
+          <div>
+            <label className="text-xs text-gray-500 mb-1.5 block">日期時間（可改，留空用而家）</label>
+            <input type="datetime-local" value={createdAt} onChange={e => setCreatedAt(e.target.value)} className="w-full bg-[#1a1a2e] border border-[#2a2a3e] rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#e11d48]" />
+          </div>
+          <div className="flex justify-end gap-2 pt-2">
+            <button onClick={onClose} className="px-4 py-2 rounded-lg text-xs text-gray-400 hover:text-gray-200 hover:bg-[#1a1a2e] transition-colors">取消</button>
+            <button onClick={save} disabled={saving} className="px-5 py-2 rounded-lg bg-[#e11d48] hover:bg-[#e11d48]/80 text-white text-sm font-medium transition-colors disabled:opacity-40">{saving ? '儲存中...' : '儲存'}</button>
+          </div>
         </div>
       </div>
     </div>

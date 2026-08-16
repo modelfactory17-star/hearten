@@ -30,7 +30,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const { user_id, post_id, body, parent_id } = await request.json();
+    const { user_id, post_id, body, parent_id, created_at } = await request.json();
     if (!user_id || !post_id || !body) {
       return NextResponse.json({ error: 'Missing fields: user_id, post_id, body' }, { status: 400 });
     }
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     const data = await supabaseAdmin('/rest/v1/comments', 'POST', {
       user_id, post_id, body,
       parent_id: parent_id || null,
-      created_at: new Date().toISOString(),
+      created_at: created_at || new Date().toISOString(),
     });
 
     // Update post reply count
@@ -51,6 +51,25 @@ export async function POST(request: NextRequest) {
       { replies: currentReplies + 1 }
     );
 
+    return NextResponse.json({ ok: true, comment: data?.[0] || data });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
+
+export async function PATCH(request: NextRequest) {
+  try {
+    const { id, body, created_at } = await request.json();
+    if (!id) {
+      return NextResponse.json({ error: 'Missing id' }, { status: 400 });
+    }
+
+    const updates: Record<string, unknown> = {};
+    if (body !== undefined) updates.body = body;
+    if (created_at !== undefined && created_at !== '') updates.created_at = created_at;
+
+    const data = await supabaseAdmin(`/rest/v1/comments?id=eq.${encodeURIComponent(id)}`, 'PATCH', updates);
     return NextResponse.json({ ok: true, comment: data?.[0] || data });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);

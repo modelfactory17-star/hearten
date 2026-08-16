@@ -42,7 +42,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const { user_id, title, body, category, category_id } = await request.json();
+    const { user_id, title, body, category, category_id, created_at } = await request.json();
     if (!user_id || !title || !body || !category || !category_id) {
       return NextResponse.json({ error: 'Missing fields: user_id, title, body, category, category_id' }, { status: 400 });
     }
@@ -54,9 +54,38 @@ export async function POST(request: NextRequest) {
     const data = await supabaseAdmin('/rest/v1/posts', 'POST', {
       user_id, title, body, preview, slug,
       category: `${catIcon} ${category}`, category_id,
-      created_at: new Date().toISOString(),
+      created_at: created_at || new Date().toISOString(),
     });
 
+    return NextResponse.json({ ok: true, post: data?.[0] || data });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
+
+export async function PATCH(request: NextRequest) {
+  try {
+    const { id, title, body, category, category_id, emoji, created_at } = await request.json();
+    if (!id) {
+      return NextResponse.json({ error: 'Missing id' }, { status: 400 });
+    }
+
+    const updates: Record<string, unknown> = {};
+    if (title !== undefined && title !== '') {
+      updates.title = title;
+      updates.slug = generateSlug(title);
+    }
+    if (body !== undefined) {
+      updates.body = body;
+      updates.preview = body.slice(0, 120) + (body.length > 120 ? '...' : '');
+    }
+    if (category !== undefined && category !== '') updates.category = category;
+    if (category_id !== undefined && category_id !== '') updates.category_id = category_id;
+    if (emoji !== undefined && emoji !== '') updates.emoji = emoji;
+    if (created_at !== undefined && created_at !== '') updates.created_at = created_at;
+
+    const data = await supabaseAdmin(`/rest/v1/posts?id=eq.${encodeURIComponent(id)}`, 'PATCH', updates);
     return NextResponse.json({ ok: true, post: data?.[0] || data });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
