@@ -30,7 +30,7 @@ const CAT_INFO: Record<string, { icon: string; name: string; desc: string }> = {
   crush: { icon: '💕', name: '暗戀表白', desc: '唔敢表白？曖昧緊？一齊研究' },
   breakup: { icon: '💔', name: '分手復合', desc: '失戀療癒、復合建議、點樣放低' },
   marriage: { icon: '💍', name: '婚姻關係', desc: '夫妻相處、婆媳問題、育兒壓力' },
-  lgbtq: { icon: '🌈', name: 'LGBTQ+', desc: '出櫃、身份認同、同志戀愛' },
+  lgbtq: { icon: '🌈', name: 'LGBTQ+', desc: '身份認同、同志戀愛' },
   treehole: { icon: '🌳', name: '心靈樹窿', desc: '咩都可以講，呢度冇人會 judge 你' },
   tarot: { icon: '🃏', name: '塔羅占卜', desc: '每日一牌、愛情運勢、塔羅解惑' },
   'work-love': { icon: '💼', name: '在職戀愛', desc: '職場邂逅、同事戀愛、Office 八卦' },
