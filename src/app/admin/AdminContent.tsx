@@ -37,6 +37,7 @@ const CATEGORIES = [
   { id: 'lgbtq', icon: '🌈', name: 'LGBTQ+' },
   { id: 'treehole', icon: '🌳', name: '心靈樹窿' },
   { id: 'tarot', icon: '🃏', name: '塔羅占卜' },
+  { id: 'ziwei', icon: '⭐', name: '紫微斗數' },
   { id: 'work', icon: '💼', name: '在職戀愛' },
   { id: 'school', icon: '🎓', name: '在學戀愛' },
   { id: 'family', icon: '👨‍👩‍👧', name: '家庭關係' },

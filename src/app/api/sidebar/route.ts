@@ -58,7 +58,7 @@ export async function GET() {
       .map(u => ({ emoji: u.emoji, text: u.username, num: `${u.count} 帖`, id: '', username: u.username }));
 
     // Category counts — total + today
-    const catIds = ['dating-life','crush','breakup','marriage','lgbtq','treehole','tarot','work-love','school-love','family','dating-kit','bedroom'];
+    const catIds = ['dating-life','crush','breakup','marriage','lgbtq','treehole','tarot','ziwei','work-love','school-love','family','dating-kit','bedroom'];
     const categoryStats: Record<string, { total: number; today: number }> = {};
     for (const cid of catIds) categoryStats[cid] = { total: 0, today: 0 };
 

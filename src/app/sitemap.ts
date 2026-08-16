@@ -24,7 +24,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Category pages
   const cats = [
     'dating-life', 'crush', 'breakup', 'marriage', 'lgbtq', 'treehole',
-    'tarot', 'work-love', 'school-love', 'family', 'dating-kit', 'bedroom',
+    'tarot', 'ziwei', 'work-love', 'school-love', 'family', 'dating-kit', 'bedroom',
   ];
   for (const c of cats) {
     entries.push({

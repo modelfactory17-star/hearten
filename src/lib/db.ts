@@ -195,7 +195,7 @@ export const posts = {
   async create(userId: string, title: string, body: string, category: string, categoryId: string, images: string[] = []): Promise<Post | null> {
     const supabase = createClient();
     const preview = body.slice(0, 120) + (body.length > 120 ? '...' : '');
-    const catIcon = ({ 'dating-life':'💑',crush:'💕',breakup:'💔',marriage:'💍',lgbtq:'🌈',treehole:'🌳',tarot:'🃏',work:'💼',school:'🎓',family:'👨‍👩‍👧',dating:'📋',bedroom:'🔞' } as Record<string,string>)[categoryId] || '💬';
+    const catIcon = ({ 'dating-life':'💑',crush:'💕',breakup:'💔',marriage:'💍',lgbtq:'🌈',treehole:'🌳',tarot:'🃏',ziwei:'⭐',work:'💼',school:'🎓',family:'👨‍👩‍👧',dating:'📋',bedroom:'🔞' } as Record<string,string>)[categoryId] || '💬';
     const slug = generateSlug(title);
 
     const { data, error } = await supabase.from('posts').insert({

@@ -11,6 +11,7 @@ const categories: { label: string; badge?: string; href: string; catId?: string 
   { label: '🌈 LGBTQ+', href: '/category/lgbtq', catId: 'lgbtq' },
   { label: '🌳 心靈樹窿', href: '/category/treehole', catId: 'treehole' },
   { label: '🃏 塔羅占卜', href: '/category/tarot', catId: 'tarot' },
+  { label: '⭐ 紫微斗數', href: '/category/ziwei', catId: 'ziwei' },
   { label: '💼 在職戀愛', href: '/category/work-love', catId: 'work-love' },
   { label: '🎓 在學戀愛', href: '/category/school-love', catId: 'school-love' },
   { label: '👨‍👩‍👧 家庭關係', href: '/category/family', catId: 'family' },

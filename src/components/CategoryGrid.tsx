@@ -11,6 +11,7 @@ const categories = [
   { icon: '🌈', name: 'LGBTQ+', desc: '身份認同、同志戀愛', color: 'lgbtq' },
   { icon: '🌳', name: '心靈樹窿', desc: '咩都可以講，呢度冇人會 judge 你', color: 'treehole' },
   { icon: '🃏', name: '塔羅占卜', desc: '每日一牌、愛情運勢、塔羅解惑', color: 'tarot' },
+  { icon: '⭐', name: '紫微斗數', desc: '紫微命盤、運勢解讀、命理疑問', color: 'ziwei' },
   { icon: '💼', name: '在職戀愛', desc: '職場邂逅、同事戀愛、Office 八卦', color: 'work-love' },
   { icon: '🎓', name: '在學戀愛', desc: '校園戀愛、暗戀師兄師姐、青春心事', color: 'school-love' },
   { icon: '👨‍👩‍👧', name: '家庭關係', desc: '家人看法、另一半同屋企人相處', color: 'family' },
@@ -27,6 +28,7 @@ const darkGradients: Record<string, string> = {
   lgbtq: 'bg-[linear-gradient(135deg,#cffafe_0%,#67e8f9_40%,#06b6d4_100%)]',
   treehole: 'bg-[linear-gradient(135deg,#ede9fe_0%,#c4b5fd_40%,#8b5cf6_100%)]',
   tarot: 'bg-[linear-gradient(135deg,#f3e8ff_0%,#d8b4fe_40%,#a855f7_100%)]',
+  ziwei: 'bg-[linear-gradient(135deg,#ede9fe_0%,#c4b5fd_40%,#7c3aed_100%)]',
   'work-love': 'bg-[linear-gradient(135deg,#fef3c7_0%,#fcd34d_40%,#f59e0b_100%)]',
   'school-love': 'bg-[linear-gradient(135deg,#ccfbf1_0%,#5eead4_40%,#14b8a6_100%)]',
   family: 'bg-[linear-gradient(135deg,#e0e7ff_0%,#a5b4fc_40%,#818cf8_100%)]',
@@ -64,6 +66,9 @@ export default function CategoryGrid() {
             ${darkGradients[cat.color]}
           `}
         >
+          {/* 圖片底圖 25% 透明 */}
+          <img src={`/categories/${cat.color}.jpg`} alt="" className="absolute inset-0 z-0 w-full h-full object-cover opacity-25" />
+
           {/* Gradient overlay ::before */}
           <span className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,transparent_10%,rgba(0,0,0,0.12)_100%)] light:bg-[linear-gradient(180deg,transparent_10%,rgba(255,255,255,0.3)_100%)]" />
 
