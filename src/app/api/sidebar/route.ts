@@ -65,11 +65,19 @@ export async function GET() {
     const now = new Date();
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
 
+    // db category_id → URL slug（db 用短 id：work/school/dating，同 URL slug 唔同）
+    const DB_TO_SLUG: Record<string, string> = {
+      work: 'work-love',
+      school: 'school-love',
+      dating: 'dating-kit',
+    };
+
     for (const p of posts) {
-      const cid = p.category_id as string;
-      if (categoryStats[cid]) {
-        categoryStats[cid].total++;
-        if ((p.created_at as string) >= todayStart) categoryStats[cid].today++;
+      const cid = (p.category_id as string) || '';
+      const slug = DB_TO_SLUG[cid] || cid;
+      if (categoryStats[slug]) {
+        categoryStats[slug].total++;
+        if ((p.created_at as string) >= todayStart) categoryStats[slug].today++;
       }
     }
 

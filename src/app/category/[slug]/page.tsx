@@ -27,7 +27,7 @@ const SLUG_TO_DB: Record<string, string> = {
 };
 
 const CAT_INFO: Record<string, { icon: string; name: string; desc: string }> = {
-  'dating-life': { icon: '💑', name: '戀愛日常', desc: '拍拖大小事、甜蜜日常、相處之道' },
+  'dating-life': { icon: '💞', name: '戀愛日常', desc: '拍拖大小事、甜蜜日常、相處之道' },
   crush: { icon: '💕', name: '暗戀表白', desc: '唔敢表白？曖昧緊？一齊研究' },
   breakup: { icon: '💔', name: '分手復合', desc: '失戀療癒、復合建議、點樣放低' },
   marriage: { icon: '💍', name: '婚姻關係', desc: '夫妻相處、婆媳問題、育兒壓力' },
@@ -69,6 +69,10 @@ export default function CategoryPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [ageVerified, setAgeVerified] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    try { return sessionStorage.getItem('hearten_18plus') === '1'; } catch { return false; }
+  });
 
   useEffect(() => {
     if (!dbCategory) return;
@@ -91,6 +95,42 @@ export default function CategoryPage() {
             <div className="flex items-center justify-center h-64 text-hearten-muted">呢個話題唔存在</div>
           </main>
           <RightSidebar />
+        </div>
+      </div>
+    );
+  }
+
+  // 18+ 年齡確認（一知半解分類）
+  if (slug === 'bedroom' && !ageVerified) {
+    return (
+      <div className="min-h-screen bg-hearten-bg">
+        <Header onMenuToggle={() => setMobileMenuOpen(v => !v)} />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
+          <div className="bg-hearten-card border border-hearten-border rounded-2xl p-8 max-w-md w-full mx-4 text-center">
+            <div className="text-6xl mb-4">🔞</div>
+            <h2 className="text-xl font-bold text-hearten-text mb-3">18+ 內容提示</h2>
+            <p className="text-hearten-muted mb-4 leading-relaxed">
+              本頁可能含有成人內容，只適合年滿 18 歲人士瀏覽。
+            </p>
+            <p className="text-hearten-text font-semibold mb-6">你是否已年滿 18 歲？</p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <button
+                onClick={() => {
+                  try { sessionStorage.setItem('hearten_18plus', '1'); } catch {}
+                  setAgeVerified(true);
+                }}
+                className="px-6 py-3 rounded-xl bg-hearten-rose text-white font-medium hover:bg-hearten-rose-light transition-colors"
+              >
+                是，進入本頁
+              </button>
+              <button
+                onClick={() => router.push('/')}
+                className="px-6 py-3 rounded-xl border border-hearten-border text-hearten-muted hover:text-hearten-text transition-colors font-medium"
+              >
+                否，離開
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     );

@@ -29,7 +29,7 @@ function compressImage(file: File, maxWidth: number, quality: number): Promise<B
 }
 
 const CATEGORIES = [
-  { id: 'dating-life', icon: '💑', name: '戀愛日常' },
+  { id: 'dating-life', icon: '💞', name: '戀愛日常' },
   { id: 'crush', icon: '💕', name: '暗戀表白' },
   { id: 'breakup', icon: '💔', name: '分手復合' },
   { id: 'marriage', icon: '💍', name: '婚姻關係' },

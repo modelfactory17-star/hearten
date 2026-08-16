@@ -4,7 +4,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
 const categories: { label: string; badge?: string; href: string; catId?: string }[] = [
-  { label: '💑 戀愛日常', href: '/category/dating-life', catId: 'dating-life' },
+  { label: '💞 戀愛日常', href: '/category/dating-life', catId: 'dating-life' },
   { label: '💕 暗戀表白', href: '/category/crush', catId: 'crush' },
   { label: '💔 分手復合', href: '/category/breakup', catId: 'breakup' },
   { label: '💍 婚姻關係', href: '/category/marriage', catId: 'marriage' },

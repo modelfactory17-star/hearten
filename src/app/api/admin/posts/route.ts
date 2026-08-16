@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
     }
 
     const preview = body.slice(0, 120) + (body.length > 120 ? '...' : '');
-    const catIcon = ({ 'dating-life':'💑',crush:'💕',breakup:'💔',marriage:'💍',lgbtq:'🌈',treehole:'🌳',tarot:'🃏',ziwei:'⭐',work:'💼',school:'🎓',family:'👨‍👩‍👧',dating:'📋',bedroom:'🔞' } as Record<string,string>)[category_id] || '💬';
+    const catIcon = ({ 'dating-life':'💞',crush:'💕',breakup:'💔',marriage:'💍',lgbtq:'🌈',treehole:'🌳',tarot:'🃏',ziwei:'⭐',work:'💼',school:'🎓',family:'👨‍👩‍👧',dating:'📋',bedroom:'🔞' } as Record<string,string>)[category_id] || '💬';
     const slug = generateSlug(title);
 
     const data = await supabaseAdmin('/rest/v1/posts', 'POST', {

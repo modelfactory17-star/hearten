@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
 const categories = [
-  { icon: '💑', name: '戀愛日常', desc: '拍拖大小事、甜蜜日常、相處之道', color: 'dating-life' },
+  { icon: '💞', name: '戀愛日常', desc: '拍拖大小事、甜蜜日常、相處之道', color: 'dating-life' },
   { icon: '💕', name: '暗戀表白', desc: '唔敢表白？曖昧緊？一齊研究', color: 'crush' },
   { icon: '💔', name: '分手復合', desc: '失戀療癒、復合建議、點樣放低', color: 'breakup' },
   { icon: '💍', name: '婚姻關係', desc: '夫妻相處、婆媳問題、育兒壓力', color: 'marriage' },
@@ -67,19 +67,19 @@ export default function CategoryGrid() {
           `}
         >
           {/* 圖片底圖 25% 透明 */}
-          <img src={`/categories/${cat.color}.jpg`} alt="" className="absolute inset-0 z-0 w-full h-full object-cover opacity-25" />
+          <img src={`/categories/${cat.color}.jpg`} alt="" className="absolute inset-0 z-0 w-full h-full object-cover opacity-[0.12]" />
 
           {/* Gradient overlay ::before */}
           <span className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,transparent_10%,rgba(0,0,0,0.12)_100%)] light:bg-[linear-gradient(180deg,transparent_10%,rgba(255,255,255,0.3)_100%)]" />
 
           {/* Content above overlay */}
-          <span className="relative z-[2] text-[40px] mb-[10px] leading-none">
+          <span className="relative z-[2] text-[32px] mb-[10px] leading-none">
             {cat.icon}
           </span>
           <span className="relative z-[2] text-[16px] font-bold text-hearten-text mb-[3px]">
             {cat.name}
           </span>
-          <span className="relative z-[2] text-sm text-hearten-muted mb-[6px] leading-[1.4]">
+          <span className="relative z-[2] text-sm text-black mb-[6px] leading-[1.4]">
             {cat.desc}
           </span>
           <span className="relative z-[2] flex items-center gap-[6px] text-xs text-hearten-muted">
