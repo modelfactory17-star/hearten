@@ -131,7 +131,7 @@ export default function Header({ onMenuToggle }: { onMenuToggle?: () => void }) 
               className="p-2 rounded-lg hover:bg-hearten-card text-hearten-muted hover:text-hearten-text transition-colors relative">
               <MessageCircle className="w-5 h-5" />
               {unreadCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 w-4.5 h-4.5 rounded-full bg-hearten-rose text-white text-[10px] font-bold flex items-center justify-center leading-none" style={{ minWidth: '18px', height: '18px', padding: '0 2px' }}>
+                <span className="absolute -top-0.5 -right-0.5 w-4.5 h-4.5 rounded-full bg-hearten-rose text-white text-2xs font-bold flex items-center justify-center leading-none" style={{ minWidth: '18px', height: '18px', padding: '0 2px' }}>
                   {unreadCount > 99 ? '99+' : unreadCount}
                 </span>
               )}

@@ -10,11 +10,11 @@ export default function AdBanner({ size = 'rectangle' }: AdBannerProps) {
 
   return (
     <div className="relative border border-dashed border-hearten-border rounded-[10px] overflow-hidden transition-colors duration-[0.3s] hover:border-hearten-dim mb-4">
-      <span className="absolute top-[6px] left-2 z-[1] text-[9px] font-semibold uppercase text-hearten-dim tracking-[0.05em]">
+      <span className="absolute top-[6px] left-2 z-[1] text-2xs font-semibold uppercase text-hearten-dim tracking-[0.05em]">
         廣告
       </span>
       <div
-        className="flex flex-col items-center justify-center bg-hearten-card text-hearten-dim text-[11px] gap-1"
+        className="flex flex-col items-center justify-center bg-hearten-card text-hearten-dim text-2xs gap-1"
         style={{ width: '100%', height }}
       >
         <span>Google AdSense</span>

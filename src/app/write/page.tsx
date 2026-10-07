@@ -145,7 +145,7 @@ export default function WritePage() {
     return layout(
       <div className="max-w-lg mx-auto py-20 text-center">
         <div className="text-5xl mb-4">💌</div>
-        <h1 className="text-xl font-bold text-hearten-text mb-2">心事已發出！</h1>
+        <h1 className="text-2xl font-bold text-hearten-text mb-2">心事已發出！</h1>
         <p className="text-hearten-muted mb-6">
           你嘅心事已經發布到「{CATEGORIES.find(c => c.id === category)?.name}」。
         </p>
@@ -168,7 +168,7 @@ export default function WritePage() {
   return layout(
     <div className="max-w-lg mx-auto">
       <div className="bg-hearten-card border border-hearten-border rounded-2xl p-6">
-        <h1 className="text-xl font-bold text-hearten-text mb-1">分享你嘅心事 💭</h1>
+        <h1 className="text-2xl font-bold text-hearten-text mb-1">分享你嘅心事 💭</h1>
         <p className="text-sm text-hearten-muted mb-6">分享你嘅故事，同其他會員真誠交流。</p>
 
         {/* Category */}

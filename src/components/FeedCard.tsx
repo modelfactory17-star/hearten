@@ -99,7 +99,7 @@ export default function FeedCard({
               className="hover:text-hearten-rose-light cursor-pointer transition-colors"
             >{anonymous}</span>
             <span>·</span>
-            <span className="px-1.5 py-0.5 rounded-md bg-hearten-rose/10 text-hearten-rose-light text-[10px] font-medium">
+            <span className="px-1.5 py-0.5 rounded-md bg-hearten-rose/10 text-hearten-rose-light text-2xs font-medium">
               {category}
             </span>
             <span>·</span>
@@ -107,7 +107,7 @@ export default function FeedCard({
           </div>
 
           {/* Title */}
-          <h3 className="text-[15px] font-semibold text-hearten-text mb-1.5 group-hover:text-hearten-rose-light transition-colors">
+          <h3 className="text-lg font-semibold text-hearten-text mb-1.5 group-hover:text-hearten-rose-light transition-colors">
             {title}
           </h3>
 

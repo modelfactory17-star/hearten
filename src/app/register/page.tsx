@@ -40,7 +40,7 @@ export default function RegisterPage() {
           {/* Hero */}
           <div className="max-w-lg mx-auto text-center py-8">
             <div className="text-5xl mb-4">💌</div>
-            <h1 className="text-[22px] font-bold text-hearten-text mb-3">註冊成為 Hearten 會員</h1>
+            <h1 className="text-2xl font-bold text-hearten-text mb-3">註冊成為 Hearten 會員</h1>
             <p className="text-base text-hearten-muted mb-8 leading-relaxed">
               加入 Hearten，同香港人一齊傾愛情、分享經歷、認識新朋友。
             </p>
@@ -66,7 +66,7 @@ export default function RegisterPage() {
                 <div key={b.title} className="flex items-start gap-3 p-4 rounded-xl bg-hearten-card border border-hearten-border">
                   <span className="text-2xl shrink-0">{b.icon}</span>
                   <div>
-                    <h3 className="text-sm font-bold text-hearten-text mb-1">{b.title}</h3>
+                    <h3 className="text-lg font-bold text-hearten-text mb-1">{b.title}</h3>
                     <p className="text-sm text-hearten-muted">{b.desc}</p>
                   </div>
                 </div>

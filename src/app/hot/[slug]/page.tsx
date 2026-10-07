@@ -123,7 +123,7 @@ export default function HotTopicPage() {
             <div className="flex items-center gap-4">
               <span className="text-5xl">{topic.icon}</span>
               <div>
-                <h1 className="text-[22px] font-bold text-hearten-text">{topic.name}</h1>
+                <h1 className="text-2xl font-bold text-hearten-text">{topic.name}</h1>
                 <p className="text-sm text-hearten-muted mt-1">{topic.desc}</p>
               </div>
             </div>

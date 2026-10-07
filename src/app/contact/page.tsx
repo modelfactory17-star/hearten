@@ -38,7 +38,7 @@ export default function ContactPage() {
           <div className="hidden lg:block"><LeftSidebar /></div>
           <main className="flex-1 min-w-0 px-7 py-20 max-md:px-4 text-center">
             <div className="text-5xl mb-4">📬</div>
-            <h1 className="text-[22px] font-bold text-hearten-text mb-2">已收到你嘅訊息</h1>
+            <h1 className="text-2xl font-bold text-hearten-text mb-2">已收到你嘅訊息</h1>
             <p className="text-base text-hearten-muted mb-8">我哋會盡快回覆你，一般喺 2-3 個工作日內。</p>
             <a href="/" className="text-sm text-hearten-rose-light hover:underline">返回首頁</a>
           </main>
@@ -73,7 +73,7 @@ export default function ContactPage() {
         )}
 
         <main className="flex-1 min-w-0 px-7 py-8 max-md:px-4">
-          <h1 className="text-[22px] font-bold text-hearten-text mb-2">聯絡我們</h1>
+          <h1 className="text-2xl font-bold text-hearten-text mb-2">聯絡我們</h1>
           <p className="text-sm text-hearten-muted mb-8">有問題或者建議？填妥以下表格，我哋會盡快回覆。</p>
 
           <div className="max-w-lg">

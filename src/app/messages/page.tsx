@@ -167,7 +167,7 @@ export default function MessagesPage() {
               <img src={conv.partner.avatar_url} alt="" className="w-full h-full object-cover" />
             ) : conv.partner?.emoji || '👤'}
             {conv.unread > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 w-5 h-5 rounded-full bg-hearten-rose text-white text-[10px] font-bold flex items-center justify-center">{conv.unread > 9 ? '9+' : conv.unread}</span>
+              <span className="absolute -top-0.5 -right-0.5 w-5 h-5 rounded-full bg-hearten-rose text-white text-2xs font-bold flex items-center justify-center">{conv.unread > 9 ? '9+' : conv.unread}</span>
             )}
           </div>
           <div className="flex-1 min-w-0">
@@ -212,7 +212,7 @@ export default function MessagesPage() {
               <div key={msg.id} className={`flex ${isMine ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[75%] px-4 py-2.5 rounded-2xl text-sm ${isMine ? 'bg-hearten-rose text-white rounded-br-md' : 'bg-hearten-card border border-hearten-border text-hearten-text rounded-bl-md'}`}>
                   {msg.body}
-                  <div className={`text-[10px] mt-1 ${isMine ? 'text-white/60' : 'text-hearten-dim'}`}>
+                  <div className={`text-2xs mt-1 ${isMine ? 'text-white/60' : 'text-hearten-dim'}`}>
                     {timeAgo(msg.created_at)}
                     {isMine && msg.read && <span className="ml-1">✓✓</span>}
                   </div>

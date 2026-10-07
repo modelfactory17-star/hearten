@@ -85,7 +85,7 @@ export default function FaqPage() {
         )}
 
         <main className="flex-1 min-w-0 px-7 py-8 max-md:px-4">
-          <h1 className="text-[22px] font-bold text-hearten-text mb-2">常見問題</h1>
+          <h1 className="text-2xl font-bold text-hearten-text mb-2">常見問題</h1>
           <p className="text-sm text-hearten-muted mb-8">關於 Hearten 嘅常見疑問，呢度應該搵到答案</p>
 
           <div className="space-y-3 max-w-3xl">

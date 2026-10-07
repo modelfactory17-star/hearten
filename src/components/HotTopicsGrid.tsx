@@ -46,7 +46,7 @@ export default function HotTopicsGrid() {
           onClick={() => router.push(`/post/${topic.slug}`)}
           className="flex items-center gap-3 px-4 py-[14px] rounded-[12px] bg-hearten-card border border-hearten-border cursor-pointer transition-all duration-[0.15s] hover:border-hearten-border-hover hover:bg-hearten-card-hover"
         >
-          <span className="text-[28px] flex-shrink-0">{topic.emoji}</span>
+          <span className="text-2xl flex-shrink-0">{topic.emoji}</span>
           <div className="flex-1 min-w-0">
             <div className="text-sm font-semibold text-hearten-text whitespace-nowrap overflow-hidden text-ellipsis">
               {topic.text}

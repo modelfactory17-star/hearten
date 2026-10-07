@@ -46,7 +46,7 @@ export default function HotTopicsPage() {
         <main className="flex-1 min-w-0 px-7 py-6 max-md:px-4">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-[22px] font-bold text-hearten-text mb-2">📰 熱門話題</h1>
+            <h1 className="text-2xl font-bold text-hearten-text mb-2">📰 熱門話題</h1>
             <p className="text-sm text-hearten-muted">時事 · 八卦 · 城中熱話 — 香港人最關心嘅話題，一齊入嚟傾</p>
           </div>
 
@@ -61,7 +61,7 @@ export default function HotTopicsPage() {
                 <span className="text-4xl flex-shrink-0">{topic.emoji}</span>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <h3 className="text-base font-bold text-hearten-text">{topic.name}</h3>
+                    <h3 className="text-lg font-bold text-hearten-text">{topic.name}</h3>
                     {topic.badge === 'hot' ? (
                       <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-hearten-amber text-hearten-bg">🔥 熱</span>
                     ) : (

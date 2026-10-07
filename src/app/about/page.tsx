@@ -36,7 +36,7 @@ export default function AboutPage() {
           {/* Hero */}
           <div className="text-center mb-10">
             <div className="text-5xl mb-4">♥</div>
-            <h1 className="text-[28px] font-bold text-hearten-text mb-3">Hearten 愛情討論區</h1>
+            <h1 className="text-2xl font-bold text-hearten-text mb-3">Hearten 愛情討論區</h1>
             <p className="text-base text-hearten-muted max-w-2xl mx-auto leading-relaxed">
               Heart + Listen — 用心聆聽每一段心事
             </p>
@@ -44,7 +44,7 @@ export default function AboutPage() {
 
           {/* Mission */}
           <section className="mb-10">
-            <h2 className="text-lg font-bold text-hearten-text mb-4">💡 我哋嘅使命</h2>
+            <h2 className="text-xl font-bold text-hearten-text mb-4">💡 我哋嘅使命</h2>
             <div className="bg-hearten-card border border-hearten-border rounded-xl p-6">
               <p className="text-base text-hearten-muted leading-relaxed mb-4">
                 Hearten 係一個專為香港人而設嘅愛情討論平台。喺呢度，無論你係暗戀、拍拖、分手、結婚，
@@ -62,7 +62,7 @@ export default function AboutPage() {
 
           {/* Features */}
           <section className="mb-10">
-            <h2 className="text-lg font-bold text-hearten-text mb-4">✨ Hearten 有咩特色？</h2>
+            <h2 className="text-xl font-bold text-hearten-text mb-4">✨ Hearten 有咩特色？</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
                 { icon: '🕶️', title: '真實身份', desc: '實名註冊社群，每個會員都有自己嘅 profile。真誠交流，告別假 account 同 troll。' },
@@ -74,7 +74,7 @@ export default function AboutPage() {
               ].map((f) => (
                 <div key={f.title} className="bg-hearten-card border border-hearten-border rounded-xl p-5">
                   <div className="text-2xl mb-2">{f.icon}</div>
-                  <h3 className="text-base font-bold text-hearten-text mb-1">{f.title}</h3>
+                  <h3 className="text-lg font-bold text-hearten-text mb-1">{f.title}</h3>
                   <p className="text-sm text-hearten-muted leading-relaxed">{f.desc}</p>
                 </div>
               ))}
@@ -83,7 +83,7 @@ export default function AboutPage() {
 
           {/* Community */}
           <section className="mb-10">
-            <h2 className="text-lg font-bold text-hearten-text mb-4">🤝 社群價值</h2>
+            <h2 className="text-xl font-bold text-hearten-text mb-4">🤝 社群價值</h2>
             <div className="bg-hearten-card border border-hearten-border rounded-xl p-6">
               <ul className="space-y-3">
                 {[

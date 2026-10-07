@@ -169,7 +169,7 @@ export default function CategoryPage() {
               <div className="flex items-center gap-4">
                 <span className="text-5xl">{info.icon}</span>
                 <div>
-                  <h1 className="text-[22px] font-bold text-hearten-text">{info.name}</h1>
+                  <h1 className="text-2xl font-bold text-hearten-text">{info.name}</h1>
                   <p className="text-sm text-hearten-muted mt-1">{info.desc}</p>
                 </div>
               </div>

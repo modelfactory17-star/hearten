@@ -85,7 +85,7 @@ export default function MembersPage() {
         <main className="flex-1 min-w-0 px-7 py-8 max-md:px-4">
           <div className="flex items-center gap-3 mb-2">
             <span className="text-3xl">👥</span>
-            <h1 className="text-[22px] font-bold text-hearten-text">會員追蹤</h1>
+            <h1 className="text-2xl font-bold text-hearten-text">會員追蹤</h1>
           </div>
           <p className="text-sm text-hearten-muted mb-8">認識 Hearten 最活躍嘅會員，睇下佢哋嘅故事</p>
 
@@ -144,7 +144,7 @@ export default function MembersPage() {
                           <span className="text-3xl">{m.emoji}</span>
                         )}
                       </div>
-                      <h3 className="text-base font-bold text-hearten-text mb-1">{m.username}</h3>
+                      <h3 className="text-lg font-bold text-hearten-text mb-1">{m.username}</h3>
                       {m.bio && (
                         <p className="text-sm text-hearten-muted mb-3 line-clamp-2">{m.bio}</p>
                       )}

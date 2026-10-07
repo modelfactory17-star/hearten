@@ -81,14 +81,14 @@ export default function FeaturesPage() {
         )}
 
         <main className="flex-1 min-w-0 px-7 py-8 max-md:px-4">
-          <h1 className="text-[22px] font-bold text-hearten-text mb-2">會員功能</h1>
+          <h1 className="text-2xl font-bold text-hearten-text mb-2">會員功能</h1>
           <p className="text-sm text-hearten-muted mb-8">了解 Hearten 為會員提供嘅所有功能</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {features.map((f) => (
               <div key={f.title} className="bg-hearten-card border border-hearten-border rounded-xl p-5 hover:border-hearten-rose transition-colors">
                 <div className="text-3xl mb-3">{f.icon}</div>
-                <h3 className="text-base font-bold text-hearten-text mb-2">{f.title}</h3>
+                <h3 className="text-lg font-bold text-hearten-text mb-2">{f.title}</h3>
                 <p className="text-sm text-hearten-muted leading-relaxed">{f.desc}</p>
               </div>
             ))}

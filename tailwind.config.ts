@@ -8,6 +8,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontSize: {
+        '2xs': '0.6875rem',   // 11.7px @ html 17px — badge／細標籤專用
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",

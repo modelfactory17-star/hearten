@@ -239,7 +239,7 @@ export default function AdminContent() {
                   <td className="py-3 px-4 text-center text-sm text-gray-300">{user.posts}</td>
                   <td className="py-3 px-4 text-sm text-gray-500">{user.joined}</td>
                   <td className="py-3 px-4 text-center">
-                    <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-400/10 text-emerald-400">
+                    <span className="inline-block px-2 py-0.5 rounded-full text-2xs font-medium bg-emerald-400/10 text-emerald-400">
                       正常
                     </span>
                   </td>
@@ -320,7 +320,7 @@ export default function AdminContent() {
                     )}
                   </td>
                   <td className="py-3 px-4 text-center">
-                    <span className="inline-block px-2 py-0.5 rounded text-[10px] bg-[#e11d48]/10 text-[#e11d48] font-medium">
+                    <span className="inline-block px-2 py-0.5 rounded text-2xs bg-[#e11d48]/10 text-[#e11d48] font-medium">
                       {post.category}
                     </span>
                   </td>
@@ -484,7 +484,7 @@ function PresetsPanel({ presets, loading, onRefresh }: { presets: AdminPreset[];
     <div className="space-y-4">
       {/* Create Card */}
       <div className="bg-[#0d0d14] border border-[#1a1a2e] rounded-xl p-5">
-        <h3 className="text-sm font-medium text-gray-300 mb-4 flex items-center gap-2">
+        <h3 className="text-lg font-medium text-gray-300 mb-4 flex items-center gap-2">
           <Plus className="w-4 h-4 text-[#e11d48]" />
           建立預設 Account
         </h3>
@@ -559,7 +559,7 @@ function PresetsPanel({ presets, loading, onRefresh }: { presets: AdminPreset[];
                   <td className="py-3 px-4 text-sm text-gray-500 font-mono text-xs">{p.email}</td>
                   <td className="py-3 px-4 text-center text-sm text-gray-300">{p.posts}</td>
                   <td className="py-3 px-4 text-center">
-                    <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-medium bg-purple-400/10 text-purple-400">
+                    <span className="inline-block px-2 py-0.5 rounded-full text-2xs font-medium bg-purple-400/10 text-purple-400">
                       預設
                     </span>
                   </td>
@@ -639,7 +639,7 @@ function PostFormModal({ post, onClose, onSaved }: { post: AdminPost | null; onC
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={onClose}>
       <div className="w-full max-w-lg bg-[#0d0d14] border border-[#1a1a2e] rounded-xl p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-5">
-          <h3 className="text-sm font-medium text-gray-200">{post ? '編輯文章' : '加文章'}</h3>
+          <h3 className="text-lg font-medium text-gray-200">{post ? '編輯文章' : '加文章'}</h3>
           <button onClick={onClose} className="p-1.5 rounded-lg text-gray-500 hover:text-gray-200"><X className="w-4 h-4" /></button>
         </div>
         <div className="space-y-4">
@@ -729,7 +729,7 @@ function CommentFormModal({ comment, onClose, onSaved }: { comment: AdminComment
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={onClose}>
       <div className="w-full max-w-lg bg-[#0d0d14] border border-[#1a1a2e] rounded-xl p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-5">
-          <h3 className="text-sm font-medium text-gray-200">{comment ? '編輯留言' : '加留言'}</h3>
+          <h3 className="text-lg font-medium text-gray-200">{comment ? '編輯留言' : '加留言'}</h3>
           <button onClick={onClose} className="p-1.5 rounded-lg text-gray-500 hover:text-gray-200"><X className="w-4 h-4" /></button>
         </div>
         <div className="space-y-4">

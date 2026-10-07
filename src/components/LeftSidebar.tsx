@@ -67,12 +67,12 @@ export default function LeftSidebar() {
                 <span className="ml-auto text-sm text-hearten-dim">{stats[cat.catId].total}</span>
               )}
               {cat.badge === 'new' && (
-                <span className="ml-auto text-[11px] font-semibold px-[6px] py-[2px] rounded-[8px] bg-hearten-rose text-white">
+                <span className="ml-auto text-2xs font-semibold px-[6px] py-[2px] rounded-[8px] bg-hearten-rose text-white">
                   新
                 </span>
               )}
               {cat.badge === 'hot' && (
-                <span className="ml-auto text-[11px] font-semibold px-[6px] py-[2px] rounded-[8px] bg-hearten-amber text-hearten-bg">
+                <span className="ml-auto text-2xs font-semibold px-[6px] py-[2px] rounded-[8px] bg-hearten-amber text-hearten-bg">
                   熱
                 </span>
               )}

@@ -60,7 +60,7 @@ export default function Home() {
 
         <main className="flex-1 min-w-0 px-7 py-6 max-md:px-4">
           <div className="mb-6">
-            <h1 className="text-[22px] font-bold text-hearten-text mb-1">揀個話題，開始傾 💬</h1>
+            <h1 className="text-2xl font-bold text-hearten-text mb-1">揀個話題，開始傾 💬</h1>
             <p className="text-sm text-hearten-muted">搵一個你關心嘅話題，睇吓其他香港人嘅故事、認識新朋友</p>
           </div>
 
@@ -119,7 +119,7 @@ export default function Home() {
 function SectionTitle({ emoji, title, subtitle }: { emoji: string; title: string; subtitle?: string }) {
   return (
     <div className="flex items-center gap-3 mb-4 mt-8 first:mt-0">
-      <h2 className="text-lg font-bold text-hearten-text flex-shrink-0">
+      <h2 className="text-xl font-bold text-hearten-text flex-shrink-0">
         {emoji} {title}
       </h2>
       <div className="flex-1 h-px bg-hearten-border" />

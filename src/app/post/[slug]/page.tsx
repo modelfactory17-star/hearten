@@ -27,9 +27,9 @@ const COMMENT_EMOJIS = [
 
 type FontSize = 'small' | 'medium' | 'large';
 const FONT_SIZES: { key: FontSize; label: string; className: string }[] = [
-  { key: 'small', label: '小', className: 'text-[14px]' },
-  { key: 'medium', label: '中', className: 'text-[16px]' },
-  { key: 'large', label: '大', className: 'text-[18px]' },
+  { key: 'small', label: '小', className: 'text-sm' },
+  { key: 'medium', label: '中', className: 'text-base' },
+  { key: 'large', label: '大', className: 'text-lg' },
 ];
 
 function buildTree(staticComments: Comment[], userComments: Comment[]): Comment[] {
@@ -87,7 +87,7 @@ export default function PostPage() {
   const tree = buildTree([], userComments);
   const displayedComments = authorOnly ? tree.filter(c => c.isOP) : tree;
   const commentCount = userComments.length;
-  const bodyClass = FONT_SIZES.find(f => f.key === fontSize)?.className ?? 'text-[16px]';
+  const bodyClass = FONT_SIZES.find(f => f.key === fontSize)?.className ?? 'text-base';
 
   const refreshComments = useCallback(async () => {
     const res = await fetch(`/api/comments?post_id=${encodeURIComponent(postId)}`);
@@ -241,7 +241,7 @@ export default function PostPage() {
                       <div className="flex items-center gap-2">
                         <span onClick={() => router.push(`/user/${encodeURIComponent(post.anonymous)}`)}
                           className="font-medium text-hearten-text text-sm hover:text-hearten-rose-light cursor-pointer transition-colors">{post.anonymous}</span>
-                        <span className="px-1.5 py-0.5 rounded-md bg-hearten-rose/10 text-hearten-rose-light text-[10px] font-medium">{post.category}</span>
+                        <span className="px-1.5 py-0.5 rounded-md bg-hearten-rose/10 text-hearten-rose-light text-2xs font-medium">{post.category}</span>
                       </div>
                       <span className="text-xs text-hearten-muted">{post.time}</span>
                     </div>
@@ -313,7 +313,7 @@ export default function PostPage() {
                   </>
                 ) : (
                   <>
-                    <h1 className="text-xl font-bold text-hearten-text mb-4">{post.title}</h1>
+                    <h1 className="text-2xl font-bold text-hearten-text mb-4">{post.title}</h1>
 
                     {/* Image gallery */}
                     {post.images && post.images.length > 0 && (
@@ -375,7 +375,7 @@ export default function PostPage() {
               </div>
 
               <div className="flex items-center gap-3 mb-5">
-                <h2 className="text-sm font-bold text-hearten-muted uppercase tracking-wider">
+                <h2 className="text-xl font-bold text-hearten-muted uppercase tracking-wider">
                   💬 留言 ({displayedComments.length}{authorOnly ? ' · 只看該作者' : ''})
                 </h2>
                 <div className="flex-1 h-px bg-hearten-border" />
@@ -479,11 +479,11 @@ function CommentItem({ comment, postId, onCommentAdded, depth = 0 }: {
           </div>
           <span onClick={() => router.push(`/user/${encodeURIComponent(comment.anonymous)}`)}
             className="text-sm font-medium text-hearten-text hover:text-hearten-rose-light cursor-pointer transition-colors">{comment.anonymous}</span>
-          {comment.isOP && <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-hearten-amber/20 text-hearten-amber">樓主</span>}
+          {comment.isOP && <span className="px-1.5 py-0.5 rounded text-2xs font-bold bg-hearten-amber/20 text-hearten-amber">樓主</span>}
           <span className="text-xs text-hearten-muted">{comment.time}</span>
           <button className="ml-auto text-hearten-muted hover:text-hearten-text"><Flag className="w-3.5 h-3.5" /></button>
         </div>
-        <p className="text-[15px] text-hearten-muted leading-relaxed mb-3">{comment.body}</p>
+        <p className="text-sm text-hearten-muted leading-relaxed mb-3">{comment.body}</p>
         <div className="flex items-center gap-4">
           <button onClick={handleHeartComment}
             className={`flex items-center gap-1 text-xs transition-colors ${cHearted ? 'text-hearten-rose-light' : 'text-hearten-muted hover:text-hearten-rose-light'}`}>

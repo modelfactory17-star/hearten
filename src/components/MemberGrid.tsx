@@ -47,18 +47,18 @@ export default function MemberGrid() {
     if (posts >= 20) return { label: 'VIP', className: 'bg-[linear-gradient(135deg,#f59e0b,#e11d48)] text-white' };
     if (posts >= 10) return { label: '資深', className: 'bg-[rgba(168,85,247,0.18)] text-[#a78bfa]' };
     if (posts >= 3) return { label: '進階', className: 'bg-[rgba(59,130,246,0.18)] text-[#60a5fa]' };
-    return { label: '新手', className: 'bg-[#374151] text-[#9ca3af]' };
+    return { label: '新手', className: 'bg-hearten-card-hover text-hearten-muted' };
   };
 
   return (
     <>
       <div className="flex flex-wrap items-center gap-2 mb-[14px]">
-        <span className="ml-auto text-[11px] text-hearten-dim flex items-center gap-[5px]">
+        <span className="ml-auto text-2xs text-hearten-dim flex items-center gap-[5px]">
           等級：
-          <span className="text-[10px] font-bold px-[7px] py-[2px] rounded-[6px] tracking-[0.03em] bg-[#374151] text-[#9ca3af]">新手</span>
-          <span className="text-[10px] font-bold px-[7px] py-[2px] rounded-[6px] tracking-[0.03em] bg-[rgba(59,130,246,0.18)] text-[#60a5fa]">進階</span>
-          <span className="text-[10px] font-bold px-[7px] py-[2px] rounded-[6px] tracking-[0.03em] bg-[rgba(168,85,247,0.18)] text-[#a78bfa]">資深</span>
-          <span className="text-[10px] font-bold px-[7px] py-[2px] rounded-[6px] tracking-[0.03em] bg-[linear-gradient(135deg,#f59e0b,#e11d48)] text-white">VIP</span>
+          <span className="text-2xs font-bold px-[7px] py-[2px] rounded-[6px] tracking-[0.03em] bg-hearten-card-hover text-hearten-muted">新手</span>
+          <span className="text-2xs font-bold px-[7px] py-[2px] rounded-[6px] tracking-[0.03em] bg-[rgba(59,130,246,0.18)] text-[#60a5fa]">進階</span>
+          <span className="text-2xs font-bold px-[7px] py-[2px] rounded-[6px] tracking-[0.03em] bg-[rgba(168,85,247,0.18)] text-[#a78bfa]">資深</span>
+          <span className="text-2xs font-bold px-[7px] py-[2px] rounded-[6px] tracking-[0.03em] bg-[linear-gradient(135deg,#f59e0b,#e11d48)] text-white">VIP</span>
         </span>
       </div>
 
@@ -72,14 +72,14 @@ export default function MemberGrid() {
               className="relative bg-hearten-card border border-hearten-border rounded-[14px] p-5 transition-all duration-[0.2s] hover:border-hearten-border-hover hover:-translate-y-[2px] block"
             >
               <div className="flex items-start gap-3 mb-[10px]">
-                <div className="w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center text-[22px] border-2 bg-[linear-gradient(135deg,#1a2a3a,#1a3040)] border-[rgba(59,130,246,0.3)]">
+                <div className="w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center text-xl border-2 bg-[linear-gradient(135deg,#1a2a3a,#1a3040)] border-[rgba(59,130,246,0.3)]">
                   {m.emoji}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-base font-bold text-hearten-text">{m.name}</div>
                   <div className="text-xs text-hearten-dim mt-[2px]">{m.status}</div>
                   <div className="flex items-center gap-1 mt-[6px]">
-                    <span className={`text-[10px] font-bold px-[7px] py-[2px] rounded-[6px] tracking-[0.03em] ${level.className}`}>
+                    <span className={`text-2xs font-bold px-[7px] py-[2px] rounded-[6px] tracking-[0.03em] ${level.className}`}>
                       {level.label}
                     </span>
                   </div>

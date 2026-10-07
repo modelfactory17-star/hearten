@@ -74,13 +74,13 @@ export default function PollSection() {
           >
             {/* Header */}
             <div className="flex items-center gap-[10px] mb-[14px]">
-              <span className="text-[10px] font-bold uppercase px-[10px] py-1 rounded-[8px] tracking-[0.05em] bg-green-500/15 text-green-500">
+              <span className="text-2xs font-bold uppercase px-[10px] py-1 rounded-[8px] tracking-[0.05em] bg-green-500/15 text-green-500">
                 ● 投票中
               </span>
             </div>
 
             {/* Question */}
-            <div className="text-[15px] font-semibold text-hearten-text mb-[14px] leading-[1.4]">
+            <div className="text-sm font-semibold text-hearten-text mb-[14px] leading-[1.4]">
               {poll.title}
             </div>
 
@@ -96,18 +96,18 @@ export default function PollSection() {
                     className="absolute left-0 top-0 bottom-0 bg-hearten-rose/10 rounded-l-[10px] transition-[width] duration-[0.5s]"
                     style={{ width: `${pct}%` }}
                   />
-                  <span className="relative z-[1] flex-1 text-[13.5px] text-hearten-muted truncate">{opt.text}</span>
-                  <span className="relative z-[1] text-[13px] font-bold text-hearten-rose-light">{pct}%</span>
+                  <span className="relative z-[1] flex-1 text-sm text-hearten-muted truncate">{opt.text}</span>
+                  <span className="relative z-[1] text-xs font-bold text-hearten-rose-light">{pct}%</span>
                 </div>
               );
             })}
 
             {/* Footer */}
             <div className="flex items-center justify-between mt-2">
-              <span className="text-[11.5px] text-hearten-dim">
+              <span className="text-2xs text-hearten-dim">
                 🗳 {formatVotes(poll.totalVotes)} 人已投票
               </span>
-              <span className="text-[11.5px] text-hearten-rose-light font-medium">
+              <span className="text-2xs text-hearten-rose-light font-medium">
                 去投票 →
               </span>
             </div>

@@ -51,13 +51,13 @@ export default function LoveWiseCard({ variant = 'feed' }: { variant?: LoveWiseV
       </span>
 
       <span className="flex-1 min-w-0">
-        <span className={`block font-semibold text-hearten-muted truncate ${compact ? 'text-[13px]' : 'text-sm'}`}>
+        <span className={`block font-semibold text-hearten-muted truncate ${compact ? 'text-xs' : 'text-sm'}`}>
           {c.line}
         </span>
         <span className="block text-xs text-hearten-dim truncate">{c.sub}</span>
       </span>
 
-      <span className="shrink-0 flex items-center gap-1 text-[11px] font-semibold tracking-[0.04em] text-hearten-dim/80 group-hover:text-hearten-muted transition-colors">
+      <span className="shrink-0 flex items-center gap-1 text-2xs font-semibold tracking-[0.04em] text-hearten-dim/80 group-hover:text-hearten-muted transition-colors">
         LoveWise
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3 h-3">
           <path d="M7 17L17 7M17 7H9M17 7v8" />

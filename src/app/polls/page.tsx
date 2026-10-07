@@ -53,7 +53,7 @@ function PollCard({ poll, userId, isAdmin, authChecked, onVote, onClose }: {
               {isActive ? '進行中' : '已結束'}
             </span>
           </div>
-          <h3 className="text-base font-bold text-hearten-text">{poll.title}</h3>
+          <h3 className="text-lg font-bold text-hearten-text">{poll.title}</h3>
           {poll.description && (
             <p className="text-sm text-hearten-muted mt-1">{poll.description}</p>
           )}
@@ -211,7 +211,7 @@ function CreatePollModal({ onClose, onCreated }: { onClose: () => void; onCreate
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
       <div className="relative bg-hearten-card border border-hearten-border rounded-2xl w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-bold text-hearten-text">建立新投票</h2>
+          <h2 className="text-xl font-bold text-hearten-text">建立新投票</h2>
           <button onClick={onClose} className="p-1 rounded-lg hover:bg-hearten-bg text-hearten-muted">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M18 6L6 18M6 6l12 12"/>
@@ -385,7 +385,7 @@ export default function PollsPage() {
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
               <span className="text-3xl">📊</span>
-              <h1 className="text-[22px] font-bold text-hearten-text">投票區</h1>
+              <h1 className="text-2xl font-bold text-hearten-text">投票區</h1>
             </div>
             {isAdmin && (
               <button
@@ -410,7 +410,7 @@ export default function PollsPage() {
                 <section>
                   <div className="flex items-center gap-2 mb-4">
                     <span className="w-2 h-2 rounded-full bg-green-500" />
-                    <h2 className="text-sm font-bold uppercase tracking-[0.04em] text-hearten-muted">進行中 · {activePolls.length}</h2>
+                    <h2 className="text-xl font-bold uppercase tracking-[0.04em] text-hearten-muted">進行中 · {activePolls.length}</h2>
                   </div>
                   <div className="space-y-4">
                     {activePolls.map(p => (
@@ -425,7 +425,7 @@ export default function PollsPage() {
                 <section>
                   <div className="flex items-center gap-2 mb-4">
                     <span className="w-2 h-2 rounded-full bg-hearten-dim" />
-                    <h2 className="text-sm font-bold uppercase tracking-[0.04em] text-hearten-muted">已結束 · {closedPolls.length}</h2>
+                    <h2 className="text-xl font-bold uppercase tracking-[0.04em] text-hearten-muted">已結束 · {closedPolls.length}</h2>
                   </div>
                   <div className="space-y-4">
                     {closedPolls.map(p => (

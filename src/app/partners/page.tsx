@@ -66,18 +66,18 @@ export default function PartnersPage() {
         )}
 
         <main className="flex-1 min-w-0 px-7 py-8 max-md:px-4">
-          <h1 className="text-[22px] font-bold text-hearten-text mb-2">合作方案</h1>
+          <h1 className="text-2xl font-bold text-hearten-text mb-2">合作方案</h1>
           <p className="text-sm text-hearten-muted mb-8">同 Hearten 一齊創造更多可能性</p>
 
           <div className="max-w-3xl space-y-8">
             {/* Partner types */}
             <section>
-              <h2 className="text-lg font-bold text-hearten-text mb-4">🤝 合作方式</h2>
+              <h2 className="text-xl font-bold text-hearten-text mb-4">🤝 合作方式</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {partners.map((p) => (
                   <div key={p.title} className="p-5 rounded-xl bg-hearten-card border border-hearten-border hover:border-hearten-rose transition-colors">
                     <div className="text-3xl mb-3">{p.icon}</div>
-                    <h3 className="text-base font-bold text-hearten-text mb-2">{p.title}</h3>
+                    <h3 className="text-lg font-bold text-hearten-text mb-2">{p.title}</h3>
                     <p className="text-sm text-hearten-muted leading-relaxed">{p.desc}</p>
                   </div>
                 ))}
@@ -87,7 +87,7 @@ export default function PartnersPage() {
             {/* Contact CTA */}
             <section>
               <div className="bg-hearten-card border border-hearten-border rounded-xl p-6 text-center">
-                <h2 className="text-lg font-bold text-hearten-text mb-2">有合作構思？</h2>
+                <h2 className="text-xl font-bold text-hearten-text mb-2">有合作構思？</h2>
                 <p className="text-base text-hearten-muted mb-6 leading-relaxed">
                   無論你係品牌、媒體、教育機構定係初創公司，我哋都歡迎你提出合作建議。
                   請透過「聯絡我們」頁面提交查詢，簡單介紹你嘅機構同合作構思。

@@ -47,7 +47,7 @@ export default function AuthCallbackPage() {
   return (
     <div className="min-h-screen bg-hearten-bg flex items-center justify-center p-4">
       <div className="bg-hearten-card border border-hearten-border rounded-2xl p-6 w-full max-w-sm">
-        <h1 className="text-lg font-bold text-hearten-text mb-2">🔐 重設密碼</h1>
+        <h1 className="text-2xl font-bold text-hearten-text mb-2">🔐 重設密碼</h1>
 
         {!ready ? (
           <p className="text-sm text-hearten-muted">正在驗證...</p>

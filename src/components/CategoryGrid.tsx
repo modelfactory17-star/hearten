@@ -73,10 +73,10 @@ export default function CategoryGrid() {
           <span className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,transparent_10%,rgba(0,0,0,0.12)_100%)] light:bg-[linear-gradient(180deg,transparent_10%,rgba(255,255,255,0.3)_100%)]" />
 
           {/* Content above overlay */}
-          <span className="relative z-[2] text-[32px] mb-[10px] leading-none">
+          <span className="relative z-[2] text-3xl mb-[10px] leading-none">
             {cat.icon}
           </span>
-          <span className="relative z-[2] text-[16px] font-bold text-hearten-text mb-[3px]">
+          <span className="relative z-[2] text-base font-bold text-hearten-text mb-[3px]">
             {cat.name}
           </span>
           <span className="relative z-[2] text-sm text-black mb-[6px] leading-[1.4]">

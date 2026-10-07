@@ -33,13 +33,13 @@ export default function SupportPage() {
         )}
 
         <main className="flex-1 min-w-0 px-7 py-8 max-md:px-4">
-          <h1 className="text-[22px] font-bold text-hearten-text mb-2">客服查詢</h1>
+          <h1 className="text-2xl font-bold text-hearten-text mb-2">客服查詢</h1>
           <p className="text-sm text-hearten-muted mb-8">有問題？我哋喺度幫你。</p>
 
           <div className="max-w-2xl space-y-8">
             {/* Quick links */}
             <section>
-              <h2 className="text-lg font-bold text-hearten-text mb-4">🔍 快速搵答案</h2>
+              <h2 className="text-xl font-bold text-hearten-text mb-4">🔍 快速搵答案</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {[
                   { label: '常見問題', href: '/faq', desc: '註冊、發文、帳戶相關' },
@@ -61,13 +61,13 @@ export default function SupportPage() {
 
             {/* Contact info */}
             <section>
-              <h2 className="text-lg font-bold text-hearten-text mb-4">📬 聯絡客服</h2>
+              <h2 className="text-xl font-bold text-hearten-text mb-4">📬 聯絡客服</h2>
               <div className="bg-hearten-card border border-hearten-border rounded-xl p-6 space-y-4">
                 <p className="text-base text-hearten-muted leading-relaxed">
                   如需進一步協助，請透過「聯絡我們」頁面提交查詢。我哋嘅客服團隊會盡快回覆你。
                 </p>
                 <div className="space-y-3">
-                  <h3 className="text-sm font-bold text-hearten-text">提交查詢時請提供：</h3>
+                  <h3 className="text-lg font-bold text-hearten-text">提交查詢時請提供：</h3>
                   <ul className="list-disc pl-5 space-y-1.5 text-sm text-hearten-muted">
                     <li>你嘅用戶名稱</li>
                     <li>遇到嘅問題嘅詳細描述</li>
@@ -80,7 +80,7 @@ export default function SupportPage() {
 
             {/* Response time */}
             <section>
-              <h2 className="text-lg font-bold text-hearten-text mb-4">⏱️ 回覆時間</h2>
+              <h2 className="text-xl font-bold text-hearten-text mb-4">⏱️ 回覆時間</h2>
               <div className="bg-hearten-card border border-hearten-border rounded-xl p-6">
                 <p className="text-base text-hearten-muted leading-relaxed">
                   我哋會喺收到查詢後盡快處理。一般查詢會喺 2-3 個工作日內回覆。複雜個案可能需要較長時間，請耐心等候。

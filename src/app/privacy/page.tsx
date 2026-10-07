@@ -33,7 +33,7 @@ export default function PrivacyPage() {
         )}
 
         <main className="flex-1 min-w-0 px-7 py-8 max-md:px-4">
-          <h1 className="text-[22px] font-bold text-hearten-text mb-2">私隱政策</h1>
+          <h1 className="text-2xl font-bold text-hearten-text mb-2">私隱政策</h1>
           <p className="text-sm text-hearten-muted mb-8">最後更新日期：2026年8月8日</p>
 
           <div className="space-y-8">
@@ -117,7 +117,7 @@ export default function PrivacyPage() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section>
-      <h2 className="text-lg font-bold text-hearten-text mb-3">{title}</h2>
+      <h2 className="text-xl font-bold text-hearten-text mb-3">{title}</h2>
       <div className="text-base text-hearten-muted leading-relaxed space-y-2">
         {children}
       </div>

@@ -436,7 +436,7 @@ export default function UserPage() {
         {isOwnProfile && (
           <div className="mt-6">
             <div className="flex items-center gap-3 mb-4">
-              <h2 className="text-base font-bold text-hearten-muted uppercase tracking-wider">👥 好友 ({friends.length})</h2>
+              <h2 className="text-xl font-bold text-hearten-muted uppercase tracking-wider">👥 好友 ({friends.length})</h2>
               <div className="flex-1 h-px bg-hearten-border" />
             </div>
             {friendsLoading ? (
@@ -486,7 +486,7 @@ export default function UserPage() {
         {/* Recent Posts */}
         <div className="mt-8">
           <div className="flex items-center gap-3 mb-4">
-            <h2 className="text-base font-bold text-hearten-muted uppercase tracking-wider">📝 最近發帖 ({userPosts.length})</h2>
+            <h2 className="text-xl font-bold text-hearten-muted uppercase tracking-wider">📝 最近發帖 ({userPosts.length})</h2>
             <div className="flex-1 h-px bg-hearten-border" />
           </div>
           {userPosts.length === 0 ? (
@@ -499,7 +499,7 @@ export default function UserPage() {
                     <span className="px-1.5 py-0.5 rounded-md bg-hearten-rose/10 text-hearten-rose-light text-xs font-medium">{post.category}</span>
                     <span className="text-sm text-hearten-muted">{post.time}</span>
                   </div>
-                  <h3 className="text-base font-semibold text-hearten-text">{post.title}</h3>
+                  <h3 className="text-lg font-semibold text-hearten-text">{post.title}</h3>
                   <div className="flex items-center gap-4 mt-2 text-sm text-hearten-dim">
                     <span>❤️ {post.hearts}</span>
                     <span>💬 {post.replies}</span>
@@ -517,7 +517,7 @@ export default function UserPage() {
           <div className="absolute inset-0 bg-black/60" onClick={() => setShowEdit(false)} />
           <div className="relative bg-hearten-card border border-hearten-border rounded-2xl w-full max-w-sm p-6 space-y-5">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-hearten-text">編輯資料</h2>
+              <h2 className="text-xl font-bold text-hearten-text">編輯資料</h2>
               <button onClick={() => setShowEdit(false)} className="p-1 rounded-lg text-hearten-muted hover:text-hearten-text"><X className="w-5 h-5" /></button>
             </div>
             <div>

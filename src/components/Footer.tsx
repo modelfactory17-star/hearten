@@ -5,7 +5,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* A 欄 — 關於 Hearten */}
           <div>
-            <h4 className="text-sm font-bold text-hearten-text mb-3">關於 Hearten</h4>
+            <h4 className="text-base font-bold text-hearten-text mb-3">關於 Hearten</h4>
             <div className="grid grid-cols-2 gap-x-4 gap-y-2">
               <a href="/about" className="text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">Hearten 愛情討論區</a>
               <a href="/privacy" className="text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">私隱政策</a>
@@ -16,7 +16,7 @@ export default function Footer() {
 
           {/* B 欄 — 會員專區 */}
           <div>
-            <h4 className="text-sm font-bold text-hearten-text mb-3">會員專區</h4>
+            <h4 className="text-base font-bold text-hearten-text mb-3">會員專區</h4>
             <div className="grid grid-cols-2 gap-x-4 gap-y-2">
               <a href="/contact" className="text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">聯絡我們</a>
               <a href="/features" className="text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">會員功能</a>
@@ -27,7 +27,7 @@ export default function Footer() {
 
           {/* C 欄 — 商務合作 */}
           <div>
-            <h4 className="text-sm font-bold text-hearten-text mb-3">商務合作</h4>
+            <h4 className="text-base font-bold text-hearten-text mb-3">商務合作</h4>
             <div className="grid grid-cols-2 gap-x-4 gap-y-2">
               <a href="/contact" className="text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">聯絡我們</a>
               <a href="/support" className="text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">客服查詢</a>
@@ -38,7 +38,7 @@ export default function Footer() {
 
           {/* D 欄 — 探索 Hearten */}
           <div>
-            <h4 className="text-sm font-bold text-hearten-text mb-3">探索 Hearten</h4>
+            <h4 className="text-base font-bold text-hearten-text mb-3">探索 Hearten</h4>
             <div className="grid grid-cols-2 gap-x-4 gap-y-2">
               <a href="/editors-picks" className="text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">編輯精選</a>
               <a href="/members" className="text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">會員追蹤</a>
