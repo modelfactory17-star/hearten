@@ -81,7 +81,40 @@ export async function GET() {
       }
     }
 
-    return NextResponse.json({ hotTopics, newMembers, activeUsers, categoryStats }, {
+    // 最新留言 — 兩步 fetch（comments → posts），唔靠 post FK 命名
+    const cmtRes = await fetch(
+      `${URL}/rest/v1/comments?select=id,body,created_at,post_id,profiles!comments_user_id_fkey(username,emoji)&order=created_at.desc&limit=6`,
+      { headers, cache: 'no-store' }
+    );
+    const cmtRaw = await cmtRes.json();
+    const cmts = Array.isArray(cmtRaw) ? cmtRaw : [];
+    const postIds = Array.from(new Set(cmts.map((c: Record<string, unknown>) => c.post_id as string)));   // 唔可以用 [...new Set()]（tsconfig target ES5，build 會 fail）
+    const postMap: Record<string, { title: string; slug: string }> = {};
+    if (postIds.length) {
+      const pRes = await fetch(
+        `${URL}/rest/v1/posts?select=id,title,slug&id=in.(${postIds.join(',')})`,
+        { headers, cache: 'no-store' }
+      );
+      const pRaw = await pRes.json();
+      (Array.isArray(pRaw) ? pRaw : []).forEach((p: Record<string, unknown>) => {
+        postMap[p.id as string] = { title: (p.title as string) || '', slug: (p.slug as string) || '' };
+      });
+    }
+    const latestComments = cmts
+      .filter((c: Record<string, unknown>) => postMap[c.post_id as string])
+      .slice(0, 5)
+      .map((c: Record<string, unknown>) => {
+        const prof = c.profiles as { username?: string; emoji?: string } | null;
+        return {
+          emoji: prof?.emoji || '💬',
+          name: prof?.username || '會員',
+          body: ((c.body as string) || '').replace(/\s+/g, ' ').slice(0, 30),
+          post: postMap[c.post_id as string].title.slice(0, 18),
+          slug: postMap[c.post_id as string].slug,
+        };
+      });
+
+    return NextResponse.json({ hotTopics, newMembers, activeUsers, latestComments, categoryStats }, {
       headers: { 'Cache-Control': 's-maxage=60, stale-while-revalidate=120' }
     });
   } catch (err) {
