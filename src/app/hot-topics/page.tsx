@@ -6,6 +6,8 @@ import Header from '@/components/Header';
 import LeftSidebar from '@/components/LeftSidebar';
 import RightSidebar from '@/components/RightSidebar';
 import Footer from '@/components/Footer';
+import IconBadge from '@/components/IconBadge';
+import { Newspaper } from 'lucide-react';
 
 const hotTopics = [
   { emoji: '💒', name: '何太事件 · 你點睇？', count: '328 討論', badge: 'hot', slug: 'hotai', desc: '全城熱話：婚姻、金錢同感情之間嘅關係' },
@@ -46,7 +48,10 @@ export default function HotTopicsPage() {
         <main className="flex-1 min-w-0 px-7 py-6 max-md:px-4">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-2xl font-bold text-hearten-text mb-2">📰 熱門話題</h1>
+            <div className="flex items-center gap-3 mb-2">
+              <IconBadge icon={Newspaper} size="lg" />
+              <h1 className="text-2xl font-bold text-hearten-text">熱門話題</h1>
+            </div>
             <p className="text-sm text-hearten-muted">時事 · 八卦 · 城中熱話 — 香港人最關心嘅話題，一齊入嚟傾</p>
           </div>
 

@@ -6,6 +6,8 @@ import Header from '@/components/Header';
 import LeftSidebar from '@/components/LeftSidebar';
 import RightSidebar from '@/components/RightSidebar';
 import Footer from '@/components/Footer';
+import IconBadge from '@/components/IconBadge';
+import { Star } from 'lucide-react';
 import FeedCard from '@/components/FeedCard';
 import { db, type Post } from '@/lib/db';
 
@@ -49,7 +51,7 @@ export default function EditorsPicksPage() {
 
         <main className="flex-1 min-w-0 px-7 py-8 max-md:px-4">
           <div className="flex items-center gap-3 mb-2">
-            <span className="text-3xl">⭐</span>
+            <IconBadge icon={Star} size="lg" />
             <h1 className="text-2xl font-bold text-hearten-text">編輯精選</h1>
           </div>
           <p className="text-sm text-hearten-muted mb-8">最多心心嘅優質貼文，值得一睇再睇</p>

@@ -3,6 +3,7 @@
 import { useParams, useRouter } from 'next/navigation';
 import { Heart, MessageCircle, Share2, ArrowLeft, Flag, Eye, EyeOff, Bookmark, Edit3, Image, X } from 'lucide-react';
 import Footer from '@/components/Footer';
+import IconBadge from '@/components/IconBadge';
 import Header from '@/components/Header';
 import LeftSidebar from '@/components/LeftSidebar';
 import RightSidebar from '@/components/RightSidebar';
@@ -375,8 +376,9 @@ export default function PostPage() {
               </div>
 
               <div className="flex items-center gap-3 mb-5">
-                <h2 className="text-xl font-bold text-hearten-muted uppercase tracking-wider">
-                  💬 留言 ({displayedComments.length}{authorOnly ? ' · 只看該作者' : ''})
+                <IconBadge icon={MessageCircle} size="md" />
+                <h2 className="text-xl font-bold text-hearten-muted uppercase tracking-wider shrink-0">
+                  留言 ({displayedComments.length}{authorOnly ? ' · 只看該作者' : ''})
                 </h2>
                 <div className="flex-1 h-px bg-hearten-border" />
               </div>

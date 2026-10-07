@@ -5,6 +5,8 @@ import Header from '@/components/Header';
 import LeftSidebar from '@/components/LeftSidebar';
 import RightSidebar from '@/components/RightSidebar';
 import Footer from '@/components/Footer';
+import IconBadge from '@/components/IconBadge';
+import { BarChart3 } from 'lucide-react';
 import { db, Poll } from '@/lib/db';
 
 // ─── Poll Card Component ───
@@ -384,7 +386,7 @@ export default function PollsPage() {
           {/* Header */}
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
-              <span className="text-3xl">📊</span>
+              <IconBadge icon={BarChart3} size="lg" />
               <h1 className="text-2xl font-bold text-hearten-text">投票區</h1>
             </div>
             {isAdmin && (
@@ -437,7 +439,7 @@ export default function PollsPage() {
 
               {activePolls.length === 0 && closedPolls.length === 0 && (
                 <div className="text-hearten-muted text-center py-12">
-                  <p className="text-4xl mb-3">📊</p>
+                  <IconBadge icon={BarChart3} size="lg" className="mb-3" />
                   <p>暫時未有投票</p>
                   {isAdmin && (
                     <button onClick={() => setShowCreate(true)} className="mt-3 text-sm text-hearten-rose-light hover:underline">

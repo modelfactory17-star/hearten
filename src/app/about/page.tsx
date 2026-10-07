@@ -5,6 +5,9 @@ import Header from '@/components/Header';
 import LeftSidebar from '@/components/LeftSidebar';
 import RightSidebar from '@/components/RightSidebar';
 import Footer from '@/components/Footer';
+import SectionHeading from '@/components/SectionHeading';
+import IconBadge from '@/components/IconBadge';
+import { Lightbulb, Sparkles, Handshake, Glasses, MessageCircle, Moon, Lock, Heart, Smartphone } from 'lucide-react';
 
 export default function AboutPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -44,7 +47,7 @@ export default function AboutPage() {
 
           {/* Mission */}
           <section className="mb-10">
-            <h2 className="text-xl font-bold text-hearten-text mb-4">💡 我哋嘅使命</h2>
+            <SectionHeading icon={Lightbulb} title="我哋嘅使命" className="mb-4" />
             <div className="bg-hearten-card border border-hearten-border rounded-xl p-6">
               <p className="text-base text-hearten-muted leading-relaxed mb-4">
                 Hearten 係一個專為香港人而設嘅愛情討論平台。喺呢度，無論你係暗戀、拍拖、分手、結婚，
@@ -62,18 +65,18 @@ export default function AboutPage() {
 
           {/* Features */}
           <section className="mb-10">
-            <h2 className="text-xl font-bold text-hearten-text mb-4">✨ Hearten 有咩特色？</h2>
+            <SectionHeading icon={Sparkles} title="Hearten 有咩特色？" className="mb-4" />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
-                { icon: '🕶️', title: '真實身份', desc: '實名註冊社群，每個會員都有自己嘅 profile。真誠交流，告別假 account 同 troll。' },
-                { icon: '💬', title: '多元話題', desc: '分手、暗戀、婚姻、LGBTQ+、塔羅占卜…揀你最關心嘅話題，搵到同路人。' },
-                { icon: '🌙', title: '日夜模式', desc: '夜晚熄燈睇唔傷眼，日頭光猛睇得清。一 click 切換，貼心設計。' },
-                { icon: '🔒', title: '安全社群', desc: '嚴格版規，確保討論環境友善、尊重。零容忍網絡欺凌。' },
-                { icon: '❤️', title: '用心互動', desc: '俾心心、留言、收藏…簡單直接嘅互動方式，唔花巧，重交流。' },
-                { icon: '📱', title: '手機友善', desc: '電腦、平板、手機全兼容，隨時隨地都可以上嚟傾。' },
+                { icon: Glasses, title: '真實身份', desc: '實名註冊社群，每個會員都有自己嘅 profile。真誠交流，告別假 account 同 troll。' },
+                { icon: MessageCircle, title: '多元話題', desc: '分手、暗戀、婚姻、LGBTQ+、塔羅占卜…揀你最關心嘅話題，搵到同路人。' },
+                { icon: Moon, title: '日夜模式', desc: '夜晚熄燈睇唔傷眼，日頭光猛睇得清。一 click 切換，貼心設計。' },
+                { icon: Lock, title: '安全社群', desc: '嚴格版規，確保討論環境友善、尊重。零容忍網絡欺凌。' },
+                { icon: Heart, title: '用心互動', desc: '俾心心、留言、收藏…簡單直接嘅互動方式，唔花巧，重交流。' },
+                { icon: Smartphone, title: '手機友善', desc: '電腦、平板、手機全兼容，隨時隨地都可以上嚟傾。' },
               ].map((f) => (
                 <div key={f.title} className="bg-hearten-card border border-hearten-border rounded-xl p-5">
-                  <div className="text-2xl mb-2">{f.icon}</div>
+                  <IconBadge icon={f.icon} size="md" className="mb-2" />
                   <h3 className="text-lg font-bold text-hearten-text mb-1">{f.title}</h3>
                   <p className="text-sm text-hearten-muted leading-relaxed">{f.desc}</p>
                 </div>
@@ -83,7 +86,7 @@ export default function AboutPage() {
 
           {/* Community */}
           <section className="mb-10">
-            <h2 className="text-xl font-bold text-hearten-text mb-4">🤝 社群價值</h2>
+            <SectionHeading icon={Handshake} title="社群價值" className="mb-4" />
             <div className="bg-hearten-card border border-hearten-border rounded-xl p-6">
               <ul className="space-y-3">
                 {[

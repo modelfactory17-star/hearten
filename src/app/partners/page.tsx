@@ -5,35 +5,38 @@ import Header from '@/components/Header';
 import LeftSidebar from '@/components/LeftSidebar';
 import RightSidebar from '@/components/RightSidebar';
 import Footer from '@/components/Footer';
+import SectionHeading from '@/components/SectionHeading';
+import IconBadge from '@/components/IconBadge';
+import { Handshake, Mic, Lightbulb, BarChart3, Globe, GraduationCap } from 'lucide-react';
 
 const partners = [
   {
-    icon: '🤝',
+    icon: Handshake,
     title: '內容合作',
     desc: '同 Hearten 一齊製作同愛情、兩性關係相關嘅內容。合作形式包括專題文章、訪談系列、互動活動等，藉此接觸我哋嘅活躍用戶社群。',
   },
   {
-    icon: '🎤',
+    icon: Mic,
     title: '活動聯乘',
     desc: '舉辦線上或線下活動，例如愛情講座、Speed Dating、工作坊等。Hearten 提供平台宣傳同會員招募，你提供專業內容同執行。',
   },
   {
-    icon: '💡',
+    icon: Lightbulb,
     title: '品牌植入',
     desc: '將你嘅品牌自然融入 Hearten 嘅內容同社群互動中。由主題贊助到長期品牌大使計劃，我哋會度身訂造最適合你嘅方案。',
   },
   {
-    icon: '📊',
+    icon: BarChart3,
     title: '數據合作',
     desc: '分享同交流香港戀愛趨勢數據。Hearten 嘅用戶數據可以為市場研究、產品開發同內容策略提供有價值嘅洞察。',
   },
   {
-    icon: '🌐',
+    icon: Globe,
     title: '媒體聯盟',
     desc: '同其他媒體平台交換內容、互相導流。如果你嘅平台都係服務香港年輕受眾，我哋可以探索跨平台合作機會。',
   },
   {
-    icon: '🎓',
+    icon: GraduationCap,
     title: '學術研究',
     desc: '歡迎大學同研究機構合作，利用 Hearten 嘅匿名數據進行兩性關係、社會心理學等學術研究。我哋重視學術誠信同用戶私隱。',
   },
@@ -72,11 +75,11 @@ export default function PartnersPage() {
           <div className="max-w-3xl space-y-8">
             {/* Partner types */}
             <section>
-              <h2 className="text-xl font-bold text-hearten-text mb-4">🤝 合作方式</h2>
+              <SectionHeading icon={Handshake} title="合作方式" className="mb-4" />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {partners.map((p) => (
                   <div key={p.title} className="p-5 rounded-xl bg-hearten-card border border-hearten-border hover:border-hearten-rose transition-colors">
-                    <div className="text-3xl mb-3">{p.icon}</div>
+                    <IconBadge icon={p.icon} size="lg" className="mb-3" />
                     <h3 className="text-lg font-bold text-hearten-text mb-2">{p.title}</h3>
                     <p className="text-sm text-hearten-muted leading-relaxed">{p.desc}</p>
                   </div>

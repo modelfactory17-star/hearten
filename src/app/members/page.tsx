@@ -6,6 +6,8 @@ import Header from '@/components/Header';
 import LeftSidebar from '@/components/LeftSidebar';
 import RightSidebar from '@/components/RightSidebar';
 import Footer from '@/components/Footer';
+import IconBadge from '@/components/IconBadge';
+import { Users, Heart } from 'lucide-react';
 import { db } from '@/lib/db';
 
 interface Member {
@@ -84,7 +86,7 @@ export default function MembersPage() {
 
         <main className="flex-1 min-w-0 px-7 py-8 max-md:px-4">
           <div className="flex items-center gap-3 mb-2">
-            <span className="text-3xl">👥</span>
+            <IconBadge icon={Users} size="lg" />
             <h1 className="text-2xl font-bold text-hearten-text">會員追蹤</h1>
           </div>
           <p className="text-sm text-hearten-muted mb-8">認識 Hearten 最活躍嘅會員，睇下佢哋嘅故事</p>
@@ -116,7 +118,7 @@ export default function MembersPage() {
                     </div>
                     {/* Name */}
                     <p className="text-sm font-bold text-hearten-text mb-1 text-center">{m.username}</p>
-                    <p className="text-xs text-hearten-dim">{m.posts_count} 貼文 · {m.hearts_received} ❤️</p>
+                    <p className="text-xs text-hearten-dim">{m.posts_count} 貼文 · <span className="inline-flex items-center gap-1 align-middle"><Heart className="w-3.5 h-3.5" />{m.hearts_received}</span></p>
                     {/* Podium block */}
                     <div className={`w-20 sm:w-24 ${PODIUM_HEIGHTS[i]} ${PODIUM_COLORS[i]} rounded-t-lg mt-2 flex items-end justify-center pb-1`}>
                       <span className="text-white text-2xl font-black">{i + 1}</span>
@@ -150,7 +152,7 @@ export default function MembersPage() {
                       )}
                       <div className="flex items-center justify-center gap-4 text-sm text-hearten-dim">
                         <span>{m.posts_count} 貼文</span>
-                        <span>{m.hearts_received} ❤️</span>
+                        <span className="inline-flex items-center gap-1"><Heart className="w-3.5 h-3.5" />{m.hearts_received}</span>
                       </div>
                     </div>
                   ))}

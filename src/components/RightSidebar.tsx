@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import LoveWiseCard from './LoveWiseCard';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { MessageCircle } from 'lucide-react';
 
 interface LatestComment {
   emoji: string;
@@ -61,7 +62,7 @@ export default function RightSidebar() {
               <div className="flex-1 min-w-0">
                 <div className="text-xs font-semibold text-hearten-muted truncate">{c.name}</div>
                 <div className="text-xs text-hearten-dim truncate">{c.body}</div>
-                <div className="text-2xs text-hearten-dim/80 truncate mt-[2px]">💬 {c.post}</div>
+                <div className="text-2xs text-hearten-dim/80 mt-[2px] flex items-center gap-1"><MessageCircle className="w-3 h-3 shrink-0" /><span className="truncate">{c.post}</span></div>
               </div>
             </Link>
           ))}

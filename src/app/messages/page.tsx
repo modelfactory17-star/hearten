@@ -2,6 +2,7 @@
 
 import { Send, ArrowLeft, MessageSquare } from 'lucide-react';
 import Footer from '@/components/Footer';
+import IconBadge from '@/components/IconBadge';
 import Header from '@/components/Header';
 import LeftSidebar from '@/components/LeftSidebar';
 import RightSidebar from '@/components/RightSidebar';
@@ -246,7 +247,10 @@ export default function MessagesPage() {
 
   return layout(
     <div className="max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold text-hearten-text mb-6">💬 訊息</h1>
+      <div className="flex items-center gap-3 mb-6">
+        <IconBadge icon={MessageSquare} size="lg" />
+        <h1 className="text-2xl font-bold text-hearten-text">訊息</h1>
+      </div>
 
       <div className="bg-hearten-card border border-hearten-border rounded-2xl overflow-hidden">
         <div className="flex h-[calc(100vh-250px)] min-h-[500px]">

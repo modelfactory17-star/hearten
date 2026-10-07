@@ -1,8 +1,9 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { Send, MessageSquare, Heart, FileText, UserPlus, LogOut, Settings, X, Check, Camera, UserCheck, Clock, Star, Ban, Trash2 } from 'lucide-react';
+import { Send, MessageSquare, Heart, FileText, UserPlus, LogOut, Settings, X, Check, Camera, UserCheck, Clock, Star, Ban, Trash2, Users, Mail, MessageCircle } from 'lucide-react';
 import Footer from '@/components/Footer';
+import IconBadge from '@/components/IconBadge';
 import Header from '@/components/Header';
 import LeftSidebar from '@/components/LeftSidebar';
 import RightSidebar from '@/components/RightSidebar';
@@ -353,7 +354,7 @@ export default function UserPage() {
             </div>
             {isOwnProfile && profile.email && (
               <div className="mt-2 text-center">
-                <span className="text-xs text-hearten-dim">📧 {profile.email}</span>
+                <span className="text-xs text-hearten-dim inline-flex items-center gap-1.5"><Mail className="w-3.5 h-3.5" />{profile.email}</span>
               </div>
             )}
             <div className="grid grid-cols-3 gap-4 mt-6 py-5 border-y border-hearten-border">
@@ -436,7 +437,8 @@ export default function UserPage() {
         {isOwnProfile && (
           <div className="mt-6">
             <div className="flex items-center gap-3 mb-4">
-              <h2 className="text-xl font-bold text-hearten-muted uppercase tracking-wider">👥 好友 ({friends.length})</h2>
+              <IconBadge icon={Users} size="md" />
+              <h2 className="text-xl font-bold text-hearten-muted uppercase tracking-wider shrink-0">好友 ({friends.length})</h2>
               <div className="flex-1 h-px bg-hearten-border" />
             </div>
             {friendsLoading ? (
@@ -456,7 +458,7 @@ export default function UserPage() {
                     <a href={`/user/${encodeURIComponent(f.friend?.username || '')}`} target="_blank" rel="noopener noreferrer"
                       className="flex-1 min-w-0 text-sm font-medium text-hearten-text hover:text-hearten-rose-light transition-colors truncate">
                       {f.friend?.username || '未知用戶'}
-                      {f.starred && <span className="ml-1.5 text-amber-400">⭐</span>}
+                      {f.starred && <Star className="w-3.5 h-3.5 ml-1.5 text-amber-400 shrink-0" />}
                       {f.blocked && <span className="ml-1.5 text-xs text-red-400">(已封鎖)</span>}
                     </a>
                     <div className="flex items-center gap-1 shrink-0">
@@ -486,7 +488,8 @@ export default function UserPage() {
         {/* Recent Posts */}
         <div className="mt-8">
           <div className="flex items-center gap-3 mb-4">
-            <h2 className="text-xl font-bold text-hearten-muted uppercase tracking-wider">📝 最近發帖 ({userPosts.length})</h2>
+            <IconBadge icon={FileText} size="md" />
+            <h2 className="text-xl font-bold text-hearten-muted uppercase tracking-wider shrink-0">最近發帖 ({userPosts.length})</h2>
             <div className="flex-1 h-px bg-hearten-border" />
           </div>
           {userPosts.length === 0 ? (
@@ -501,8 +504,8 @@ export default function UserPage() {
                   </div>
                   <h3 className="text-lg font-semibold text-hearten-text">{post.title}</h3>
                   <div className="flex items-center gap-4 mt-2 text-sm text-hearten-dim">
-                    <span>❤️ {post.hearts}</span>
-                    <span>💬 {post.replies}</span>
+                    <span className="inline-flex items-center gap-1.5"><Heart className="w-3.5 h-3.5" />{post.hearts}</span>
+                    <span className="inline-flex items-center gap-1.5"><MessageCircle className="w-3.5 h-3.5" />{post.replies}</span>
                   </div>
                 </button>
               ))}
@@ -565,7 +568,7 @@ export default function UserPage() {
             </div>
             <div className="flex items-center justify-between py-2">
               <div>
-                <span className="text-sm font-medium text-hearten-text">📬 訊息電郵通知</span>
+                <span className="text-sm font-medium text-hearten-text inline-flex items-center gap-1.5"><Mail className="w-4 h-4" />訊息電郵通知</span>
                 <p className="text-xs text-hearten-dim mt-0.5">有人 send 訊息俾你時，發送電郵提示</p>
               </div>
               <button

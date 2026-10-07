@@ -5,6 +5,9 @@ import Header from '@/components/Header';
 import LeftSidebar from '@/components/LeftSidebar';
 import RightSidebar from '@/components/RightSidebar';
 import Footer from '@/components/Footer';
+import SectionHeading from '@/components/SectionHeading';
+import IconBadge from '@/components/IconBadge';
+import { TrendingUp, ClipboardList, Mail, Target, MessageCircle, Smartphone } from 'lucide-react';
 
 export default function AdvertisePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -39,15 +42,15 @@ export default function AdvertisePage() {
           <div className="max-w-2xl space-y-8">
             {/* Why Hearten */}
             <section>
-              <h2 className="text-xl font-bold text-hearten-text mb-4">📈 點解揀 Hearten？</h2>
+              <SectionHeading icon={TrendingUp} title="點解揀 Hearten？" className="mb-4" />
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {[
-                  { icon: '🎯', title: '精準受眾', desc: '香港 18-45 歲，關注戀愛、生活話題嘅活躍用戶' },
-                  { icon: '💬', title: '高互動', desc: '用戶參與度高，留言同討論活躍' },
-                  { icon: '📱', title: '多平台', desc: '桌面同手機版全面覆蓋' },
+                  { icon: Target, title: '精準受眾', desc: '香港 18-45 歲，關注戀愛、生活話題嘅活躍用戶' },
+                  { icon: MessageCircle, title: '高互動', desc: '用戶參與度高，留言同討論活躍' },
+                  { icon: Smartphone, title: '多平台', desc: '桌面同手機版全面覆蓋' },
                 ].map((item) => (
                   <div key={item.title} className="p-4 rounded-xl bg-hearten-card border border-hearten-border text-center">
-                    <div className="text-2xl mb-2">{item.icon}</div>
+                    <IconBadge icon={item.icon} size="md" className="mb-2" />
                     <h3 className="text-lg font-bold text-hearten-text mb-1">{item.title}</h3>
                     <p className="text-sm text-hearten-muted">{item.desc}</p>
                   </div>
@@ -57,7 +60,7 @@ export default function AdvertisePage() {
 
             {/* Ad formats */}
             <section>
-              <h2 className="text-xl font-bold text-hearten-text mb-4">📋 廣告形式</h2>
+              <SectionHeading icon={ClipboardList} title="廣告形式" className="mb-4" />
               <div className="space-y-3">
                 {[
                   { format: 'Banner 廣告', size: '728×90 / 300×250', desc: '放置喺頁面頂部或側欄，適合品牌曝光' },
@@ -77,7 +80,7 @@ export default function AdvertisePage() {
 
             {/* Contact */}
             <section>
-              <h2 className="text-xl font-bold text-hearten-text mb-4">📩 查詢廣告報價</h2>
+              <SectionHeading icon={Mail} title="查詢廣告報價" className="mb-4" />
               <div className="bg-hearten-card border border-hearten-border rounded-xl p-6">
                 <p className="text-base text-hearten-muted leading-relaxed mb-4">
                   有興趣喺 Hearten 投放廣告？請透過「聯絡我們」頁面提交查詢，提供以下資料：

@@ -4,7 +4,7 @@ import { useAdminTab } from './AdminContext';
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/db';
 import {
-  Users, FileText, MessageSquare, Heart,
+  Users, FileText, MessageSquare, MessageCircle, Heart,
   Trash2, Search, RefreshCw, Plus, UserCog, Pencil, X
 } from 'lucide-react';
 
@@ -299,8 +299,8 @@ export default function AdminContent() {
                 <th className="text-left py-3 px-4 font-medium">標題</th>
                 <th className="text-left py-3 px-4 font-medium">作者</th>
                 <th className="text-center py-3 px-4 font-medium">分類</th>
-                <th className="text-center py-3 px-4 font-medium">❤️</th>
-                <th className="text-center py-3 px-4 font-medium">💬</th>
+                <th className="text-center py-3 px-4 font-medium"><Heart className="w-4 h-4 mx-auto" /></th>
+                <th className="text-center py-3 px-4 font-medium"><MessageCircle className="w-4 h-4 mx-auto" /></th>
                 <th className="text-left py-3 px-4 font-medium">時間</th>
                 <th className="text-right py-3 px-4 font-medium">操作</th>
               </tr>

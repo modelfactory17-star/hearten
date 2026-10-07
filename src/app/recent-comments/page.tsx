@@ -5,6 +5,8 @@ import Header from '@/components/Header';
 import LeftSidebar from '@/components/LeftSidebar';
 import RightSidebar from '@/components/RightSidebar';
 import Footer from '@/components/Footer';
+import IconBadge from '@/components/IconBadge';
+import { MessageCircle } from 'lucide-react';
 import { db } from '@/lib/db';
 
 interface RecentComment {
@@ -52,7 +54,7 @@ export default function RecentCommentsPage() {
 
         <main className="flex-1 min-w-0 px-7 py-8 max-md:px-4">
           <div className="flex items-center gap-3 mb-2">
-            <span className="text-3xl">💬</span>
+            <IconBadge icon={MessageCircle} size="lg" />
             <h1 className="text-2xl font-bold text-hearten-text">最新留言</h1>
           </div>
           <p className="text-sm text-hearten-muted mb-8">實時睇住社群嘅最新討論</p>

@@ -5,6 +5,8 @@ import Header from '@/components/Header';
 import LeftSidebar from '@/components/LeftSidebar';
 import RightSidebar from '@/components/RightSidebar';
 import Footer from '@/components/Footer';
+import IconBadge from '@/components/IconBadge';
+import { Mailbox } from 'lucide-react';
 
 const SUBJECTS = [
   '帳戶查詢',
@@ -37,7 +39,7 @@ export default function ContactPage() {
         <div className="flex max-w-[1500px] mx-auto">
           <div className="hidden lg:block"><LeftSidebar /></div>
           <main className="flex-1 min-w-0 px-7 py-20 max-md:px-4 text-center">
-            <div className="text-5xl mb-4">📬</div>
+            <IconBadge icon={Mailbox} size="lg" className="mb-4" />
             <h1 className="text-2xl font-bold text-hearten-text mb-2">已收到你嘅訊息</h1>
             <p className="text-base text-hearten-muted mb-8">我哋會盡快回覆你，一般喺 2-3 個工作日內。</p>
             <a href="/" className="text-sm text-hearten-rose-light hover:underline">返回首頁</a>
