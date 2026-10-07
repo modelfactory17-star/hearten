@@ -83,9 +83,19 @@ export default function CategoryGrid() {
             {cat.desc}
           </span>
           <span className="relative z-[2] flex items-center gap-[6px] text-xs text-hearten-muted">
-            <span>{s.total} 篇</span>
-            <span className="w-[3px] h-[3px] rounded-full bg-hearten-muted" />
-            <span>{s.today > 0 ? `今日 +${s.today}` : s.total > 0 ? '今日 0' : 'new'}</span>
+            {s.total > 0 ? (
+              <>
+                <span>{s.total} 篇</span>
+                {s.today > 0 && (
+                  <>
+                    <span className="w-[3px] h-[3px] rounded-full bg-hearten-muted" />
+                    <span>今日 +{s.today}</span>
+                  </>
+                )}
+              </>
+            ) : (
+              <span>new</span>
+            )}
           </span>
         </button>
         );

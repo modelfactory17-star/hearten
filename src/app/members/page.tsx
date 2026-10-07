@@ -1,65 +1,23 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import Link from 'next/link';
 import Header from '@/components/Header';
 import LeftSidebar from '@/components/LeftSidebar';
 import RightSidebar from '@/components/RightSidebar';
 import Footer from '@/components/Footer';
 import IconBadge from '@/components/IconBadge';
-import { Users, Heart } from 'lucide-react';
-import { db } from '@/lib/db';
+import { Users, MessageCircle, Heart, Bookmark, UserPlus } from 'lucide-react';
 
-interface Member {
-  id: string;
-  username: string;
-  emoji: string;
-  avatar_url: string | null;
-  bio: string | null;
-  posts_count: number;
-  hearts_received: number;
-  joined: string;
-}
-
-const PODIUM_MEDALS = ['🥇', '🥈', '🥉'];
-const PODIUM_HEIGHTS = ['h-28', 'h-20', 'h-16'];
-const PODIUM_COLORS = [
-  'bg-amber-400',
-  'bg-slate-300',
-  'bg-amber-700',
+const MEMBER_FEATURES = [
+  { icon: MessageCircle, title: 'Inbox 私訊', desc: '同其他會員一對一傾，唔使公開。' },
+  { icon: UserPlus, title: '互相追蹤', desc: 'follow 你欣賞嘅會員，第一時間睇到佢哋嘅心事。' },
+  { icon: Heart, title: '俾心心同留言', desc: '支持同路人，等對方知道你喺度。' },
+  { icon: Bookmark, title: '收藏帖子', desc: 'save 低想再睇嘅內容，隨時重溫。' },
 ];
 
 export default function MembersPage() {
-  const router = useRouter();
-  const [members, setMembers] = useState<Member[]>([]);
-  const [loading, setLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    async function load() {
-      const stats = await db.admin.users();
-      // Get profile details for top users
-      const enriched = await Promise.all(
-        stats.slice(0, 24).map(async (s) => {
-          const profile = await db.auth.getUserByUsername(s.username);
-          return {
-            id: s.id,
-            username: s.username,
-            emoji: s.emoji || '🐱',
-            avatar_url: profile?.avatar_url || null,
-            bio: profile?.bio || null,
-            posts_count: s.posts,
-            hearts_received: profile?.hearts_received || 0,
-            joined: s.joined,
-          };
-        })
-      );
-      const sorted = enriched.sort((a, b) => b.posts_count - a.posts_count);
-      setMembers(sorted);
-      setLoading(false);
-    }
-    load();
-  }, []);
 
   return (
     <div className="min-h-screen bg-hearten-bg">
@@ -89,81 +47,26 @@ export default function MembersPage() {
             <IconBadge icon={Users} size="md" />
             <h1 className="text-2xl font-bold text-hearten-text">會員追蹤</h1>
           </div>
-          <p className="text-sm text-hearten-muted mb-8">認識 Hearten 最活躍嘅會員，睇下佢哋嘅故事</p>
+          <p className="text-sm text-hearten-muted mb-8">Hearten 係實名註冊社群。會員之間可以互相追蹤、Inbox 私訊，一齊傾心事。</p>
 
-          {loading ? (
-            <div className="text-hearten-muted text-center py-12">載入中…</div>
-          ) : members.length === 0 ? (
-            <div className="text-hearten-muted text-center py-12">暫時未有會員</div>
-          ) : (
-            <>
-              {/* Podium: Top 3 */}
-              <div className="flex items-end justify-center gap-3 sm:gap-5 mb-10 mt-4">
-                {members.slice(0, 3).map((m, i) => (
-                  <div
-                    key={m.id}
-                    onClick={() => router.push(`/user/${encodeURIComponent(m.username)}`)}
-                    className="flex flex-col items-center cursor-pointer group"
-                  >
-                    {/* Avatar */}
-                    <div className="relative mb-2">
-                      <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-[3px] border-hearten-border bg-hearten-card group-hover:border-hearten-rose transition-all">
-                        {m.avatar_url ? (
-                          <img src={m.avatar_url} alt="" className="w-full h-full object-cover" />
-                        ) : (
-                          <span className="w-full h-full flex items-center justify-center text-3xl">{m.emoji}</span>
-                        )}
-                      </div>
-                      <span className="absolute -top-1 -right-1 text-2xl drop-shadow-md">{PODIUM_MEDALS[i]}</span>
-                    </div>
-                    {/* Name */}
-                    <p className="text-sm font-bold text-hearten-text mb-1 text-center">{m.username}</p>
-                    <p className="text-xs text-hearten-dim">{m.posts_count} 貼文 · <span className="inline-flex items-center gap-1 align-middle"><Heart className="w-3.5 h-3.5" />{m.hearts_received}</span></p>
-                    {/* Podium block */}
-                    <div className={`w-20 sm:w-24 ${PODIUM_HEIGHTS[i]} ${PODIUM_COLORS[i]} rounded-t-lg mt-2 flex items-end justify-center pb-1`}>
-                      <span className="text-white text-2xl font-black">{i + 1}</span>
-                    </div>
-                  </div>
-                ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+            {MEMBER_FEATURES.map((f) => (
+              <div key={f.title} className="bg-hearten-card border border-hearten-border rounded-xl p-5">
+                <IconBadge icon={f.icon} size="md" className="mb-3" />
+                <h2 className="text-lg font-bold text-hearten-text mb-1">{f.title}</h2>
+                <p className="text-sm text-hearten-muted leading-relaxed">{f.desc}</p>
               </div>
+            ))}
+          </div>
 
-              {/* Grid: #4+ */}
-              {members.length > 3 && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                  {members.slice(3).map((m, i) => (
-                    <div
-                      key={m.id}
-                      onClick={() => router.push(`/user/${encodeURIComponent(m.username)}`)}
-                      className="p-5 rounded-xl bg-hearten-card border border-hearten-border cursor-pointer hover:border-hearten-rose transition-all text-center"
-                    >
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-xs font-bold text-hearten-dim">#{i + 4}</span>
-                        {m.avatar_url ? (
-                          <span className="w-12 h-12 rounded-full overflow-hidden inline-block">
-                            <img src={m.avatar_url} alt="" className="w-full h-full object-cover" />
-                          </span>
-                        ) : (
-                          <span className="text-3xl">{m.emoji}</span>
-                        )}
-                      </div>
-                      <h3 className="text-lg font-bold text-hearten-text mb-1">{m.username}</h3>
-                      {m.bio && (
-                        <p className="text-sm text-hearten-muted mb-3 line-clamp-2">{m.bio}</p>
-                      )}
-                      <div className="flex items-center justify-center gap-4 text-sm text-hearten-dim">
-                        <span>{m.posts_count} 貼文</span>
-                        <span className="inline-flex items-center gap-1"><Heart className="w-3.5 h-3.5" />{m.hearts_received}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {members.length <= 3 && (
-                <p className="text-hearten-muted text-center text-sm mt-3">更多會員即將加入 ✨</p>
-              )}
-            </>
-          )}
+          <div className="bg-hearten-card border border-hearten-border rounded-xl p-6 text-center">
+            <p className="text-base font-semibold text-hearten-text mb-1">想認識大家？</p>
+            <p className="text-sm text-hearten-muted mb-4">註冊成為會員，就可以入去社群一齊傾。</p>
+            <div className="flex justify-center gap-3 flex-wrap">
+              <Link href="/register" className="px-5 py-2.5 rounded-xl bg-hearten-rose hover:bg-hearten-rose-light text-white text-sm font-semibold transition-colors">註冊成為會員</Link>
+              <Link href="/" className="px-5 py-2.5 rounded-xl border border-hearten-border text-hearten-text hover:border-hearten-rose text-sm font-semibold transition-colors">睇社群</Link>
+            </div>
+          </div>
         </main>
 
         <RightSidebar />

@@ -41,7 +41,6 @@ export default function Footer() {
             <h4 className="text-base font-bold text-hearten-text mb-3">探索 Hearten</h4>
             <div className="grid grid-cols-2 gap-x-4 gap-y-0">
               <a href="/editors-picks" className="py-2 text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">編輯精選</a>
-              <a href="/members" className="py-2 text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">會員追蹤</a>
               <a href="/recent-comments" className="py-2 text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">最新留言</a>
             </div>
           </div>

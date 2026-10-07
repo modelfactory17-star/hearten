@@ -93,7 +93,7 @@ export default function MemberGrid() {
                   </svg>
                   Inbox
                 </span>
-                <span className="text-xs text-hearten-dim">{m.posts} 帖</span>
+                {m.posts > 0 && <span className="text-xs text-hearten-dim">{m.posts} 帖</span>}
               </div>
             </Link>
           );

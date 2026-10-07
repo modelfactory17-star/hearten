@@ -100,7 +100,9 @@ export default function RightSidebar() {
               <span className="flex-1 text-sm font-semibold text-hearten-muted whitespace-nowrap overflow-hidden text-ellipsis">
                 {user.text}
               </span>
-              <span className="text-sm text-hearten-dim flex-shrink-0">{user.num}</span>
+              {Number(user.num) > 0 && (
+                <span className="text-sm text-hearten-dim flex-shrink-0">{user.num}</span>
+              )}
             </Link>
           ))}
         </div>

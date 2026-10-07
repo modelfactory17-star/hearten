@@ -19,7 +19,6 @@ const categories: { label: string; badge?: string; href: string; catId?: string 
   { label: '🔞 一知半解', href: '/category/bedroom', catId: 'bedroom' },
   { label: '📊 投票', badge: 'hot', href: '/polls' },
   { label: '📰 熱門話題', badge: 'hot', href: '/hot-topics' },
-  { label: '👥 推薦會員', badge: 'new', href: '/members' },
 ];
 
 export default function LeftSidebar() {
@@ -63,7 +62,7 @@ export default function LeftSidebar() {
               `}
             >
               {cat.label}
-              {cat.catId && stats[cat.catId] && (
+              {cat.catId && stats[cat.catId] && stats[cat.catId].total > 0 && (
                 <span className="ml-auto text-sm text-hearten-dim">{stats[cat.catId].total}</span>
               )}
               {cat.badge === 'new' && (
