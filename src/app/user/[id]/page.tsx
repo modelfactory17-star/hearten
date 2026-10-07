@@ -322,7 +322,7 @@ export default function UserPage() {
     <>
       <div className="max-w-xl mx-auto">
         {/* Profile Card */}
-        <div className="bg-hearten-card border border-hearten-border rounded-2xl overflow-hidden">
+        <div className="bg-hearten-card border border-hearten-border rounded-2xl shadow-card overflow-hidden">
           <div className="h-24 bg-gradient-to-r from-hearten-rose/30 via-hearten-rose/10 to-hearten-card" />
           <div className="flex justify-center -mt-10">
             <div className="w-24 h-24 rounded-full bg-hearten-card border-4 border-hearten-card flex items-center justify-center text-5xl shadow-lg overflow-hidden relative group">

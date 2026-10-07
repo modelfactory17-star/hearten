@@ -102,7 +102,7 @@ function PollCard({ poll, userId, isAdmin, authChecked, onVote, onClose }: {
                 <div className="flex items-center gap-3">
                   {/* Checkbox indicator */}
                   {isActive && !hasVoted && userId && (
-                    <div className={`w-[18px] h-[18px] rounded border-2 flex items-center justify-center shrink-0 transition-all ${
+                    <div className={`w-[18px] h-[18px] rounded-md border-2 flex items-center justify-center shrink-0 transition-all ${
                       isSelected ? 'bg-hearten-rose border-hearten-rose' : 'border-hearten-dim'
                     }`}>
                       {isSelected && (

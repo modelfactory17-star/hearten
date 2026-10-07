@@ -8,6 +8,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      boxShadow: {
+        // 極淡卡片陰影：深色模式睇唔到（黑底上黑影），日間模式先有立體感
+        card: '0 1px 2px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.04)',
+      },
       fontSize: {
         '2xs': '0.6875rem',   // 11.7px @ html 17px — badge／細標籤專用
       },

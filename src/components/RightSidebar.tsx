@@ -53,7 +53,7 @@ export default function RightSidebar() {
             <Link
               key={`${c.slug}-${c.name}-${c.body}`}
               href={c.slug ? `/post/${c.slug}` : '#'}
-              className="flex items-start gap-3 py-[9px] px-3 rounded-[10px] bg-transparent hover:bg-hearten-card cursor-pointer transition-colors duration-[0.15s] text-left w-full"
+              className="flex items-start gap-3 py-[9px] px-3 rounded-lg bg-transparent hover:bg-hearten-card cursor-pointer transition-colors duration-[0.15s] text-left w-full"
             >
               <div className="w-[30px] h-[30px] flex-shrink-0 rounded-full bg-hearten-card border border-hearten-border flex items-center justify-center text-xs">
                 {c.emoji}
@@ -91,7 +91,7 @@ export default function RightSidebar() {
             <Link
               key={user.text}
               href={user.username ? `/user/${encodeURIComponent(user.username)}` : '#'}
-              className="flex items-center gap-3 py-[9px] px-3 rounded-[10px] bg-transparent hover:bg-hearten-card cursor-pointer transition-colors duration-[0.15s] text-left w-full"
+              className="flex items-center gap-3 py-[9px] px-3 rounded-lg bg-transparent hover:bg-hearten-card cursor-pointer transition-colors duration-[0.15s] text-left w-full"
             >
               <div className="w-[34px] h-[34px] flex-shrink-0 rounded-full bg-hearten-card border border-hearten-border flex items-center justify-center text-sm">
                 {user.emoji}

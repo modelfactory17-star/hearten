@@ -25,7 +25,7 @@ export default function HotPostsList() {
       {hotPosts.map((post) => (
         <div
           key={post.rank}
-          className="flex items-center gap-[14px] px-4 py-[14px] rounded-[12px] bg-hearten-card border border-hearten-border cursor-pointer transition-all duration-[0.15s] hover:bg-hearten-card-hover hover:border-hearten-border-hover"
+          className="flex items-center gap-[14px] px-4 py-[14px] rounded-xl bg-hearten-card border border-hearten-border shadow-card cursor-pointer transition-all duration-[0.15s] hover:bg-hearten-card-hover hover:border-hearten-border-hover"
         >
           {/* Rank */}
           <span

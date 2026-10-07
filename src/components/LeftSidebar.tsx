@@ -55,7 +55,7 @@ export default function LeftSidebar() {
             <button
               key={cat.label}
               onClick={() => router.push(cat.href)}
-              className={`flex items-center gap-[10px] py-[9px] px-3 rounded-[10px] text-base font-semibold transition-all duration-[0.15s] text-left w-full
+              className={`flex items-center gap-[10px] py-[9px] px-3 rounded-lg text-base font-semibold transition-all duration-[0.15s] text-left w-full
                 ${isActive
                   ? 'bg-hearten-rose/10 text-hearten-rose-light'
                   : 'text-hearten-muted hover:bg-hearten-card hover:text-hearten-text'
@@ -67,12 +67,12 @@ export default function LeftSidebar() {
                 <span className="ml-auto text-sm text-hearten-dim">{stats[cat.catId].total}</span>
               )}
               {cat.badge === 'new' && (
-                <span className="ml-auto text-2xs font-semibold px-[6px] py-[2px] rounded-[8px] bg-hearten-rose text-white">
+                <span className="ml-auto text-2xs font-semibold px-[6px] py-[2px] rounded-md bg-hearten-rose text-white">
                   新
                 </span>
               )}
               {cat.badge === 'hot' && (
-                <span className="ml-auto text-2xs font-semibold px-[6px] py-[2px] rounded-[8px] bg-hearten-amber text-hearten-bg">
+                <span className="ml-auto text-2xs font-semibold px-[6px] py-[2px] rounded-md bg-hearten-amber text-hearten-bg">
                   熱
                 </span>
               )}
@@ -86,7 +86,7 @@ export default function LeftSidebar() {
       <div className="mt-7">
         <button
           onClick={() => router.push('/write')}
-          className="w-full flex items-center justify-center gap-2 px-4 py-[11px] rounded-[12px] bg-hearten-rose hover:bg-hearten-rose-light text-white text-sm font-semibold cursor-pointer transition-all duration-[0.15s] hover:-translate-y-[1px] animate-pulse-glow"
+          className="w-full flex items-center justify-center gap-2 px-4 py-[11px] rounded-lg bg-hearten-rose hover:bg-hearten-rose-light text-white text-sm font-semibold cursor-pointer transition-all duration-[0.15s] hover:-translate-y-[1px] animate-pulse-glow"
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-[17px] h-[17px]">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>

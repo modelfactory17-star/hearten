@@ -62,7 +62,7 @@ export default function CategoryGrid() {
         <button
           key={cat.color}
           onClick={() => router.push(`/category/${cat.color}`)}
-          className={`relative rounded-[6px] overflow-hidden cursor-pointer transition-all duration-[0.25s] aspect-[4/3] flex flex-col justify-end pt-[14px] pr-[16px] pb-[10px] pl-[16px] border border-hearten-border hover:-translate-y-[3px] hover:border-hearten-border-hover text-left
+          className={`relative rounded-xl overflow-hidden cursor-pointer transition-all duration-[0.25s] aspect-[4/3] flex flex-col justify-end pt-[14px] pr-[16px] pb-[10px] pl-[16px] border border-hearten-border hover:-translate-y-[3px] hover:border-hearten-border-hover text-left
             ${darkGradients[cat.color]}
           `}
         >

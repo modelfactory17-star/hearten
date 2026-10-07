@@ -30,7 +30,7 @@ export default function HotTopicsGrid() {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[10px]">
         {[1,2,3,4,5,6].map(i => (
-          <div key={i} className="h-[68px] rounded-[12px] bg-hearten-card border border-hearten-border animate-pulse" />
+          <div key={i} className="h-[68px] rounded-xl bg-hearten-card border border-hearten-border animate-pulse" />
         ))}
       </div>
     );
@@ -44,7 +44,7 @@ export default function HotTopicsGrid() {
         <div
           key={topic.slug}
           onClick={() => router.push(`/post/${topic.slug}`)}
-          className="flex items-center gap-3 px-4 py-[14px] rounded-[12px] bg-hearten-card border border-hearten-border cursor-pointer transition-all duration-[0.15s] hover:border-hearten-border-hover hover:bg-hearten-card-hover"
+          className="flex items-center gap-3 px-4 py-[14px] rounded-xl bg-hearten-card border border-hearten-border shadow-card cursor-pointer transition-all duration-[0.15s] hover:border-hearten-border-hover hover:bg-hearten-card-hover"
         >
           <span className="text-2xl flex-shrink-0">{topic.emoji}</span>
           <div className="flex-1 min-w-0">

@@ -229,7 +229,7 @@ export default function PostPage() {
                 <ArrowLeft className="w-4 h-4" />返回上頁
               </button>
 
-              <article className="bg-hearten-card border border-hearten-border rounded-xl p-6 mb-6">
+              <article className="bg-hearten-card border border-hearten-border rounded-xl shadow-card p-6 mb-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-full bg-hearten-rose/20 flex items-center justify-center text-2xl shrink-0 overflow-hidden">
@@ -410,7 +410,7 @@ export default function PostPage() {
                     <div className="flex items-center gap-1 flex-wrap">
                       {COMMENT_EMOJIS.map(emoji => (
                         <button key={emoji} onClick={() => setReplyText(prev => prev + emoji)}
-                          className="w-7 h-7 flex items-center justify-center rounded hover:bg-hearten-bg text-sm transition-colors"
+                          className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-hearten-bg text-sm transition-colors"
                           title={emoji}>{emoji}</button>
                       ))}
                     </div>
@@ -479,7 +479,7 @@ function CommentItem({ comment, postId, onCommentAdded, depth = 0 }: {
           </div>
           <span onClick={() => router.push(`/user/${encodeURIComponent(comment.anonymous)}`)}
             className="text-sm font-medium text-hearten-text hover:text-hearten-rose-light cursor-pointer transition-colors">{comment.anonymous}</span>
-          {comment.isOP && <span className="px-1.5 py-0.5 rounded text-2xs font-bold bg-hearten-amber/20 text-hearten-amber">樓主</span>}
+          {comment.isOP && <span className="px-1.5 py-0.5 rounded-md text-2xs font-bold bg-hearten-amber/20 text-hearten-amber">樓主</span>}
           <span className="text-xs text-hearten-muted">{comment.time}</span>
           <button className="ml-auto text-hearten-muted hover:text-hearten-text"><Flag className="w-3.5 h-3.5" /></button>
         </div>
@@ -505,7 +505,7 @@ function CommentItem({ comment, postId, onCommentAdded, depth = 0 }: {
             <div className="flex items-center gap-1">
               {['😊','😂','❤️','😢','😡','👍','🤔','😍'].map(emoji => (
                 <button key={emoji} onClick={() => setReplyInput(prev => prev + emoji)}
-                  className="w-6 h-6 flex items-center justify-center rounded hover:bg-hearten-bg text-sm transition-colors">{emoji}</button>
+                  className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-hearten-bg text-sm transition-colors">{emoji}</button>
               ))}
             </div>
           </div>

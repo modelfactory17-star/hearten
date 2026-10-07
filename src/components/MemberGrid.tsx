@@ -32,7 +32,7 @@ export default function MemberGrid() {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-[14px]">
         {[1,2,3,4].map(i => (
-          <div key={i} className="bg-hearten-card border border-hearten-border rounded-[14px] p-5 h-48 animate-pulse" />
+          <div key={i} className="bg-hearten-card border border-hearten-border rounded-xl p-5 h-48 animate-pulse" />
         ))}
       </div>
     );
@@ -55,10 +55,10 @@ export default function MemberGrid() {
       <div className="flex flex-wrap items-center gap-2 mb-[14px]">
         <span className="ml-auto text-2xs text-hearten-dim flex items-center gap-[5px]">
           等級：
-          <span className="text-2xs font-bold px-[7px] py-[2px] rounded-[6px] tracking-[0.03em] bg-hearten-card-hover text-hearten-muted">新手</span>
-          <span className="text-2xs font-bold px-[7px] py-[2px] rounded-[6px] tracking-[0.03em] bg-[rgba(59,130,246,0.18)] text-[#60a5fa]">進階</span>
-          <span className="text-2xs font-bold px-[7px] py-[2px] rounded-[6px] tracking-[0.03em] bg-[rgba(168,85,247,0.18)] text-[#a78bfa]">資深</span>
-          <span className="text-2xs font-bold px-[7px] py-[2px] rounded-[6px] tracking-[0.03em] bg-[linear-gradient(135deg,#f59e0b,#e11d48)] text-white">VIP</span>
+          <span className="text-2xs font-bold px-[7px] py-[2px] rounded-md tracking-[0.03em] bg-hearten-card-hover text-hearten-muted">新手</span>
+          <span className="text-2xs font-bold px-[7px] py-[2px] rounded-md tracking-[0.03em] bg-[rgba(59,130,246,0.18)] text-[#60a5fa]">進階</span>
+          <span className="text-2xs font-bold px-[7px] py-[2px] rounded-md tracking-[0.03em] bg-[rgba(168,85,247,0.18)] text-[#a78bfa]">資深</span>
+          <span className="text-2xs font-bold px-[7px] py-[2px] rounded-md tracking-[0.03em] bg-[linear-gradient(135deg,#f59e0b,#e11d48)] text-white">VIP</span>
         </span>
       </div>
 
@@ -69,7 +69,7 @@ export default function MemberGrid() {
             <Link
               key={m.id}
               href={`/user/${encodeURIComponent(m.name)}`}
-              className="relative bg-hearten-card border border-hearten-border rounded-[14px] p-5 transition-all duration-[0.2s] hover:border-hearten-border-hover hover:-translate-y-[2px] block"
+              className="relative bg-hearten-card border border-hearten-border rounded-xl shadow-card p-5 transition-all duration-[0.2s] hover:border-hearten-border-hover hover:-translate-y-[2px] block"
             >
               <div className="flex items-start gap-3 mb-[10px]">
                 <div className="w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center text-xl border-2 bg-[linear-gradient(135deg,#1a2a3a,#1a3040)] border-[rgba(59,130,246,0.3)]">
@@ -79,7 +79,7 @@ export default function MemberGrid() {
                   <div className="text-base font-bold text-hearten-text">{m.name}</div>
                   <div className="text-xs text-hearten-dim mt-[2px]">{m.status}</div>
                   <div className="flex items-center gap-1 mt-[6px]">
-                    <span className={`text-2xs font-bold px-[7px] py-[2px] rounded-[6px] tracking-[0.03em] ${level.className}`}>
+                    <span className={`text-2xs font-bold px-[7px] py-[2px] rounded-md tracking-[0.03em] ${level.className}`}>
                       {level.label}
                     </span>
                   </div>
@@ -87,7 +87,7 @@ export default function MemberGrid() {
               </div>
               <p className="text-sm text-hearten-muted mt-2 leading-[1.5] line-clamp-2">{m.bio}</p>
               <div className="flex items-center gap-2 mt-[14px]">
-                <span className="flex items-center justify-center gap-[6px] py-[7px] px-[14px] rounded-[10px] border border-hearten-rose bg-transparent text-hearten-rose-light text-sm font-semibold transition-all duration-[0.15s] flex-1 hover:bg-hearten-rose hover:text-white">
+                <span className="flex items-center justify-center gap-[6px] py-[7px] px-[14px] rounded-lg border border-hearten-rose bg-transparent text-hearten-rose-light text-sm font-semibold transition-all duration-[0.15s] flex-1 hover:bg-hearten-rose hover:text-white">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-[14px] h-[14px]">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                   </svg>

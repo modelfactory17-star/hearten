@@ -190,7 +190,7 @@ export default function CategoryPage() {
 
           {/* 版規（可摺疊，預設收起） */}
           {rules && (
-            <details className="group mb-6 bg-hearten-card border border-hearten-border rounded-xl overflow-hidden transition-colors duration-[0.15s] hover:border-hearten-border-hover">
+            <details className="group mb-6 bg-hearten-card border border-hearten-border rounded-xl shadow-card overflow-hidden transition-colors duration-[0.15s] hover:border-hearten-border-hover">
               <summary className="flex items-center justify-between gap-3 px-4 py-3 cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden">
                 <span className="flex items-center gap-2 text-sm font-bold text-hearten-muted uppercase tracking-wider">
                   📋 版規
