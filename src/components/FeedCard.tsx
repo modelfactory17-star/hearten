@@ -119,21 +119,21 @@ export default function FeedCard({
           {/* Actions */}
           <div className="flex items-center gap-5 mt-3 pt-3 border-t border-hearten-border">
             <button onClick={handleHeart}
-              className={`flex items-center gap-1.5 py-3 -my-3 transition-colors text-sm ${hearted ? 'text-hearten-rose-light' : 'text-hearten-muted hover:text-hearten-rose-light'}`}>
+              className={`flex items-center justify-center gap-1.5 min-w-10 py-3 -my-3 transition-colors text-sm ${hearted ? 'text-hearten-rose-light' : 'text-hearten-muted hover:text-hearten-rose-light'}`}>
               <Heart className={`w-4 h-4 ${hearted ? 'fill-current' : ''}`} />
               <span>{heartCount}</span>
             </button>
-            <button className="flex items-center gap-1.5 py-3 -my-3 text-hearten-muted hover:text-blue-400 transition-colors text-sm">
+            <button className="flex items-center justify-center gap-1.5 min-w-10 py-3 -my-3 text-hearten-muted hover:text-blue-400 transition-colors text-sm">
               <MessageCircle className="w-4 h-4" />
               <span>{replies}</span>
             </button>
             <button
               onClick={handleBookmark}
-              className={`flex items-center gap-1.5 py-3 -my-3 transition-colors text-sm ${bookmarked ? 'text-hearten-amber' : 'text-hearten-muted hover:text-hearten-amber'}`}
+              className={`flex items-center justify-center gap-1.5 min-w-10 py-3 -my-3 transition-colors text-sm ${bookmarked ? 'text-hearten-amber' : 'text-hearten-muted hover:text-hearten-amber'}`}
             >
               <Bookmark className={`w-4 h-4 ${bookmarked ? 'fill-current' : ''}`} />
             </button>
-            <button className="flex items-center gap-1.5 py-3 -my-3 text-hearten-muted hover:text-green-400 transition-colors text-sm ml-auto">
+            <button className="flex items-center justify-center gap-1.5 min-w-10 py-3 -my-3 text-hearten-muted hover:text-green-400 transition-colors text-sm ml-auto">
               <Share2 className="w-4 h-4" />
             </button>
           </div>
