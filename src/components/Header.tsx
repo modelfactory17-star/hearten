@@ -87,7 +87,7 @@ export default function Header({ onMenuToggle }: { onMenuToggle?: () => void }) 
             {/* Hamburger — mobile only */}
             <button
               onClick={onMenuToggle}
-              className="lg:hidden p-1.5 -ml-1 rounded-lg hover:bg-hearten-card text-hearten-text transition-colors"
+              className="lg:hidden p-2.5 -ml-1 rounded-lg hover:bg-hearten-card text-hearten-text transition-colors"
               aria-label="Toggle menu"
             >
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -121,14 +121,14 @@ export default function Header({ onMenuToggle }: { onMenuToggle?: () => void }) 
             {/* Theme toggle */}
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-lg hover:bg-hearten-card text-hearten-muted hover:text-hearten-text transition-colors"
+              className="p-2.5 rounded-lg hover:bg-hearten-card text-hearten-muted hover:text-hearten-text transition-colors"
               title={theme === 'dark' ? '切換日間模式' : '切換夜間模式'}
             >
               {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
 
             <button onClick={() => router.push('/messages')}
-              className="p-2 rounded-lg hover:bg-hearten-card text-hearten-muted hover:text-hearten-text transition-colors relative">
+              className="p-2.5 rounded-lg hover:bg-hearten-card text-hearten-muted hover:text-hearten-text transition-colors relative">
               <MessageCircle className="w-5 h-5" />
               {unreadCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 w-4.5 h-4.5 rounded-full bg-hearten-rose text-white text-2xs font-bold flex items-center justify-center leading-none" style={{ minWidth: '18px', height: '18px', padding: '0 2px' }}>
@@ -141,7 +141,7 @@ export default function Header({ onMenuToggle }: { onMenuToggle?: () => void }) 
               <div className="flex items-center gap-2">
                 <a
                   href={`/user/${encodeURIComponent(user.username)}`}
-                  className="flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-hearten-card text-hearten-text text-sm transition-colors"
+                  className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg hover:bg-hearten-card text-hearten-text text-sm transition-colors"
                 >
                   {user.avatar_url ? (
                     <span className="w-6 h-6 rounded-full overflow-hidden">
@@ -155,7 +155,7 @@ export default function Header({ onMenuToggle }: { onMenuToggle?: () => void }) 
                 </a>
                 <button
                   onClick={handleLogout}
-                  className="p-1.5 rounded-lg hover:bg-hearten-card text-hearten-muted hover:text-hearten-rose-light transition-colors"
+                  className="p-2 rounded-lg hover:bg-hearten-card text-hearten-muted hover:text-hearten-rose-light transition-colors"
                   title="登出"
                 >
                   <LogOut className="w-4 h-4" />
@@ -165,13 +165,13 @@ export default function Header({ onMenuToggle }: { onMenuToggle?: () => void }) 
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setShowLogin(true)}
-                  className="px-3 py-1.5 rounded-lg border border-hearten-border hover:bg-hearten-card text-hearten-text text-sm font-medium transition-colors"
+                  className="px-3 py-2.5 rounded-lg border border-hearten-border hover:bg-hearten-card text-hearten-text text-sm font-medium transition-colors"
                 >
                   註冊
                 </button>
                 <button
                   onClick={() => setShowLogin(true)}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-hearten-rose hover:bg-hearten-rose-light text-white text-sm font-medium transition-colors"
+                  className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-hearten-rose hover:bg-hearten-rose-light text-white text-sm font-medium transition-colors"
                 >
                   <User className="w-4 h-4" />
                   <span className="hidden sm:inline">登入</span>

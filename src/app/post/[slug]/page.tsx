@@ -225,7 +225,7 @@ export default function PostPage() {
           ) : (
             <>
               {/* Back nav */}
-              <button onClick={() => router.push('/')} className="flex items-center gap-1 text-hearten-muted hover:text-hearten-text transition-colors text-sm mb-4">
+              <button onClick={() => router.push('/')} className="flex items-center gap-1 py-3 -my-3 text-hearten-muted hover:text-hearten-text transition-colors text-sm mb-4">
                 <ArrowLeft className="w-4 h-4" />返回上頁
               </button>
 
@@ -250,17 +250,17 @@ export default function PostPage() {
                     <div className="flex items-center rounded-lg border border-hearten-border overflow-hidden">
                       {FONT_SIZES.map(f => (
                         <button key={f.key} onClick={() => setFontSize(f.key)}
-                          className={`px-2 py-1 text-xs transition-colors ${fontSize === f.key ? 'bg-hearten-rose text-white' : 'text-hearten-muted hover:text-hearten-text hover:bg-hearten-card'}`}>{f.label}</button>
+                          className={`px-2.5 py-2.5 text-xs transition-colors ${fontSize === f.key ? 'bg-hearten-rose text-white' : 'text-hearten-muted hover:text-hearten-text hover:bg-hearten-card'}`}>{f.label}</button>
                       ))}
                     </div>
                     {isOwner && !isEditing && (
                       <button onClick={handleEdit}
-                        className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs text-hearten-muted hover:text-hearten-rose-light hover:bg-hearten-card transition-colors">
+                        className="flex items-center gap-1 px-2.5 py-2.5 rounded-lg text-xs text-hearten-muted hover:text-hearten-rose-light hover:bg-hearten-card transition-colors">
                         <Edit3 className="w-3.5 h-3.5" />編輯
                       </button>
                     )}
                     <button onClick={() => setAuthorOnly(!authorOnly)}
-                      className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs transition-colors ${authorOnly ? 'bg-hearten-amber/20 text-hearten-amber' : 'text-hearten-muted hover:text-hearten-text hover:bg-hearten-card'}`}>
+                      className={`flex items-center gap-1 px-2.5 py-2.5 rounded-lg text-xs transition-colors ${authorOnly ? 'bg-hearten-amber/20 text-hearten-amber' : 'text-hearten-muted hover:text-hearten-text hover:bg-hearten-card'}`}>
                       {authorOnly ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}只看該作者
                     </button>
                   </div>
@@ -334,7 +334,7 @@ export default function PostPage() {
 
                 <div className="flex items-center gap-5 pt-4 border-t border-hearten-border flex-wrap">
                   <button onClick={handleHeartPost}
-                    className={`flex items-center gap-1.5 transition-colors text-sm ${hearted ? 'text-hearten-rose-light' : 'text-hearten-muted hover:text-hearten-rose-light'}`}>
+                    className={`flex items-center gap-1.5 py-3 -my-3 transition-colors text-sm ${hearted ? 'text-hearten-rose-light' : 'text-hearten-muted hover:text-hearten-rose-light'}`}>
                     <Heart className={`w-4 h-4 ${hearted ? 'fill-current' : ''}`} /><span>{heartCount}</span>
                   </button>
                   {MOODS.map(m => (
@@ -345,7 +345,7 @@ export default function PostPage() {
                         setUserMoods(prev => now ? [...prev, m.key] : prev.filter(k => k !== m.key));
                         setMoodCounts(prev => ({ ...prev, [m.key]: prev[m.key] + (now ? 1 : -1) }));
                       }}
-                      className={`text-lg transition-all flex items-center gap-0.5 ${
+                      className={`text-lg transition-all flex items-center gap-0.5 p-1.5 -m-1.5 ${
                         userMoods.includes(m.key)
                           ? 'scale-110'
                           : 'opacity-50 hover:opacity-100 hover:scale-110'
@@ -356,15 +356,15 @@ export default function PostPage() {
                       )}
                     </button>
                   ))}
-                  <button className="flex items-center gap-1.5 text-hearten-muted hover:text-blue-400 transition-colors text-sm">
+                  <button className="flex items-center gap-1.5 py-3 -my-3 text-hearten-muted hover:text-blue-400 transition-colors text-sm">
                     <MessageCircle className="w-4 h-4" /><span>{commentCount} 則留言</span>
                   </button>
                   <button onClick={handleBookmark}
-                    className={`flex items-center gap-1.5 transition-colors text-sm ${bookmarked ? 'text-hearten-amber' : 'text-hearten-muted hover:text-hearten-amber'}`}>
+                    className={`flex items-center gap-1.5 py-3 -my-3 transition-colors text-sm ${bookmarked ? 'text-hearten-amber' : 'text-hearten-muted hover:text-hearten-amber'}`}>
                     <Bookmark className={`w-4 h-4 ${bookmarked ? 'fill-current' : ''}`} />
                   </button>
                   <button onClick={handleShare}
-                    className={`flex items-center gap-1.5 transition-colors text-sm ml-auto ${shareDone ? 'text-green-400' : 'text-hearten-muted hover:text-green-400'}`}>
+                    className={`flex items-center gap-1.5 py-3 -my-3 transition-colors text-sm ml-auto ${shareDone ? 'text-green-400' : 'text-hearten-muted hover:text-green-400'}`}>
                     <Share2 className="w-4 h-4" />{shareDone ? '已複製' : '分享'}
                   </button>
                 </div>
@@ -481,12 +481,12 @@ function CommentItem({ comment, postId, onCommentAdded, depth = 0 }: {
             className="text-sm font-medium text-hearten-text hover:text-hearten-rose-light cursor-pointer transition-colors">{comment.anonymous}</span>
           {comment.isOP && <span className="px-1.5 py-0.5 rounded-md text-2xs font-bold bg-hearten-amber/20 text-hearten-amber">樓主</span>}
           <span className="text-xs text-hearten-muted">{comment.time}</span>
-          <button className="ml-auto text-hearten-muted hover:text-hearten-text"><Flag className="w-3.5 h-3.5" /></button>
+          <button className="ml-auto p-3 -m-3 text-hearten-muted hover:text-hearten-text"><Flag className="w-3.5 h-3.5" /></button>
         </div>
         <p className="text-sm text-hearten-muted leading-relaxed mb-3">{comment.body}</p>
         <div className="flex items-center gap-4">
           <button onClick={handleHeartComment}
-            className={`flex items-center gap-1 text-xs transition-colors ${cHearted ? 'text-hearten-rose-light' : 'text-hearten-muted hover:text-hearten-rose-light'}`}>
+            className={`flex items-center gap-1 py-3 -my-3 text-xs transition-colors ${cHearted ? 'text-hearten-rose-light' : 'text-hearten-muted hover:text-hearten-rose-light'}`}>
             <Heart className={`w-3 h-3 ${cHearted ? 'fill-current' : ''}`} />{cHeartCount > 0 && <span>{cHeartCount}</span>}
           </button>
           {user && (
