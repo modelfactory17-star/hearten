@@ -46,7 +46,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   <Icon className="w-4 h-4 shrink-0" />
                   <span className="flex-1 text-left">{item.label}</span>
                   {NAV_BADGES[item.id] && (
-                    <span className="px-1.5 py-0.5 rounded-full bg-[#e11d48] text-white text-2xs font-bold leading-none">
+                    <span className="px-1.5 py-0.5 rounded-full bg-[#e11d48] text-white text-[10px] font-bold leading-none">
                       {NAV_BADGES[item.id]}
                     </span>
                   )}
@@ -69,7 +69,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Main */}
         <div className="flex-1 flex flex-col min-w-0">
           <header className="h-14 border-b border-[#1a1a2e] flex items-center justify-between px-6 shrink-0">
-            <h2 className="text-xl font-medium text-gray-300">
+            <h2 className="text-sm font-medium text-gray-300">
               {NAV_ITEMS.find(i => i.id === tab)?.label ?? '儀表板'}
             </h2>
             <div className="flex items-center gap-2 text-gray-400">
