@@ -75,7 +75,7 @@ export default function FeedCard({
   return (
     <article
       onClick={onClick}
-      className={`bg-hearten-card border border-hearten-border rounded-xl p-5 hover:border-gray-600 transition-colors ${onClick ? 'cursor-pointer' : ''} group`}>
+      className={`bg-hearten-card border border-hearten-border rounded-xl shadow-card p-5 hover:border-gray-600 transition-colors ${onClick ? 'cursor-pointer' : ''} group`}>
       <div className="flex items-start gap-4">
         {/* Avatar */}
         <div
