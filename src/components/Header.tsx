@@ -155,7 +155,7 @@ export default function Header({ onMenuToggle }: { onMenuToggle?: () => void }) 
                 </a>
                 <button
                   onClick={handleLogout}
-                  className="p-1.5 rounded-lg hover:bg-hearten-card text-hearten-muted hover:text-hearten-rose transition-colors"
+                  className="p-1.5 rounded-lg hover:bg-hearten-card text-hearten-muted hover:text-hearten-rose-light transition-colors"
                   title="登出"
                 >
                   <LogOut className="w-4 h-4" />

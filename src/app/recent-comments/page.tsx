@@ -74,7 +74,7 @@ export default function RecentCommentsPage() {
                   </div>
                   <p className="text-base text-hearten-muted mb-2 line-clamp-2">{c.body}</p>
                   <div className="text-sm text-hearten-dim">
-                    於貼文「<span className="text-hearten-rose">{c.post}</span>」
+                    於貼文「<span className="text-hearten-rose-light">{c.post}</span>」
                   </div>
                 </div>
               ))}

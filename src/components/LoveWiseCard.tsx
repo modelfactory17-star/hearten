@@ -44,7 +44,7 @@ export default function LoveWiseCard({ variant = 'feed' }: { variant?: LoveWiseV
           fill="none"
           stroke="currentColor"
           strokeWidth="1.8"
-          className={`${compact ? 'w-4 h-4' : 'w-[18px] h-[18px]'} text-hearten-rose opacity-70`}
+          className={`${compact ? 'w-4 h-4' : 'w-[18px] h-[18px]'} text-hearten-rose-light opacity-70`}
         >
           <path d="M20.8 5.6a5.5 5.5 0 0 0-7.8 0L12 6.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l8.8 8.8 8.8-8.8a5.5 5.5 0 0 0 0-7.8z" />
         </svg>

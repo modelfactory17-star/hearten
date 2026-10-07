@@ -96,10 +96,10 @@ export default function FeedCard({
           <div className="flex items-center gap-2 text-xs text-hearten-muted mb-1.5">
             <span
               onClick={(e) => { e.stopPropagation(); router.push(`/user/${encodeURIComponent(anonymous)}`); }}
-              className="hover:text-hearten-rose cursor-pointer transition-colors"
+              className="hover:text-hearten-rose-light cursor-pointer transition-colors"
             >{anonymous}</span>
             <span>·</span>
-            <span className="px-1.5 py-0.5 rounded-md bg-hearten-rose/10 text-hearten-rose text-[10px] font-medium">
+            <span className="px-1.5 py-0.5 rounded-md bg-hearten-rose/10 text-hearten-rose-light text-[10px] font-medium">
               {category}
             </span>
             <span>·</span>
@@ -107,7 +107,7 @@ export default function FeedCard({
           </div>
 
           {/* Title */}
-          <h3 className="text-[15px] font-semibold text-hearten-text mb-1.5 group-hover:text-hearten-rose transition-colors">
+          <h3 className="text-[15px] font-semibold text-hearten-text mb-1.5 group-hover:text-hearten-rose-light transition-colors">
             {title}
           </h3>
 
@@ -119,7 +119,7 @@ export default function FeedCard({
           {/* Actions */}
           <div className="flex items-center gap-5 mt-3 pt-3 border-t border-hearten-border">
             <button onClick={handleHeart}
-              className={`flex items-center gap-1.5 transition-colors text-sm ${hearted ? 'text-hearten-rose' : 'text-hearten-muted hover:text-hearten-rose'}`}>
+              className={`flex items-center gap-1.5 transition-colors text-sm ${hearted ? 'text-hearten-rose-light' : 'text-hearten-muted hover:text-hearten-rose-light'}`}>
               <Heart className={`w-4 h-4 ${hearted ? 'fill-current' : ''}`} />
               <span>{heartCount}</span>
             </button>

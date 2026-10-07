@@ -87,7 +87,7 @@ export default function MemberGrid() {
               </div>
               <p className="text-sm text-hearten-muted mt-2 leading-[1.5] line-clamp-2">{m.bio}</p>
               <div className="flex items-center gap-2 mt-[14px]">
-                <span className="flex items-center justify-center gap-[6px] py-[7px] px-[14px] rounded-[10px] border border-hearten-rose bg-transparent text-hearten-rose text-sm font-semibold transition-all duration-[0.15s] flex-1 hover:bg-hearten-rose hover:text-white">
+                <span className="flex items-center justify-center gap-[6px] py-[7px] px-[14px] rounded-[10px] border border-hearten-rose bg-transparent text-hearten-rose-light text-sm font-semibold transition-all duration-[0.15s] flex-1 hover:bg-hearten-rose hover:text-white">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-[14px] h-[14px]">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                   </svg>

@@ -40,7 +40,7 @@ export default function ContactPage() {
             <div className="text-5xl mb-4">📬</div>
             <h1 className="text-[22px] font-bold text-hearten-text mb-2">已收到你嘅訊息</h1>
             <p className="text-base text-hearten-muted mb-8">我哋會盡快回覆你，一般喺 2-3 個工作日內。</p>
-            <a href="/" className="text-sm text-hearten-rose hover:underline">返回首頁</a>
+            <a href="/" className="text-sm text-hearten-rose-light hover:underline">返回首頁</a>
           </main>
           <RightSidebar />
         </div>

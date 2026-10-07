@@ -93,7 +93,7 @@ export default function AboutPage() {
                   '香港人嘅平台：由香港人打造，專注香港人嘅戀愛話題同文化',
                 ].map((v, i) => (
                   <li key={i} className="flex items-start gap-3 text-base text-hearten-muted">
-                    <span className="text-hearten-rose mt-0.5 shrink-0">♥</span>
+                    <span className="text-hearten-rose-light mt-0.5 shrink-0">♥</span>
                     <span>{v}</span>
                   </li>
                 ))}

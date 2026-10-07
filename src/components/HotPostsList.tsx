@@ -30,7 +30,7 @@ export default function HotPostsList() {
           {/* Rank */}
           <span
             className={`w-7 text-[14px] font-bold text-center flex-shrink-0
-              ${post.rank <= 3 ? 'text-hearten-rose' : 'text-hearten-dim'}
+              ${post.rank <= 3 ? 'text-hearten-rose-light' : 'text-hearten-dim'}
             `}
           >
             {post.rank}

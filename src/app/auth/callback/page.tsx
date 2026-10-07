@@ -64,7 +64,7 @@ export default function AuthCallbackPage() {
               className="w-full bg-hearten-bg border border-hearten-border rounded-lg px-3 py-2.5 text-sm text-hearten-text placeholder-hearten-muted outline-none focus:border-hearten-rose transition-colors mb-3"
               onKeyDown={(e) => e.key === 'Enter' && handleReset()}
             />
-            {error && <p className="text-hearten-rose text-sm mb-3">⚠️ {error}</p>}
+            {error && <p className="text-hearten-rose-light text-sm mb-3">⚠️ {error}</p>}
             <button
               onClick={handleReset}
               disabled={password.length < 6 || loading}

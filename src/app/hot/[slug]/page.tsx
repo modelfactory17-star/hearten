@@ -138,7 +138,7 @@ export default function HotTopicPage() {
               <span
                 key={cat}
                 onClick={() => router.push(`/category/${cat}`)}
-                className="px-3 py-1.5 rounded-lg bg-hearten-card border border-hearten-border text-sm text-hearten-muted cursor-pointer hover:border-hearten-rose hover:text-hearten-rose transition-all"
+                className="px-3 py-1.5 rounded-lg bg-hearten-card border border-hearten-border text-sm text-hearten-muted cursor-pointer hover:border-hearten-rose hover:text-hearten-rose-light transition-all"
               >
                 📂 {cat === 'breakup' ? '分手' : cat === 'crush' ? '暗戀' : cat === 'marriage' ? '婚姻' : cat === 'dating' ? '交友配套' : cat}
               </span>

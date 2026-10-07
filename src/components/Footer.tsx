@@ -7,10 +7,10 @@ export default function Footer() {
           <div>
             <h4 className="text-sm font-bold text-hearten-text mb-3">關於 Hearten</h4>
             <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-              <a href="/about" className="text-sm text-hearten-muted hover:text-hearten-rose transition-colors whitespace-nowrap">Hearten 愛情討論區</a>
-              <a href="/privacy" className="text-sm text-hearten-muted hover:text-hearten-rose transition-colors whitespace-nowrap">私隱政策</a>
-              <a href="/terms" className="text-sm text-hearten-muted hover:text-hearten-rose transition-colors whitespace-nowrap">使用條款及免責聲明</a>
-              <a href="/removal" className="text-sm text-hearten-muted hover:text-hearten-rose transition-colors whitespace-nowrap">移除政策</a>
+              <a href="/about" className="text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">Hearten 愛情討論區</a>
+              <a href="/privacy" className="text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">私隱政策</a>
+              <a href="/terms" className="text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">使用條款及免責聲明</a>
+              <a href="/removal" className="text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">移除政策</a>
             </div>
           </div>
 
@@ -18,10 +18,10 @@ export default function Footer() {
           <div>
             <h4 className="text-sm font-bold text-hearten-text mb-3">會員專區</h4>
             <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-              <a href="/contact" className="text-sm text-hearten-muted hover:text-hearten-rose transition-colors whitespace-nowrap">聯絡我們</a>
-              <a href="/features" className="text-sm text-hearten-muted hover:text-hearten-rose transition-colors whitespace-nowrap">會員功能</a>
-              <a href="/faq" className="text-sm text-hearten-muted hover:text-hearten-rose transition-colors whitespace-nowrap">常見問題</a>
-              <a href="/register" className="text-sm text-hearten-muted hover:text-hearten-rose transition-colors whitespace-nowrap">註冊成為會員</a>
+              <a href="/contact" className="text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">聯絡我們</a>
+              <a href="/features" className="text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">會員功能</a>
+              <a href="/faq" className="text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">常見問題</a>
+              <a href="/register" className="text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">註冊成為會員</a>
             </div>
           </div>
 
@@ -29,10 +29,10 @@ export default function Footer() {
           <div>
             <h4 className="text-sm font-bold text-hearten-text mb-3">商務合作</h4>
             <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-              <a href="/contact" className="text-sm text-hearten-muted hover:text-hearten-rose transition-colors whitespace-nowrap">聯絡我們</a>
-              <a href="/support" className="text-sm text-hearten-muted hover:text-hearten-rose transition-colors whitespace-nowrap">客服查詢</a>
-              <a href="/advertise" className="text-sm text-hearten-muted hover:text-hearten-rose transition-colors whitespace-nowrap">廣告查詢</a>
-              <a href="/partners" className="text-sm text-hearten-muted hover:text-hearten-rose transition-colors whitespace-nowrap">合作方案</a>
+              <a href="/contact" className="text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">聯絡我們</a>
+              <a href="/support" className="text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">客服查詢</a>
+              <a href="/advertise" className="text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">廣告查詢</a>
+              <a href="/partners" className="text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">合作方案</a>
             </div>
           </div>
 
@@ -40,9 +40,9 @@ export default function Footer() {
           <div>
             <h4 className="text-sm font-bold text-hearten-text mb-3">探索 Hearten</h4>
             <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-              <a href="/editors-picks" className="text-sm text-hearten-muted hover:text-hearten-rose transition-colors whitespace-nowrap">編輯精選</a>
-              <a href="/members" className="text-sm text-hearten-muted hover:text-hearten-rose transition-colors whitespace-nowrap">會員追蹤</a>
-              <a href="/recent-comments" className="text-sm text-hearten-muted hover:text-hearten-rose transition-colors whitespace-nowrap">最新留言</a>
+              <a href="/editors-picks" className="text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">編輯精選</a>
+              <a href="/members" className="text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">會員追蹤</a>
+              <a href="/recent-comments" className="text-sm text-hearten-muted hover:text-hearten-rose-light transition-colors whitespace-nowrap">最新留言</a>
             </div>
           </div>
         </div>
@@ -50,7 +50,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="mt-10 pt-6 border-t border-hearten-border flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="text-lg text-hearten-rose">♥</span>
+            <span className="text-lg text-hearten-rose-light">♥</span>
             <span className="text-sm font-medium text-hearten-text">Hearten</span>
             <span className="text-xs text-hearten-dim">· Heart + Listen</span>
           </div>

@@ -125,7 +125,7 @@ export default function LoginModal({ open, onClose }: Props) {
             <>
               <div className="text-center mb-2">
                 <p className="text-sm text-hearten-text">驗證碼已發送到</p>
-                <p className="text-sm font-medium text-hearten-rose">{email}</p>
+                <p className="text-sm font-medium text-hearten-rose-light">{email}</p>
               </div>
 
               <div>
@@ -143,7 +143,7 @@ export default function LoginModal({ open, onClose }: Props) {
                 />
               </div>
 
-              {error && <p className="text-hearten-rose text-sm">⚠️ {error}</p>}
+              {error && <p className="text-hearten-rose-light text-sm">⚠️ {error}</p>}
               {success && <p className="text-green-400 text-sm">✅ {success}</p>}
 
               <button
@@ -201,7 +201,7 @@ export default function LoginModal({ open, onClose }: Props) {
           </div>
           )}
 
-          {error && <p className="text-hearten-rose text-sm">⚠️ {error}</p>}
+          {error && <p className="text-hearten-rose-light text-sm">⚠️ {error}</p>}
           {success && <p className="text-green-400 text-sm">✅ {success}</p>}
 
           <button
@@ -214,14 +214,14 @@ export default function LoginModal({ open, onClose }: Props) {
 
           {tab === 'forgot' ? (
             <p className="text-xs text-hearten-dim text-center">
-              <button onClick={() => switchTab('login')} className="text-hearten-rose hover:underline">
+              <button onClick={() => switchTab('login')} className="text-hearten-rose-light hover:underline">
                 ← 返回登入
               </button>
             </p>
           ) : (
           <p className="text-xs text-hearten-dim text-center">
             {tab === 'login' ? '未有帳戶？' : '已經有帳戶？'}
-            <button onClick={() => switchTab(tab === 'login' ? 'register' : 'login')} className="text-hearten-rose ml-1 hover:underline">
+            <button onClick={() => switchTab(tab === 'login' ? 'register' : 'login')} className="text-hearten-rose-light ml-1 hover:underline">
               {tab === 'login' ? '註冊' : '登入'}
             </button>
           </p>
@@ -229,7 +229,7 @@ export default function LoginModal({ open, onClose }: Props) {
 
           {tab === 'login' && (
             <p className="text-xs text-center">
-              <button onClick={() => switchTab('forgot')} className="text-hearten-dim hover:text-hearten-rose transition-colors">
+              <button onClick={() => switchTab('forgot')} className="text-hearten-dim hover:text-hearten-rose-light transition-colors">
                 忘記密碼？
               </button>
             </p>

@@ -17,8 +17,8 @@ html {
   --hearten-border: 31 31 36;
   --hearten-border-hover: 58 58 72;
   --hearten-text: 228 228 231;
-  --hearten-muted: 107 107 123;
-  --hearten-dim: 82 82 91;
+  --hearten-muted: 154 154 166;    /* #9a9aa6 dark: 3.5:1 → 6.6:1 */
+  --hearten-dim: 129 129 143;      /* #81818f dark: 2.4:1 → 4.8:1 */
   --hearten-rose: 225 29 72;
   --hearten-rose-light: 251 113 133;
   --hearten-amber: 245 158 11;
@@ -35,7 +35,7 @@ html.light {
   --hearten-border-hover: 212 212 216;
   --hearten-text: 24 24 27;
   --hearten-muted: 82 82 91;
-  --hearten-dim: 161 161 170;
+  --hearten-dim: 113 113 122;      /* #71717a light: 2.5:1 → 4.6:1 */
   --hearten-rose: 225 29 72;
   --hearten-rose-light: 190 18 60;
   --hearten-amber: 180 83 9;

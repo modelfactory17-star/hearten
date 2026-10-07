@@ -240,8 +240,8 @@ export default function PostPage() {
                     <div>
                       <div className="flex items-center gap-2">
                         <span onClick={() => router.push(`/user/${encodeURIComponent(post.anonymous)}`)}
-                          className="font-medium text-hearten-text text-sm hover:text-hearten-rose cursor-pointer transition-colors">{post.anonymous}</span>
-                        <span className="px-1.5 py-0.5 rounded-md bg-hearten-rose/10 text-hearten-rose text-[10px] font-medium">{post.category}</span>
+                          className="font-medium text-hearten-text text-sm hover:text-hearten-rose-light cursor-pointer transition-colors">{post.anonymous}</span>
+                        <span className="px-1.5 py-0.5 rounded-md bg-hearten-rose/10 text-hearten-rose-light text-[10px] font-medium">{post.category}</span>
                       </div>
                       <span className="text-xs text-hearten-muted">{post.time}</span>
                     </div>
@@ -255,7 +255,7 @@ export default function PostPage() {
                     </div>
                     {isOwner && !isEditing && (
                       <button onClick={handleEdit}
-                        className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs text-hearten-muted hover:text-hearten-rose hover:bg-hearten-card transition-colors">
+                        className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs text-hearten-muted hover:text-hearten-rose-light hover:bg-hearten-card transition-colors">
                         <Edit3 className="w-3.5 h-3.5" />編輯
                       </button>
                     )}
@@ -334,7 +334,7 @@ export default function PostPage() {
 
                 <div className="flex items-center gap-5 pt-4 border-t border-hearten-border flex-wrap">
                   <button onClick={handleHeartPost}
-                    className={`flex items-center gap-1.5 transition-colors text-sm ${hearted ? 'text-hearten-rose' : 'text-hearten-muted hover:text-hearten-rose'}`}>
+                    className={`flex items-center gap-1.5 transition-colors text-sm ${hearted ? 'text-hearten-rose-light' : 'text-hearten-muted hover:text-hearten-rose-light'}`}>
                     <Heart className={`w-4 h-4 ${hearted ? 'fill-current' : ''}`} /><span>{heartCount}</span>
                   </button>
                   {MOODS.map(m => (
@@ -478,7 +478,7 @@ function CommentItem({ comment, postId, onCommentAdded, depth = 0 }: {
             ) : comment.emoji}
           </div>
           <span onClick={() => router.push(`/user/${encodeURIComponent(comment.anonymous)}`)}
-            className="text-sm font-medium text-hearten-text hover:text-hearten-rose cursor-pointer transition-colors">{comment.anonymous}</span>
+            className="text-sm font-medium text-hearten-text hover:text-hearten-rose-light cursor-pointer transition-colors">{comment.anonymous}</span>
           {comment.isOP && <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-hearten-amber/20 text-hearten-amber">樓主</span>}
           <span className="text-xs text-hearten-muted">{comment.time}</span>
           <button className="ml-auto text-hearten-muted hover:text-hearten-text"><Flag className="w-3.5 h-3.5" /></button>
@@ -486,7 +486,7 @@ function CommentItem({ comment, postId, onCommentAdded, depth = 0 }: {
         <p className="text-[15px] text-hearten-muted leading-relaxed mb-3">{comment.body}</p>
         <div className="flex items-center gap-4">
           <button onClick={handleHeartComment}
-            className={`flex items-center gap-1 text-xs transition-colors ${cHearted ? 'text-hearten-rose' : 'text-hearten-muted hover:text-hearten-rose'}`}>
+            className={`flex items-center gap-1 text-xs transition-colors ${cHearted ? 'text-hearten-rose-light' : 'text-hearten-muted hover:text-hearten-rose-light'}`}>
             <Heart className={`w-3 h-3 ${cHearted ? 'fill-current' : ''}`} />{cHeartCount > 0 && <span>{cHeartCount}</span>}
           </button>
           {user && (

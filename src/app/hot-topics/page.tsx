@@ -63,7 +63,7 @@ export default function HotTopicsPage() {
                   <div className="flex items-center gap-2 mb-1">
                     <h3 className="text-base font-bold text-hearten-text">{topic.name}</h3>
                     {topic.badge === 'hot' ? (
-                      <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-hearten-amber text-black">🔥 熱</span>
+                      <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-hearten-amber text-hearten-bg">🔥 熱</span>
                     ) : (
                       <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-hearten-rose text-white">新</span>
                     )}

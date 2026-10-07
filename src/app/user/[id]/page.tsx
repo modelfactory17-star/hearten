@@ -280,7 +280,7 @@ export default function UserPage() {
     if (!currentUser) {
       return (
         <button onClick={() => window.dispatchEvent(new Event('hearten:open-login'))}
-          className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-hearten-border hover:border-hearten-rose text-hearten-text hover:text-hearten-rose font-medium text-base transition-colors">
+          className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-hearten-border hover:border-hearten-rose text-hearten-text hover:text-hearten-rose-light font-medium text-base transition-colors">
           <UserPlus className="w-5 h-5" />加到好友
         </button>
       );
@@ -290,7 +290,7 @@ export default function UserPage() {
       case 'none':
         return (
           <button onClick={handleFriendAction} disabled={friendLoading}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-hearten-border hover:border-hearten-rose text-hearten-text hover:text-hearten-rose font-medium text-base transition-colors">
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-hearten-border hover:border-hearten-rose text-hearten-text hover:text-hearten-rose-light font-medium text-base transition-colors">
             <UserPlus className="w-5 h-5" />{friendLoading ? '處理中...' : '加到好友'}
           </button>
         );
@@ -348,7 +348,7 @@ export default function UserPage() {
               <p className="text-base text-hearten-dim mt-1 italic">尚未填寫個人簡介</p>
             )}
             <div className="flex items-center justify-center gap-3 mt-3">
-              {profile.status && <span className="px-2.5 py-0.5 rounded-full bg-hearten-rose/10 text-hearten-rose text-sm">{profile.status}</span>}
+              {profile.status && <span className="px-2.5 py-0.5 rounded-full bg-hearten-rose/10 text-hearten-rose-light text-sm">{profile.status}</span>}
               <span className="text-sm text-hearten-dim">加入：{profile.joined}</span>
             </div>
             {isOwnProfile && profile.email && (
@@ -378,7 +378,7 @@ export default function UserPage() {
             <div className="flex gap-3 mt-5">
               {isOwnProfile ? (
                 <>
-                  <button onClick={openEdit} className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-hearten-border hover:border-hearten-rose text-hearten-text hover:text-hearten-rose font-medium text-base transition-colors">
+                  <button onClick={openEdit} className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-hearten-border hover:border-hearten-rose text-hearten-text hover:text-hearten-rose-light font-medium text-base transition-colors">
                     <Settings className="w-5 h-5" />編輯資料
                   </button>
                   <button onClick={handleLogout} className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-hearten-rose hover:bg-hearten-rose-light text-white font-medium text-base transition-colors">
@@ -454,7 +454,7 @@ export default function UserPage() {
                       ) : f.friend?.emoji || '👤'}
                     </a>
                     <a href={`/user/${encodeURIComponent(f.friend?.username || '')}`} target="_blank" rel="noopener noreferrer"
-                      className="flex-1 min-w-0 text-sm font-medium text-hearten-text hover:text-hearten-rose transition-colors truncate">
+                      className="flex-1 min-w-0 text-sm font-medium text-hearten-text hover:text-hearten-rose-light transition-colors truncate">
                       {f.friend?.username || '未知用戶'}
                       {f.starred && <span className="ml-1.5 text-amber-400">⭐</span>}
                       {f.blocked && <span className="ml-1.5 text-xs text-red-400">(已封鎖)</span>}
@@ -496,7 +496,7 @@ export default function UserPage() {
               {userPosts.map((post) => (
                 <button key={post.id} onClick={() => router.push(`/post/${post.slug}`)} className="w-full text-left bg-hearten-card border border-hearten-border rounded-xl p-4 hover:border-gray-600 transition-colors">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="px-1.5 py-0.5 rounded-md bg-hearten-rose/10 text-hearten-rose text-xs font-medium">{post.category}</span>
+                    <span className="px-1.5 py-0.5 rounded-md bg-hearten-rose/10 text-hearten-rose-light text-xs font-medium">{post.category}</span>
                     <span className="text-sm text-hearten-muted">{post.time}</span>
                   </div>
                   <h3 className="text-base font-semibold text-hearten-text">{post.title}</h3>

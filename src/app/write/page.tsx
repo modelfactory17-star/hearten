@@ -181,7 +181,7 @@ export default function WritePage() {
                 onClick={() => setCategory(cat.id)}
                 className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left transition-colors ${
                   category === cat.id
-                    ? 'bg-hearten-rose/20 border border-hearten-rose/40 text-hearten-rose'
+                    ? 'bg-hearten-rose/20 border border-hearten-rose/40 text-hearten-rose-light'
                     : 'border border-hearten-border text-hearten-muted hover:border-gray-500 hover:text-hearten-muted'
                 }`}
               >
@@ -244,7 +244,7 @@ export default function WritePage() {
 
         {/* Error */}
         {error && (
-          <p className="text-hearten-rose text-sm mb-4">⚠️ {error}</p>
+          <p className="text-hearten-rose-light text-sm mb-4">⚠️ {error}</p>
         )}
 
         <button

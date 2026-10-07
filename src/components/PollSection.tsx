@@ -97,7 +97,7 @@ export default function PollSection() {
                     style={{ width: `${pct}%` }}
                   />
                   <span className="relative z-[1] flex-1 text-[13.5px] text-hearten-muted truncate">{opt.text}</span>
-                  <span className="relative z-[1] text-[13px] font-bold text-hearten-rose">{pct}%</span>
+                  <span className="relative z-[1] text-[13px] font-bold text-hearten-rose-light">{pct}%</span>
                 </div>
               );
             })}
@@ -107,7 +107,7 @@ export default function PollSection() {
               <span className="text-[11.5px] text-hearten-dim">
                 🗳 {formatVotes(poll.totalVotes)} 人已投票
               </span>
-              <span className="text-[11.5px] text-hearten-rose font-medium">
+              <span className="text-[11.5px] text-hearten-rose-light font-medium">
                 去投票 →
               </span>
             </div>

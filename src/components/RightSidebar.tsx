@@ -87,7 +87,7 @@ export default function RightSidebar() {
       {/* 最新會員 */}
       <div className="mb-7">
         <div className="flex items-center gap-2 text-[13px] font-extrabold uppercase tracking-[0.04em] text-hearten-muted mb-[14px] pl-0.5">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-[15px] h-[15px] text-hearten-rose">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-[15px] h-[15px] text-hearten-rose-light">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
             <circle cx="12" cy="7" r="4"/>
           </svg>

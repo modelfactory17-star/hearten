@@ -57,7 +57,7 @@ export default function LeftSidebar() {
               onClick={() => router.push(cat.href)}
               className={`flex items-center gap-[10px] py-[9px] px-3 rounded-[10px] text-base font-semibold transition-all duration-[0.15s] text-left w-full
                 ${isActive
-                  ? 'bg-hearten-rose/10 text-hearten-rose'
+                  ? 'bg-hearten-rose/10 text-hearten-rose-light'
                   : 'text-hearten-muted hover:bg-hearten-card hover:text-hearten-text'
                 }
               `}
@@ -72,7 +72,7 @@ export default function LeftSidebar() {
                 </span>
               )}
               {cat.badge === 'hot' && (
-                <span className="ml-auto text-[11px] font-semibold px-[6px] py-[2px] rounded-[8px] bg-hearten-amber text-black">
+                <span className="ml-auto text-[11px] font-semibold px-[6px] py-[2px] rounded-[8px] bg-hearten-amber text-hearten-bg">
                   熱
                 </span>
               )}

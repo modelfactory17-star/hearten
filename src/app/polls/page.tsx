@@ -61,7 +61,7 @@ function PollCard({ poll, userId, isAdmin, authChecked, onVote, onClose }: {
         {isAdmin && isActive && (
           <button
             onClick={() => onClose(poll.id)}
-            className="shrink-0 text-xs text-hearten-muted hover:text-hearten-rose transition-colors px-2 py-1 rounded-lg hover:bg-hearten-rose/10"
+            className="shrink-0 text-xs text-hearten-muted hover:text-hearten-rose-light transition-colors px-2 py-1 rounded-lg hover:bg-hearten-rose/10"
           >
             結束投票
           </button>
@@ -121,7 +121,7 @@ function PollCard({ poll, userId, isAdmin, authChecked, onVote, onClose }: {
                     <span className="text-sm font-semibold text-hearten-dim tabular-nums">{opt.votes}</span>
                   )}
                   {hasVoted && isSelected && (
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-hearten-rose">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-hearten-rose-light">
                       <path d="M20 6L9 17l-5-5"/>
                     </svg>
                   )}
@@ -138,7 +138,7 @@ function PollCard({ poll, userId, isAdmin, authChecked, onVote, onClose }: {
           <p className="text-sm text-hearten-dim">
             <button
               onClick={() => window.dispatchEvent(new Event('hearten:open-login'))}
-              className="text-hearten-rose hover:underline font-medium"
+              className="text-hearten-rose-light hover:underline font-medium"
             >
               登入
             </button>
@@ -260,7 +260,7 @@ function CreatePollModal({ onClose, onCreated }: { onClose: () => void; onCreate
                   {options.length > 2 && (
                     <button
                       onClick={() => removeOption(i)}
-                      className="p-2 rounded-lg hover:bg-hearten-rose/10 text-hearten-muted hover:text-hearten-rose"
+                      className="p-2 rounded-lg hover:bg-hearten-rose/10 text-hearten-muted hover:text-hearten-rose-light"
                     >
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M18 6L6 18M6 6l12 12"/>
@@ -272,7 +272,7 @@ function CreatePollModal({ onClose, onCreated }: { onClose: () => void; onCreate
             </div>
             <button
               onClick={addOption}
-              className="mt-2 text-sm text-hearten-rose hover:text-hearten-rose-light font-medium"
+              className="mt-2 text-sm text-hearten-rose-light hover:text-hearten-rose-light font-medium"
             >
               + 新增選項
             </button>
@@ -440,7 +440,7 @@ export default function PollsPage() {
                   <p className="text-4xl mb-3">📊</p>
                   <p>暫時未有投票</p>
                   {isAdmin && (
-                    <button onClick={() => setShowCreate(true)} className="mt-3 text-sm text-hearten-rose hover:underline">
+                    <button onClick={() => setShowCreate(true)} className="mt-3 text-sm text-hearten-rose-light hover:underline">
                       建立第一個投票
                     </button>
                   )}
