@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import AdBanner from './AdBanner';
+import LoveWiseCard from './LoveWiseCard';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 interface HotTopic {
   emoji: string;
@@ -28,6 +29,9 @@ interface ActiveUser {
 }
 
 export default function RightSidebar() {
+  const pathname = usePathname();
+  const showPromo = pathname === '/' || pathname.startsWith('/category') || pathname.startsWith('/post') || pathname === '/hot-topics' || pathname === '/editors-picks';
+
   const [hotTopics, setHotTopics] = useState<HotTopic[]>([]);
   const [newMembers, setNewMembers] = useState<SidebarMember[]>([]);
   const [activeUsers, setActiveUsers] = useState<ActiveUser[]>([]);
@@ -45,9 +49,6 @@ export default function RightSidebar() {
 
   return (
     <aside className="w-[280px] shrink-0 border-l border-hearten-border h-[calc(100vh-56px)] sticky top-14 overflow-y-auto px-4 py-5 max-[1100px]:hidden">
-      {/* Ad Banner */}
-      <AdBanner size="rectangle" />
-
       {/* 熱門話題 */}
       <div className="mb-7">
         <div className="flex items-center gap-2 text-[13px] font-extrabold uppercase tracking-[0.04em] text-hearten-muted mb-[14px] pl-0.5">
@@ -75,6 +76,13 @@ export default function RightSidebar() {
           ))}
         </div>
       </div>
+
+      {/* 自家品牌推薦（低調原生卡，只落主要頁）*/}
+      {showPromo && (
+        <div className="mb-7">
+          <LoveWiseCard variant="sidebar" />
+        </div>
+      )}
 
       {/* 最新會員 */}
       <div className="mb-7">

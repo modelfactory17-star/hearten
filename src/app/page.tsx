@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import LeftSidebar from '@/components/LeftSidebar';
 import RightSidebar from '@/components/RightSidebar';
@@ -8,7 +8,7 @@ import CategoryGrid from '@/components/CategoryGrid';
 import MemberGrid from '@/components/MemberGrid';
 import HotTopicsGrid from '@/components/HotTopicsGrid';
 import PollSection from '@/components/PollSection';
-import AdBanner from '@/components/AdBanner';
+import LoveWiseCard from '@/components/LoveWiseCard';
 import Footer from '@/components/Footer';
 import FeedCard from '@/components/FeedCard';
 import { useRouter } from 'next/navigation';
@@ -76,10 +76,6 @@ export default function Home() {
           <SectionTitle emoji="📊" title="投票專區" subtitle="一齊表達意見" />
           <PollSection />
 
-          <div className="mt-8">
-            <AdBanner size="leaderboard" />
-          </div>
-
           {/* Posts Feed — inline */}
           <SectionTitle emoji="🔥" title="最新心事" />
 
@@ -89,7 +85,8 @@ export default function Home() {
             <div className="text-center py-12 text-hearten-muted text-base">暫時未有帖文，做第一個分享心事嘅人 💬</div>
           ) : (
             <div className="flex flex-col gap-3">
-              {posts.slice(0, 10).map((post) => (
+              {posts.slice(0, 10).map((post, i) => (
+                <Fragment key={post.id}>
                 <FeedCard
                   key={post.id}
                   id={post.id}
@@ -105,6 +102,8 @@ export default function Home() {
                   images={post.images}
                   onClick={() => router.push(`/post/${post.slug}`)}
                 />
+                {i === 2 && <LoveWiseCard variant="feed" />}
+                </Fragment>
               ))}
             </div>
           )}

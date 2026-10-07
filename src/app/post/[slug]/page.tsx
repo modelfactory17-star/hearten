@@ -6,6 +6,7 @@ import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import LeftSidebar from '@/components/LeftSidebar';
 import RightSidebar from '@/components/RightSidebar';
+import LoveWiseCard from '@/components/LoveWiseCard';
 import { db, type AuthUser } from '@/lib/db';
 import type { Post, Comment } from '@/lib/db';
 import { useState, useCallback, useEffect, useRef } from 'react';
@@ -368,6 +369,10 @@ export default function PostPage() {
                   </button>
                 </div>
               </article>
+
+              <div className="mb-5">
+                <LoveWiseCard variant="post" />
+              </div>
 
               <div className="flex items-center gap-3 mb-5">
                 <h2 className="text-sm font-bold text-hearten-muted uppercase tracking-wider">
