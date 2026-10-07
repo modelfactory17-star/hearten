@@ -51,7 +51,7 @@ export default function EditorsPicksPage() {
 
         <main className="flex-1 min-w-0 px-7 py-8 max-md:px-4">
           <div className="flex items-center gap-3 mb-2">
-            <IconBadge icon={Star} size="lg" />
+            <IconBadge icon={Star} size="md" />
             <h1 className="text-2xl font-bold text-hearten-text">編輯精選</h1>
           </div>
           <p className="text-sm text-hearten-muted mb-8">最多心心嘅優質貼文，值得一睇再睇</p>

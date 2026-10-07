@@ -248,7 +248,7 @@ export default function MessagesPage() {
   return layout(
     <div className="max-w-4xl mx-auto">
       <div className="flex items-center gap-3 mb-6">
-        <IconBadge icon={MessageSquare} size="lg" />
+        <IconBadge icon={MessageSquare} size="md" />
         <h1 className="text-2xl font-bold text-hearten-text">訊息</h1>
       </div>
 

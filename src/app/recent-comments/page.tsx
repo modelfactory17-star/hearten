@@ -54,7 +54,7 @@ export default function RecentCommentsPage() {
 
         <main className="flex-1 min-w-0 px-7 py-8 max-md:px-4">
           <div className="flex items-center gap-3 mb-2">
-            <IconBadge icon={MessageCircle} size="lg" />
+            <IconBadge icon={MessageCircle} size="md" />
             <h1 className="text-2xl font-bold text-hearten-text">最新留言</h1>
           </div>
           <p className="text-sm text-hearten-muted mb-8">實時睇住社群嘅最新討論</p>

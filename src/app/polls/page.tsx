@@ -386,7 +386,7 @@ export default function PollsPage() {
           {/* Header */}
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
-              <IconBadge icon={BarChart3} size="lg" />
+              <IconBadge icon={BarChart3} size="md" />
               <h1 className="text-2xl font-bold text-hearten-text">投票區</h1>
             </div>
             {isAdmin && (
@@ -439,7 +439,7 @@ export default function PollsPage() {
 
               {activePolls.length === 0 && closedPolls.length === 0 && (
                 <div className="text-hearten-muted text-center py-12">
-                  <IconBadge icon={BarChart3} size="lg" className="mb-3" />
+                  <IconBadge icon={BarChart3} size="md" className="mb-3" />
                   <p>暫時未有投票</p>
                   {isAdmin && (
                     <button onClick={() => setShowCreate(true)} className="mt-3 text-sm text-hearten-rose-light hover:underline">

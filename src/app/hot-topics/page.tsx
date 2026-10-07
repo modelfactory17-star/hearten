@@ -49,7 +49,7 @@ export default function HotTopicsPage() {
           {/* Header */}
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-2">
-              <IconBadge icon={Newspaper} size="lg" />
+              <IconBadge icon={Newspaper} size="md" />
               <h1 className="text-2xl font-bold text-hearten-text">熱門話題</h1>
             </div>
             <p className="text-sm text-hearten-muted">時事 · 八卦 · 城中熱話 — 香港人最關心嘅話題，一齊入嚟傾</p>
