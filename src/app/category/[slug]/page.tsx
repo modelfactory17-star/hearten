@@ -188,11 +188,31 @@ export default function CategoryPage() {
             </div>
           </div>
 
-          {/* 版規 */}
+          {/* 版規（可摺疊，預設收起） */}
           {rules && (
-            <div className="mb-6 bg-hearten-card border border-hearten-border rounded-xl p-4">
-              <h3 className="text-sm font-bold text-hearten-muted uppercase tracking-wider mb-3">📋 版規</h3>
-              <ul className="space-y-1.5">
+            <details className="group mb-6 bg-hearten-card border border-hearten-border rounded-xl overflow-hidden transition-colors duration-[0.15s] hover:border-hearten-border-hover">
+              <summary className="flex items-center justify-between gap-3 px-4 py-3 cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center gap-2 text-sm font-bold text-hearten-muted uppercase tracking-wider">
+                  📋 版規
+                  <span className="text-xs font-normal normal-case tracking-normal text-hearten-dim">
+                    （{rules.length} 條）
+                  </span>
+                </span>
+                <span className="flex items-center gap-1.5 text-xs text-hearten-dim shrink-0">
+                  <span className="group-open:hidden">展開</span>
+                  <span className="hidden group-open:inline">收起</span>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    className="w-4 h-4 transition-transform duration-[0.2s] group-open:rotate-180"
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </span>
+              </summary>
+              <ul className="space-y-1.5 px-4 pb-4 pt-3 border-t border-hearten-border">
                 {rules.map((rule, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-hearten-muted">
                     <span className="text-hearten-rose mt-0.5 shrink-0">{i + 1}.</span>
@@ -200,7 +220,7 @@ export default function CategoryPage() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </details>
           )}
 
           {/* Posts */}
