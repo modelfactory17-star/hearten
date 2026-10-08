@@ -7,6 +7,7 @@ interface MemberData {
   id: string;
   name: string;
   emoji: string;
+  avatarUrl?: string | null;
   bio: string;
   status: string;
   posts: number;
@@ -72,8 +73,10 @@ export default function MemberGrid() {
               className="relative bg-hearten-card border border-hearten-border rounded-xl shadow-card p-5 transition-all duration-[0.2s] hover:border-hearten-border-hover hover:-translate-y-[2px] block"
             >
               <div className="flex items-start gap-3 mb-[10px]">
-                <div className="w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center text-xl border-2 bg-[linear-gradient(135deg,#1a2a3a,#1a3040)] border-[rgba(59,130,246,0.3)]">
-                  {m.emoji}
+                <div className="w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center text-xl border-2 bg-[linear-gradient(135deg,#1a2a3a,#1a3040)] border-[rgba(59,130,246,0.3)] overflow-hidden">
+                  {m.avatarUrl ? (
+                    <img src={m.avatarUrl} alt="" className="w-full h-full object-cover" />
+                  ) : m.emoji}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-base font-bold text-hearten-text">{m.name}</div>

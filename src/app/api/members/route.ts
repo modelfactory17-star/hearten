@@ -24,7 +24,7 @@ function activityScore(p: Profile) {
 export async function GET() {
   try {
     const res = await fetch(
-      `${URL}/rest/v1/profiles?select=id,username,emoji,bio,status,posts_count,comments_count,hearts_received,created_at&order=posts_count.desc&limit=${SCAN}`,
+      `${URL}/rest/v1/profiles?select=id,username,emoji,bio,status,posts_count,comments_count,hearts_received,created_at,avatar_url&order=posts_count.desc&limit=${SCAN}`,
       { headers }
     );
     const raw = await res.json();
@@ -40,6 +40,7 @@ export async function GET() {
         id: p.id,
         name: p.username || '會員',
         emoji: p.emoji || '🙋',
+        avatarUrl: (p.avatar_url as string) || null,
         bio: (p.bio as string) || '新會員，等緊同大家交流 💬',
         status: p.status || '在職',
         posts: (p.posts_count as number) || 0,
